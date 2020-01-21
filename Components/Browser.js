@@ -1,20 +1,20 @@
 import React from'react'
 import {View, Text, Button, StyleSheet, SafeAreaView} from 'react-native'
 
+import  WebMapView  from '../arcGigAPI/MapView'
+
 class Browser extends React.Component {
 constructor(props) {
     super(props)
     this.state = {
-
+        ////
     }
 }
 
 render() {
     return (
         <View style={styles.main}>
-            <Button title="TEST"
-                    style={styles.elements} >
-            </Button>
+            <WebMapView></WebMapView>
         </View>
     )
 }
@@ -29,18 +29,6 @@ const styles = StyleSheet.create({
         flexDirection : 'row',
         alignItems: 'center',
         justifyContent: 'space-around',
-
-            //Just for testing
-        borderColor: 'red',
-        borderWidth: 1
-    },
-    elements : {
-        width: 105,
-        height: 45,
-
-            //Just for testing
-        borderColor: 'red',
-        borderWidth: 1
     }
 })
 
