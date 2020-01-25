@@ -7,14 +7,21 @@ class Browser extends React.Component {
 constructor(props) {
     super(props)
     this.state = {
-        ////
+      mapType : "standart"
     }
+    this._changeLocation = this._changeLocation.bind(this)
 }
+
+    // the setting function
+    _changeLocation() {
+        this.setState({ mapType : "satellite" });
+      }
 
 render() {
     return (
         <View style={styles.main}>
-            <WebMapView></WebMapView>
+            <WebMapView mapType={this.state.mapType} style={styles.map}></WebMapView>
+            <Button onPress={this._changeLocation} title='satellite' style={styles.Button}></Button>
         </View>
     )
 }
@@ -22,13 +29,9 @@ render() {
 
 const styles = StyleSheet.create({
     main : {
-        width: '100%',
-        height: '100%',
-
-        display: 'flex',
-        flexDirection : 'row',
-        alignItems: 'center',
-        justifyContent: 'space-around',
+        flex : 1,
+        justifyContent : 'flex-end',
+        alignItems : 'center'
     }
 })
 
