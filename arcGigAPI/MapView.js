@@ -8,24 +8,37 @@ export default class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      region : {
+      region : {    // for initial region of the map
         latitude: 36.365,
         longitude: 6.61472,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       },
-      latLng : {
-        latitude: 0,
-        longitude: 0,
-      },
+      markerNumber: 0  // number of markers (counter)
     }
     this._makeMarker = this._makeMarker.bind(this)
   }
 
-  _makeMarker(e) {
-    this.setState({latLng : e.nativeEvent.coordinate})
+  latLng = {  // Marker location:
+    latitude: 36.365,
+    longitude: 6.61472,
   }
 
+    // the list of markers
+  set = []
+  
+  _makeMarker(e) {
+    this.latLng = e.nativeEvent.coordinate  // change the marker location to the touched one
+      // push a new marker to the list :
+    this.set.push(<Marker
+      coordinate={ { latitude: this.latLng.latitude, longitude: this.latLng.longitude, }}
+      title={"valle"}
+      description={"oued rhumel"}
+      key={"MN-" + this.state.markerNumber}
+    ></Marker>)
+      // update the counter of markers :
+    this.setState({markerNumber : this.state.markerNumber + 1})
+  }
 
   render() {
     return (
@@ -35,13 +48,7 @@ export default class App extends React.Component {
           style={styles.mapStyle} 
           onLongPress={this._makeMarker}
         >
-        <Marker
-          draggable
-          coordinate={this.state.latLng}
-          title={"valle"}
-          description={"oued rhumel"}
-          onDragEnd={(e) => this.setState({ x: e.nativeEvent.coordinate })}
-        ></Marker>
+      {this.set}
       </MapView>
     );
   }
