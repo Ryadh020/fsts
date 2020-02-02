@@ -25,6 +25,11 @@ render() {
             <View  style={styles.LayoutButtons}>
                 <TouchableOpacity onPress={this._changeLocation} style={styles.MapType}><Text>sat</Text></TouchableOpacity>
             </View>
+            <View style={styles.DrawingButtons}>
+                <TouchableOpacity style={styles.MapType}><Text>Mrk</Text></TouchableOpacity>
+                <TouchableOpacity style={styles.MapType}><Text>Lne</Text></TouchableOpacity>
+                <TouchableOpacity style={styles.MapType}><Text>Plg</Text></TouchableOpacity>
+            </View>
         </View>
     )
 }
