@@ -8,13 +8,13 @@ export default class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      region : {    // for initial region of the map
+      region : {    //  initial cordinates for the map
         latitude: 36.365,
         longitude: 6.61472,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       },
-      markerNumber: 0  // number of markers (counter)
+      markerNumber: 0  // number of markers (counter) "use it to assign keys and helps with counting"
     }
     this._makeMarker = this._makeMarker.bind(this)
   }
@@ -57,6 +57,6 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   mapStyle: {
     width: (Dimensions.get('window').width),
-    height: (Dimensions.get('window').height) * 0.89,
+    height: (Dimensions.get('window').height) * 0.93,
   }
 });
