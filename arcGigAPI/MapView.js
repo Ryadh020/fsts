@@ -1,7 +1,7 @@
 import React from 'react';
 import  MapView  from 'react-native-maps';
 import { Marker } from 'react-native-maps';
-import { StyleSheet, Text, View, Dimensions, Button, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, Dimensions, Button, TouchableOpacity, Image} from 'react-native';
 
 export default class App extends React.Component {
 
@@ -89,9 +89,18 @@ export default class App extends React.Component {
         {this.set}
         </MapView>
         <View style={styles.DrawingButtons}>
-          <TouchableOpacity onPress={this._MarkerTool} style={styles.MapType}><Text>Mrk</Text></TouchableOpacity>
-          <TouchableOpacity onPress={this._LineTool} style={styles.MapType}><Text>Lne</Text></TouchableOpacity>
-          <TouchableOpacity onPress={this._PolygoneTool} style={styles.MapType}><Text>Plg</Text></TouchableOpacity>
+        <TouchableOpacity onPress={this._MarkerTool} style={styles.logoContainer}>
+            <Image style={styles.logo} source={require("../Images/brush.png")} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._MarkerTool} style={styles.logoContainer}>
+            <Image style={styles.logo} source={require("../Images/marker.png")} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._LineTool} style={styles.logoContainer}>
+            <Image style={styles.logo} source={require("../Images/line.png")} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._PolygoneTool} style={styles.logoContainer}>
+            <Image style={styles.logo} source={require("../Images/Polygone.png")} />
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -103,14 +112,19 @@ const styles = StyleSheet.create({
     width: (Dimensions.get('window').width),
     height: (Dimensions.get('window').height) * 0.93,
   },
-  MapType : { // ordinary button
-      display : "flex",
-      justifyContent : "center",
-      alignItems : "center",
+  logoContainer : {
+    display : "flex",
+    justifyContent : "center",
+    alignItems : "center",
+    width : 50,
+    height : 50,
+    padding : 10,
+    backgroundColor : "hsla(44, 0%, 85%, 0.8)",
+    borderRadius : 50
+  },
+  logo : { // ordinary button
       width : 45,
       height : 45,
-      padding : 5,
-      backgroundColor : "red",
       borderRadius : 50
   },
   DrawingButtons : {  // for the right side buttons (marker/line/Polygone ....etc.)

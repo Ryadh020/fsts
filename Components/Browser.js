@@ -1,5 +1,5 @@
 import React from'react'
-import {View, Text, Button, StyleSheet, SafeAreaView} from 'react-native'
+import {View, Text, Button, StyleSheet, SafeAreaView, Image} from 'react-native'
 
 import  WebMapView  from '../arcGigAPI/MapView'
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -23,7 +23,9 @@ render() {
         <View style={styles.main}>
             <WebMapView mapType={this.state.mapType} style={styles.map}></WebMapView>
             <View  style={styles.LayoutButtons}>
-                <TouchableOpacity onPress={this._changeLocation} style={styles.MapType}><Text>sat</Text></TouchableOpacity>
+                <TouchableOpacity onPress={this._changeLocation} style={styles.MapType}>
+                <Image style={{width: 45, height: 45}} source={require("../Images/earth.png")} />
+                </TouchableOpacity>
             </View>
         </View>
     )
@@ -52,7 +54,7 @@ const styles = StyleSheet.create({
         width : 45,
         height : 45,
         padding : 5,
-        backgroundColor : "red",
+        backgroundColor : "hsla(44, 0%, 85%, 0.5)",
         borderRadius : 50
     },
     DrawingButtons : {  // for the right side buttons (marker/line/Polygone ....etc.)
