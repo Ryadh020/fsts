@@ -22,6 +22,8 @@ export default class App extends React.Component {
     this._MarkerTool = this._MarkerTool.bind(this)
     this._LineTool = this._LineTool.bind(this)
     this._PolygoneTool = this._PolygoneTool.bind(this)
+
+    this._ShowTools = this._ShowTools.bind(this)
   }
 
   latLng = {  // Marker location:
@@ -66,7 +68,7 @@ export default class App extends React.Component {
       this.setState({markerNumber : this.state.markerNumber + 1})
     }
   }
-
+      // change the components to put in the set array (marker/line/polygone)
   _MarkerTool() {
     this.setState({ DrawingTool : "Marker" });
   }
@@ -74,6 +76,21 @@ export default class App extends React.Component {
     this.setState({ DrawingTool : "Line" });
   }
   _PolygoneTool() {
+    this.setState({ DrawingTool : "Polygone" });
+  }
+
+    // change the components to put in the set array (marker/line/polygone)
+  _ShowTools() {
+    styles.DrawingButtons = {
+      position : "absolute",
+      height: 210,
+      top : 110,
+      right : 15,
+      display : "flex",
+      flexDirection : "column",
+      justifyContent : "space-around",
+      alignItems : "center",
+    }
     this.setState({ DrawingTool : "Polygone" });
   }
 
@@ -89,9 +106,6 @@ export default class App extends React.Component {
         {this.set}
         </MapView>
         <View style={styles.DrawingButtons}>
-        <TouchableOpacity onPress={this._MarkerTool} style={styles.logoContainer}>
-            <Image style={styles.logo} source={require("../Images/brush.png")} />
-          </TouchableOpacity>
           <TouchableOpacity onPress={this._MarkerTool} style={styles.logoContainer}>
             <Image style={styles.logo} source={require("../Images/marker.png")} />
           </TouchableOpacity>
@@ -100,6 +114,9 @@ export default class App extends React.Component {
           </TouchableOpacity>
           <TouchableOpacity onPress={this._PolygoneTool} style={styles.logoContainer}>
             <Image style={styles.logo} source={require("../Images/Polygone.png")} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._ShowTools} style={styles.logoContainer}>
+            <Image style={styles.XO} source={require("../Images/brush.png")} />
           </TouchableOpacity>
         </View>
       </View>
@@ -116,20 +133,26 @@ const styles = StyleSheet.create({
     display : "flex",
     justifyContent : "center",
     alignItems : "center",
-    width : 50,
-    height : 50,
+    width : 45,
+    height : 45,
     padding : 10,
     backgroundColor : "hsla(44, 0%, 85%, 0.8)",
     borderRadius : 50
   },
+  XO : { // ordinary button
+    width : 30,
+    height : 30,
+    borderRadius : 50,
+  },
   logo : { // ordinary button
-      width : 45,
-      height : 45,
-      borderRadius : 50
+      width : 30,
+      height : 30,
+      borderRadius : 50,
   },
   DrawingButtons : {  // for the right side buttons (marker/line/Polygone ....etc.)
       position : "absolute",
-      top : 150,
+      height: 0,
+      top : 140,
       right : 15,
       display : "flex",
       flexDirection : "column",
