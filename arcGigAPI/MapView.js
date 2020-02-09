@@ -3,6 +3,8 @@ import  MapView  from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 import { StyleSheet, Text, View, Dimensions, Button, TouchableOpacity, Image} from 'react-native';
 
+import DrawingTools from '../Components/DrawingTools'
+
 export default class App extends React.Component {
 
   constructor(props) {
@@ -18,12 +20,6 @@ export default class App extends React.Component {
       DrawingTool : "Marker"
     }
     this._makeMarker = this._makeMarker.bind(this)
-
-    this._MarkerTool = this._MarkerTool.bind(this)
-    this._LineTool = this._LineTool.bind(this)
-    this._PolygoneTool = this._PolygoneTool.bind(this)
-
-    this._ShowTools = this._ShowTools.bind(this)
   }
 
   latLng = {  // Marker location:
@@ -68,31 +64,6 @@ export default class App extends React.Component {
       this.setState({markerNumber : this.state.markerNumber + 1})
     }
   }
-      // change the components to put in the set array (marker/line/polygone)
-  _MarkerTool() {
-    this.setState({ DrawingTool : "Marker" });
-  }
-  _LineTool() {
-    this.setState({ DrawingTool : "Line" });
-  }
-  _PolygoneTool() {
-    this.setState({ DrawingTool : "Polygone" });
-  }
-
-    // change the components to put in the set array (marker/line/polygone)
-  _ShowTools() {
-    styles.DrawingButtons = {
-      position : "absolute",
-      height: 210,
-      top : 110,
-      right : 15,
-      display : "flex",
-      flexDirection : "column",
-      justifyContent : "space-around",
-      alignItems : "center",
-    }
-    this.setState({ DrawingTool : "Polygone" });
-  }
 
   render() {
     return (
@@ -105,20 +76,7 @@ export default class App extends React.Component {
         >
         {this.set}
         </MapView>
-        <View style={styles.DrawingButtons}>
-          <TouchableOpacity onPress={this._MarkerTool} style={styles.logoContainer}>
-            <Image style={styles.logo} source={require("../Images/marker.png")} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this._LineTool} style={styles.logoContainer}>
-            <Image style={styles.logo} source={require("../Images/line.png")} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this._PolygoneTool} style={styles.logoContainer}>
-            <Image style={styles.logo} source={require("../Images/Polygone.png")} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this._ShowTools} style={styles.logoContainer}>
-            <Image style={styles.XO} source={require("../Images/brush.png")} />
-          </TouchableOpacity>
-        </View>
+        <DrawingTools/>
       </View>
     );
   }
