@@ -1,11 +1,14 @@
 import * as React from 'react';
-import { Text, View } from 'react-native';
+import { Provider } from 'react-redux'
 
+import Store from './Store/configureStore'
 import Route from './Navigation/Route'
 
 export default function App() {
   return (
-    <Route></Route>
+    <Provider store={Store}>
+      <Route></Route>
+    </Provider>
   );
 }
 

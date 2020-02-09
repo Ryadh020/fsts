@@ -1,11 +1,11 @@
 import React from 'react'
 import { StyleSheet, View, TouchableOpacity, Image} from 'react-native';
+import { connect } from 'react-redux'
 
-export default class DrawingTools extends React.Component {
+class DrawingTools extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            DrawingTool : "Marker"
         }
         this._MarkerTool = this._MarkerTool.bind(this)
         this._LineTool = this._LineTool.bind(this)
@@ -14,7 +14,7 @@ export default class DrawingTools extends React.Component {
         this._ShowTools = this._ShowTools.bind(this)
     }
 
-        // show the tools
+        // show the tools "drawing tools button"
     _ShowTools() {
         styles.DrawingButtons = {
         position : "absolute",
@@ -29,15 +29,19 @@ export default class DrawingTools extends React.Component {
         this.setState({ DrawingTool : "Polygone" });
     }
     
-        // change the components to put in the set array (marker/line/polygone)
+        // change the components to put in the set array (marker/line/polygone) 
+        // creat and send actions with the spicified data to the toggleToll reducer
     _MarkerTool() {
-        this.setState({ DrawingTool : "Marker" });
+        let action = { type: "Marker", value: "Marker" }
+        this.props.dispatch(action)
     }
     _LineTool() {
-        this.setState({ DrawingTool : "Line" });
+        let action = { type: "Line", value: "Line" }
+        this.props.dispatch(action)
     }
     _PolygoneTool() {
-        this.setState({ DrawingTool : "Polygone" });
+        let action = { type: "Polygone", value: "Polygone" }
+        this.props.dispatch(action)
     }
 
     render() {
@@ -92,4 +96,12 @@ const styles = StyleSheet.create({
         borderRadius : 50,
     }
   });
+
+  const mapStateToProps = (state) => {
+    return {
+      tool: state.toggleTool.tool
+    }
+  }
+  
+  export default connect(mapStateToProps)(DrawingTools) // connect the drawingtools component to the global state
   

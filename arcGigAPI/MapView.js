@@ -2,10 +2,11 @@ import React from 'react';
 import  MapView  from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 import { StyleSheet, Text, View, Dimensions, Button, TouchableOpacity, Image} from 'react-native';
+import { connect } from 'react-redux'
 
 import DrawingTools from '../Components/DrawingTools'
 
-export default class App extends React.Component {
+class App extends React.Component {
 
   constructor(props) {
     super(props)
@@ -28,13 +29,13 @@ export default class App extends React.Component {
   }
 
     // the list of markers
-  set = []
+  markers = []
   
   _makeMarker(e) {
     this.latLng = e.nativeEvent.coordinate  // change the marker location to the touched one
-    if (this.state.DrawingTool == "Marker") {
+    if (this.props.tool == "Marker") {
             // push a new marker to the list :
-      this.set.push(<Marker
+      this.markers.push(<Marker
         coordinate={ { latitude: this.latLng.latitude, longitude: this.latLng.longitude, }}
         title={"Marker"}
         description={"oued rhumel"}
@@ -42,9 +43,9 @@ export default class App extends React.Component {
       ></Marker>)
         // update the counter of markers :
       this.setState({markerNumber : this.state.markerNumber + 1})
-    } else if (this.state.DrawingTool == "Line") {
+    } else if (this.props.tool == "Line") {
             // push a new marker to the list :
-      this.set.push(<Marker
+      this.markers.push(<Marker
         coordinate={ { latitude: this.latLng.latitude, longitude: this.latLng.longitude, }}
         title={"Line"}
         description={"oued rhumel"}
@@ -52,9 +53,9 @@ export default class App extends React.Component {
       ></Marker>)
             // update the counter of markers :
       this.setState({markerNumber : this.state.markerNumber + 1})
-    } else if (this.state.DrawingTool == "Polygone") {
+    } else if (this.props.tool == "Polygone") {
                   // push a new marker to the list :
-      this.set.push(<Marker
+      this.markers.push(<Marker
         coordinate={ { latitude: this.latLng.latitude, longitude: this.latLng.longitude, }}
         title={"Polygone"}
         description={"oued rhumel"}
@@ -74,7 +75,7 @@ export default class App extends React.Component {
           style={styles.mapStyle} 
           onLongPress={this._makeMarker}
         >
-        {this.set}
+        {this.markers}
         </MapView>
         <DrawingTools/>
       </View>
@@ -87,34 +88,12 @@ const styles = StyleSheet.create({
     width: (Dimensions.get('window').width),
     height: (Dimensions.get('window').height) * 0.93,
   },
-  logoContainer : {
-    display : "flex",
-    justifyContent : "center",
-    alignItems : "center",
-    width : 45,
-    height : 45,
-    padding : 10,
-    backgroundColor : "hsla(44, 0%, 85%, 0.8)",
-    borderRadius : 50
-  },
-  XO : { // ordinary button
-    width : 30,
-    height : 30,
-    borderRadius : 50,
-  },
-  logo : { // ordinary button
-      width : 30,
-      height : 30,
-      borderRadius : 50,
-  },
-  DrawingButtons : {  // for the right side buttons (marker/line/Polygone ....etc.)
-      position : "absolute",
-      height: 0,
-      top : 140,
-      right : 15,
-      display : "flex",
-      flexDirection : "column",
-      justifyContent : "space-around",
-      alignItems : "center"
-  }
 });
+
+const mapStateToProps = (state) => {
+  return {
+    tool: state.toggleTool.tool
+  }
+}
+
+export default connect(mapStateToProps)(App) // connect the drawingtools component to the global state
