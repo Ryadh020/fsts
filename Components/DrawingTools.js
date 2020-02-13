@@ -33,7 +33,7 @@ class DrawingTools extends React.Component {
           styles.DrawingButtons = {  // Shrink the toolBar
             position : "absolute",
             height: 0,
-            top : 110,
+            top : 140,
             right : 15,
             display : "flex",
             flexDirection : "column",
@@ -46,8 +46,6 @@ class DrawingTools extends React.Component {
           this.setState({ toolsOpen : false });
         }  
     }
-
-    //_ShowHideButtonImage = this.state.toolsOpen? "../Images/x.png" : "../Images/brush.png" ;
     
         // change the components to put in the set array (marker/line/polygone) 
         // creat and send actions with the spicified data to the toggleToll reducer
@@ -65,6 +63,9 @@ class DrawingTools extends React.Component {
     }
 
     render() {
+          // the defalt Button image to show or hide drawingTools 
+        let ShowHideButtonImage = this.state.toolsOpen? require("../Images/x.png") : require("../Images/brush.png") ;
+          // return
         return(
           <View style={styles.DrawingButtons}>
             <TouchableOpacity onPress={this._MarkerTool} style={styles.logoContainer}>
@@ -78,7 +79,7 @@ class DrawingTools extends React.Component {
             </TouchableOpacity>
             <TouchableOpacity onPress={this._DrawingToolsToggle} style={styles.logoContainer}>
               <Image style={styles.XO} 
-                     source={require("../Images/brush.png")} 
+                     source={ShowHideButtonImage} 
               />
             </TouchableOpacity>
           </View>
