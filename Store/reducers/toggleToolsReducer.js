@@ -22,6 +22,12 @@ function toggleTool(state = initialState, action) {
           tool: action.value
         }
         return nextState || state
+      case 'disabled':
+        nextState = { 
+          ...state, 
+          tool: action.value
+        }
+        return nextState || state
       default:
       return state
     }

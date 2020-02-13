@@ -1,7 +1,7 @@
 import React from 'react';
 import  MapView  from 'react-native-maps';
 import { Marker } from 'react-native-maps';
-import { StyleSheet, Text, View, Dimensions, Button, TouchableOpacity, Image} from 'react-native';
+import { StyleSheet, View, Dimensions } from 'react-native';
 import { connect } from 'react-redux'
 
 import DrawingTools from '../Components/DrawingTools'
@@ -30,6 +30,10 @@ class App extends React.Component {
 
     // the list of markers
   markers = []
+    // the list of Lines
+  Lines = []
+    // the list of Plygones
+  Plygones = []
   
   _makeMarker(e) {
     this.latLng = e.nativeEvent.coordinate  // change the marker location to the touched one
@@ -45,7 +49,7 @@ class App extends React.Component {
       this.setState({markerNumber : this.state.markerNumber + 1})
     } else if (this.props.tool == "Line") {
             // push a new marker to the list :
-      this.markers.push(<Marker
+      this.Lines.push(<Marker
         coordinate={ { latitude: this.latLng.latitude, longitude: this.latLng.longitude, }}
         title={"Line"}
         description={"oued rhumel"}
@@ -55,7 +59,7 @@ class App extends React.Component {
       this.setState({markerNumber : this.state.markerNumber + 1})
     } else if (this.props.tool == "Polygone") {
                   // push a new marker to the list :
-      this.markers.push(<Marker
+      this.Plygones.push(<Marker
         coordinate={ { latitude: this.latLng.latitude, longitude: this.latLng.longitude, }}
         title={"Polygone"}
         description={"oued rhumel"}
@@ -76,6 +80,8 @@ class App extends React.Component {
           onLongPress={this._makeMarker}
         >
         {this.markers}
+        {this.Lines}
+        {this.Plygones}
         </MapView>
         <DrawingTools/>
       </View>

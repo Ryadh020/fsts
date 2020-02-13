@@ -6,28 +6,48 @@ class DrawingTools extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+          toolsOpen : false
         }
         this._MarkerTool = this._MarkerTool.bind(this)
         this._LineTool = this._LineTool.bind(this)
         this._PolygoneTool = this._PolygoneTool.bind(this)
 
-        this._ShowTools = this._ShowTools.bind(this)
+        this._DrawingToolsToggle = this._DrawingToolsToggle.bind(this)
     }
 
         // show the tools "drawing tools button"
-    _ShowTools() {
-        styles.DrawingButtons = {
-        position : "absolute",
-        height: 210,
-        top : 110,
-        right : 15,
-        display : "flex",
-        flexDirection : "column",
-        justifyContent : "space-around",
-        alignItems : "center",
-        }
-        this.setState({ DrawingTool : "Polygone" });
+    _DrawingToolsToggle() {
+        if(!this.state.toolsOpen) {  // if the drawing toolBar is closed 
+          styles.DrawingButtons = {  // Spand the toolBar
+            position : "absolute",
+            height: 210,
+            top : 110,
+            right : 15,
+            display : "flex",
+            flexDirection : "column",
+            justifyContent : "space-around",
+            alignItems : "center",
+          }
+          this.setState({ toolsOpen : true });  // use it to change to change the button image and detect toolBar state
+        } else if(this.state.toolsOpen) {
+          styles.DrawingButtons = {  // Shrink the toolBar
+            position : "absolute",
+            height: 0,
+            top : 110,
+            right : 15,
+            display : "flex",
+            flexDirection : "column",
+            justifyContent : "space-around",
+            alignItems : "center",
+          }
+          let action = { type: "disabled", value: "" }  // reset the globale state to disable drawing
+          this.props.dispatch(action)
+
+          this.setState({ toolsOpen : false });
+        }  
     }
+
+    //_ShowHideButtonImage = this.state.toolsOpen? "../Images/x.png" : "../Images/brush.png" ;
     
         // change the components to put in the set array (marker/line/polygone) 
         // creat and send actions with the spicified data to the toggleToll reducer
@@ -56,8 +76,10 @@ class DrawingTools extends React.Component {
             <TouchableOpacity onPress={this._PolygoneTool} style={styles.logoContainer}>
               <Image style={styles.logo} source={require("../Images/Polygone.png")} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={this._ShowTools} style={styles.logoContainer}>
-              <Image style={styles.XO} source={require("../Images/brush.png")} />
+            <TouchableOpacity onPress={this._DrawingToolsToggle} style={styles.logoContainer}>
+              <Image style={styles.XO} 
+                     source={require("../Images/brush.png")} 
+              />
             </TouchableOpacity>
           </View>
         )
