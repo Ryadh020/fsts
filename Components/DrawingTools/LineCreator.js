@@ -14,7 +14,7 @@ class LineCreator extends React.Component {
         <Marker
           coordinate={this.props.cords}
           title={"Line"}
-          description={"TEST"}
+          description={`${this.props.data}`}
         ></Marker>
       )
   }

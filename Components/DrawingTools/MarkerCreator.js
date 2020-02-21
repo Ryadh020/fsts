@@ -14,7 +14,7 @@ class MarkerCreator extends React.Component {
         <Marker
           coordinate={this.props.cords}
           title={"Marker"}
-          description={"TEST"}
+          description={`${this.props.data}`}
         ></Marker>
       )
   }

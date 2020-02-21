@@ -19,9 +19,9 @@ class App extends React.Component {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       },
-      markerNumber: 0,
-      LineNumber: 0,
-      polygoneNumber:0,  // number of markers (counter) "use it to assign keys and helps with counting"
+      markerNumber: 0,  // number of markers (counter) "use it to assign keys and helps with counting"
+      LineNumber: 0,  // number of Lines (counter) "use it to assign keys and helps with counting"
+      polygoneNumber:0,  // number of Polygones (counter) "use it to assign keys and helps with counting"
       DrawingTool : "Marker"
     }
     this._Darw = this._Darw.bind(this)
@@ -44,10 +44,10 @@ class App extends React.Component {
   _Darw(e) {
     const latLng = e.nativeEvent.coordinate  // change the marker location to the touched one
     if (this.props.tool == "Marker") {
-      this.markers.push(<MarkerCreator cords={latLng} key={"MN-" + this.state.markerNumber}></MarkerCreator>) // push a new marker to the list :
+      this.markers.push(<MarkerCreator cords={latLng} data={this.state.markerNumber} key={"MN-" + this.state.markerNumber}></MarkerCreator>) // push a new marker to the list :
       this.setState({markerNumber : this.state.markerNumber + 1}) // update the counter of markers :
     } else if (this.props.tool == "Line") {
-      this.Lines.push(<LineCreator cords={latLng} key={"MN-" + this.state.LineNumber}></LineCreator>) // push a new LIne to the list :
+      this.Lines.push(<LineCreator cords={latLng} data={this.state.LineNumber} key={"MN-" + this.state.LineNumber}></LineCreator>) // push a new LIne to the list :
       this.setState({LineNumber : this.state.LineNumber + 1}) // update the counter of Lines : *"change to lines later"
     } 
     
