@@ -1,10 +1,11 @@
 import React from 'react';
 import  MapView  from 'react-native-maps';
-import { Marker } from 'react-native-maps';
+import { Marker, Polygon  } from 'react-native-maps';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import { connect } from 'react-redux'
 
-import DrawingTools from '../Components/DrawingTools'
+import DrawingTools from '../Components/DrawingTools' // components takes in charge displaying drawing tools
+import MarkerCreator from '../Components/DrawingTools/Marker' // components takes in charge drawing markers
 
 class App extends React.Component {
 
@@ -17,16 +18,16 @@ class App extends React.Component {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       },
-      markerNumber: 0,  // number of markers (counter) "use it to assign keys and helps with counting"
+      markerNumber: 0,
+      polygoneNumber:0,  // number of markers (counter) "use it to assign keys and helps with counting"
       DrawingTool : "Marker"
     }
-    this._makeMarker = this._makeMarker.bind(this)
+    this._Darw = this._Darw.bind(this)
+    this._addNewPoint = this._addNewPoint.bind(this)
   }
 
-  latLng = {  // Marker location:
-    latitude: 36.365,
-    longitude: 6.61472,
-  }
+    // Helper location:
+  latLng = {latitude: 36.365, longitude: 6.61472}
 
     // the list of markers
   markers = []
@@ -35,40 +36,57 @@ class App extends React.Component {
     // the list of Plygones
   Plygones = []
   
-  _makeMarker(e) {
-    this.latLng = e.nativeEvent.coordinate  // change the marker location to the touched one
+    // array to contain polygone cordinates:
+  polygoneCordinates = []
+
+  _Darw(e) {
+    const latLng = e.nativeEvent.coordinate  // change the marker location to the touched one
     if (this.props.tool == "Marker") {
             // push a new marker to the list :
-      this.markers.push(<Marker
-        coordinate={ { latitude: this.latLng.latitude, longitude: this.latLng.longitude, }}
-        title={"Marker"}
-        description={"oued rhumel"}
-        key={"MN-" + this.state.markerNumber}
-      ></Marker>)
+      this.markers.push(<MarkerCreator cords={latLng} key={"MN-" + this.state.markerNumber}></MarkerCreator>)
         // update the counter of markers :
       this.setState({markerNumber : this.state.markerNumber + 1})
-    } else if (this.props.tool == "Line") {
+    } /*else if (this.props.tool == "Line") {
             // push a new marker to the list :
       this.Lines.push(<Marker
-        coordinate={ { latitude: this.latLng.latitude, longitude: this.latLng.longitude, }}
+        coordinate={latLng}
         title={"Line"}
         description={"oued rhumel"}
         key={"MN-" + this.state.markerNumber}
       ></Marker>)
             // update the counter of markers :
       this.setState({markerNumber : this.state.markerNumber + 1})
-    } else if (this.props.tool == "Polygone") {
-                  // push a new marker to the list :
-      this.Plygones.push(<Marker
-        coordinate={ { latitude: this.latLng.latitude, longitude: this.latLng.longitude, }}
-        title={"Polygone"}
-        description={"oued rhumel"}
-        key={"MN-" + this.state.markerNumber}
-      ></Marker>)
+
+
+    }*/ else if (this.props.tool == "Polygone") {
+        // set the initial polygone cordinate
+      this.polygoneCordinates = [latLng]
+
+      this.Plygones.push(
+        <Polygon 
+          coordinates={this.polygoneCordinates}
+          strokeWidth={2}
+          strokeColor={"rgba(252, 240, 0 ,1)"}
+          fillColor={"rgba(252, 97, 86 ,0.5)"}
+          tappable={true}
+          onPress={this._addNewPoint} // replace it to the mapView instead <-------:
+          key={"MN-" + this.state.polygoneNumber}
+        ></Polygon>
+      )
               // update the counter of markers :
-      this.setState({markerNumber : this.state.markerNumber + 1})
+      this.setState({markerNumber : this.state.polygoneNumber + 1}) // <-----: change it place
     }
   }
+
+  
+        //add new point cordinates to the polygone:
+    _addNewPoint(e) {  
+        // push a new cordinate to the polygone :
+      this.polygoneCordinates.push(e.nativeEvent.coordinate)
+  
+      this.setState({markerNumber : this.state.polygoneNumber + 1})
+    }
+  
 
   render() {
     return (
@@ -77,7 +95,8 @@ class App extends React.Component {
           mapType = {this.props.mapType}
           initialRegion = {this.state.region}
           style={styles.mapStyle} 
-          onLongPress={this._makeMarker}
+          onLongPress={this._Darw}
+          onPress={this._addNewPoint}
         >
         {this.markers}
         {this.Lines}
