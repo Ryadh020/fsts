@@ -5,7 +5,8 @@ import { StyleSheet, View, Dimensions } from 'react-native';
 import { connect } from 'react-redux'
 
 import DrawingTools from '../Components/DrawingTools' // components takes in charge displaying drawing tools
-import MarkerCreator from '../Components/DrawingTools/Marker' // components takes in charge drawing markers
+import MarkerCreator from '../Components/DrawingTools/MarkerCreator' // components takes in charge drawing markers
+import LineCreator from '../Components/DrawingTools/LineCreator' // components takes in charge drawing markers
 
 class App extends React.Component {
 
@@ -19,6 +20,7 @@ class App extends React.Component {
         longitudeDelta: 0.0421,
       },
       markerNumber: 0,
+      LineNumber: 0,
       polygoneNumber:0,  // number of markers (counter) "use it to assign keys and helps with counting"
       DrawingTool : "Marker"
     }
@@ -42,23 +44,14 @@ class App extends React.Component {
   _Darw(e) {
     const latLng = e.nativeEvent.coordinate  // change the marker location to the touched one
     if (this.props.tool == "Marker") {
-            // push a new marker to the list :
-      this.markers.push(<MarkerCreator cords={latLng} key={"MN-" + this.state.markerNumber}></MarkerCreator>)
-        // update the counter of markers :
-      this.setState({markerNumber : this.state.markerNumber + 1})
-    } /*else if (this.props.tool == "Line") {
-            // push a new marker to the list :
-      this.Lines.push(<Marker
-        coordinate={latLng}
-        title={"Line"}
-        description={"oued rhumel"}
-        key={"MN-" + this.state.markerNumber}
-      ></Marker>)
-            // update the counter of markers :
-      this.setState({markerNumber : this.state.markerNumber + 1})
-
-
-    }*/ else if (this.props.tool == "Polygone") {
+      this.markers.push(<MarkerCreator cords={latLng} key={"MN-" + this.state.markerNumber}></MarkerCreator>) // push a new marker to the list :
+      this.setState({markerNumber : this.state.markerNumber + 1}) // update the counter of markers :
+    } else if (this.props.tool == "Line") {
+      this.Lines.push(<LineCreator cords={latLng} key={"MN-" + this.state.LineNumber}></LineCreator>) // push a new LIne to the list :
+      this.setState({LineNumber : this.state.LineNumber + 1}) // update the counter of Lines : *"change to lines later"
+    } 
+    
+    else if (this.props.tool == "Polygone") {
         // set the initial polygone cordinate
       this.polygoneCordinates = [latLng]
 

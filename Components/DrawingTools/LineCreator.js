@@ -1,7 +1,7 @@
 import React from 'react';
 import { Marker  } from 'react-native-maps';
 
-class MarkerCreator extends React.Component {
+class LineCreator extends React.Component {
   constructor(props) {
       super(props)
       this.state = {
@@ -13,11 +13,11 @@ class MarkerCreator extends React.Component {
       return(
         <Marker
           coordinate={this.props.cords}
-          title={"Marker"}
-          description={"oued rhumel"}
+          title={"Line"}
+          description={"TEST"}
         ></Marker>
       )
   }
 }
 
-export default MarkerCreator;
+export default LineCreator;
