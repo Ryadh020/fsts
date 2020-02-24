@@ -1,12 +1,13 @@
 import React from 'react';
-import  MapView  from 'react-native-maps';
-import { Marker, Polygon  } from 'react-native-maps';
+import MapView, { MAP_TYPES, Marker, Polygon  } from 'react-native-maps';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import { connect } from 'react-redux'
 
 import DrawingTools from '../Components/DrawingTools' // components takes in charge displaying drawing tools
 import MarkerCreator from '../Components/DrawingTools/MarkerCreator' // components takes in charge drawing markers
 import LineCreator from '../Components/DrawingTools/LineCreator' // components takes in charge drawing markers
+
+let id = 0;
 
 class App extends React.Component {
 
@@ -21,11 +22,14 @@ class App extends React.Component {
       },
       markerNumber: 0,  // number of markers (counter) "use it to assign keys and helps with counting"
       LineNumber: 0,  // number of Lines (counter) "use it to assign keys and helps with counting"
-      polygoneNumber:0,  // number of Polygones (counter) "use it to assign keys and helps with counting"
+
+      polygons: [],   // to contain polygones and show them on mapping the array
+      editing: null,  // to contains polygons data
+      creatingHole: false,  // detect if a hole is on creating
+
       DrawingTool : "Marker"
     }
     this._Darw = this._Darw.bind(this)
-    this._addNewPoint = this._addNewPoint.bind(this)
   }
 
     // Helper location:
@@ -50,38 +54,85 @@ class App extends React.Component {
       this.Lines.push(<LineCreator cords={latLng} data={this.state.LineNumber} key={"MN-" + this.state.LineNumber}></LineCreator>) // push a new LIne to the list :
       this.setState({LineNumber : this.state.LineNumber + 1}) // update the counter of Lines : *"change to lines later"
     } 
-    
     else if (this.props.tool == "Polygone") {
-        // set the initial polygone cordinate
-      this.polygoneCordinates = [latLng]
-
-      this.Plygones.push(
-        <Polygon 
-          coordinates={this.polygoneCordinates}
-          strokeWidth={2}
-          strokeColor={"rgba(252, 240, 0 ,1)"}
-          fillColor={"rgba(252, 97, 86 ,0.5)"}
-          tappable={true}
-          onPress={this._addNewPoint} // replace it to the mapView instead <-------:
-          key={"MN-" + this.state.polygoneNumber}
-        ></Polygon>
-      )
-              // update the counter of markers :
-      this.setState({markerNumber : this.state.polygoneNumber + 1}) // <-----: change it place
+      const { editing, creatingHole } = this.state;
+      if (!editing) {
+        this.setState({
+          editing: {
+            id: id++,
+            coordinates: [e.nativeEvent.coordinate],
+            holes: [],
+          },
+        });
+      } else if (!creatingHole) {
+        this.setState({
+          editing: {
+            ...editing,
+            coordinates: [...editing.coordinates, e.nativeEvent.coordinate],
+          },
+        });
+      } else {
+        const holes = [...editing.holes];
+        holes[holes.length - 1] = [
+          ...holes[holes.length - 1],
+          e.nativeEvent.coordinate,
+        ];
+        this.setState({
+          editing: {
+            ...editing,
+            id: id++, // keep incrementing id to trigger display refresh
+            coordinates: [...editing.coordinates],
+            holes,
+          },
+        });
+      }
+    }
+  }
+    // finish drawing:
+  finish() {
+    const { polygons, editing } = this.state;
+    this.setState({
+      polygons: [...polygons, editing],
+      editing: null,
+      creatingHole: false,
+    });
+  }
+    // start creating a hole:
+  createHole() {
+    const { editing, creatingHole } = this.state;
+    if (!creatingHole) {
+      this.setState({
+        creatingHole: true,
+        editing: {
+          ...editing,
+          holes: [...editing.holes, []],
+        },
+      });
+    } else {
+      const holes = [...editing.holes];
+      if (holes[holes.length - 1].length === 0) {
+        holes.pop();
+        this.setState({
+          editing: {
+            ...editing,
+            holes,
+          },
+        });
+      }
+      this.setState({ creatingHole: false });
     }
   }
 
-  
-        //add new point cordinates to the polygone:
-    _addNewPoint(e) {  
-        // push a new cordinate to the polygone :
-      this.polygoneCordinates.push(e.nativeEvent.coordinate)
-  
-      this.setState({markerNumber : this.state.polygoneNumber + 1})
-    }
-  
-
   render() {
+    const mapOptions = {
+      scrollEnabled: true,
+    };
+
+    if (this.state.editing) {
+      mapOptions.scrollEnabled = false;
+      mapOptions.onPanDrag = e => this.onPress(e);
+    }
+
     return (
       <View>
         <MapView
@@ -89,11 +140,29 @@ class App extends React.Component {
           initialRegion = {this.state.region}
           style={styles.mapStyle} 
           onLongPress={this._Darw}
-          onPress={this._addNewPoint}
         >
         {this.markers}
         {this.Lines}
-        {this.Plygones}
+        {this.state.polygons.map(polygon => (
+            <Polygon
+              key={polygon.id}
+              coordinates={polygon.coordinates}
+              holes={polygon.holes}
+              strokeColor="#F00"
+              fillColor="rgba(255,0,0,0.5)"
+              strokeWidth={1}
+            />
+          ))}
+          {this.state.editing && (
+            <Polygon
+              key={this.state.editing.id}
+              coordinates={this.state.editing.coordinates}
+              holes={this.state.editing.holes}
+              strokeColor="#000"
+              fillColor="rgba(255,0,0,0.5)"
+              strokeWidth={1}
+            />
+          )}
         </MapView>
         <DrawingTools/>
       </View>

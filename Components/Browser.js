@@ -1,5 +1,6 @@
 import React from'react'
 import {View, Text, Button, StyleSheet, SafeAreaView, Image} from 'react-native'
+import { MAP_TYPES } from 'react-native-maps';
 
 import  WebMapView  from '../arcGigAPI/MapView'
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -8,14 +9,14 @@ class Browser extends React.Component {
 constructor(props) {
     super(props)
     this.state = {
-      mapType : "standart"
+      mapType : MAP_TYPES.STANDARD
     }
     this._changeLocation = this._changeLocation.bind(this)
 }
 
     // the setting function
     _changeLocation() {
-        this.setState({ mapType : "satellite" });
+        this.setState({ mapType : MAP_TYPES.SATELLITE });
       }
 
 render() {
