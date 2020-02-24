@@ -1,6 +1,6 @@
 import React from 'react';
 import MapView, { MAP_TYPES, Marker, Polygon  } from 'react-native-maps';
-import { StyleSheet, View, Dimensions } from 'react-native';
+import { StyleSheet, View, Dimensions, Text, TouchableOpacity, } from 'react-native';
 import { connect } from 'react-redux'
 
 import DrawingTools from '../Components/DrawingTools' // components takes in charge displaying drawing tools
@@ -144,26 +144,46 @@ class App extends React.Component {
         {this.markers}
         {this.Lines}
         {this.state.polygons.map(polygon => (
-            <Polygon
-              key={polygon.id}
-              coordinates={polygon.coordinates}
-              holes={polygon.holes}
-              strokeColor="#F00"
-              fillColor="rgba(255,0,0,0.5)"
-              strokeWidth={1}
-            />
-          ))}
-          {this.state.editing && (
-            <Polygon
-              key={this.state.editing.id}
-              coordinates={this.state.editing.coordinates}
-              holes={this.state.editing.holes}
-              strokeColor="#000"
-              fillColor="rgba(255,0,0,0.5)"
-              strokeWidth={1}
-            />
-          )}
+          <Polygon
+            key={polygon.id}
+            coordinates={polygon.coordinates}
+            holes={polygon.holes}
+            strokeColor="#F00"
+            fillColor="rgba(255,0,0,0.5)"
+            strokeWidth={1}
+          />
+        ))}
+        {this.state.editing && (
+          <Polygon
+            key={this.state.editing.id}
+            coordinates={this.state.editing.coordinates}
+            holes={this.state.editing.holes}
+            strokeColor="#000"
+            fillColor="rgba(255,0,0,0.5)"
+            strokeWidth={1}
+          />
+        )}
         </MapView>
+        <View style={styles.buttonContainer}>
+          {this.state.editing && (
+            <TouchableOpacity
+              onPress={() => this.createHole()}
+              style={[styles.bubble, styles.button]}
+            >
+              <Text>
+                {this.state.creatingHole ? 'Finish Hole' : 'Create Hole'}
+              </Text>
+            </TouchableOpacity>
+          )}
+          {this.state.editing && (
+            <TouchableOpacity
+              onPress={() => this.finish()}
+              style={[styles.bubble, styles.button]}
+            >
+              <Text>Finish</Text>
+            </TouchableOpacity>
+          )}
+        </View>
         <DrawingTools/>
       </View>
     );
@@ -174,6 +194,24 @@ const styles = StyleSheet.create({
   mapStyle: {
     width: (Dimensions.get('window').width),
     height: (Dimensions.get('window').height) * 0.93,
+  },
+
+  bubble: {
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    borderRadius: 20,
+  },
+  button: {
+    width: 80,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    marginHorizontal: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    marginVertical: 20,
+    backgroundColor: 'transparent',
   },
 });
 
