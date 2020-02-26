@@ -3,9 +3,10 @@ import MapView, { MAP_TYPES, Marker, Polygon  } from 'react-native-maps';
 import { StyleSheet, View, Dimensions, Text, TouchableOpacity, } from 'react-native';
 import { connect } from 'react-redux'
 
-import DrawingTools from '../Components/DrawingTools' // components takes in charge displaying drawing tools
-import MarkerCreator from '../Components/DrawingTools/MarkerCreator' // components takes in charge drawing markers
-import LineCreator from '../Components/DrawingTools/LineCreator' // components takes in charge drawing markers
+import DrawingTools from '../Components/DrawingTools' // components takes in charge displaying drawing tools.
+import MarkerCreator from '../Components/DrawingTools/MarkerCreator' // components takes in charge drawing markers.
+import LineCreator from '../Components/DrawingTools/LineCreator' // components takes in charge drawing markers.
+import Data from "../Components/DataForm" // a table to put data about the marker/line/polygone.
 
 let id = 0;
 
@@ -185,6 +186,7 @@ class App extends React.Component {
           )}
         </View>
         <DrawingTools/>
+        <Data/>
       </View>
     );
   }
@@ -195,7 +197,12 @@ const styles = StyleSheet.create({
     width: (Dimensions.get('window').width),
     height: (Dimensions.get('window').height) * 0.93,
   },
-
+  buttonContainer: {
+    position: "absolute",
+    flexDirection: 'row',
+    marginVertical: 20,
+    backgroundColor: 'transparent',
+  },
   bubble: {
     backgroundColor: 'rgba(255,255,255,0.7)',
     paddingHorizontal: 18,
@@ -207,11 +214,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     alignItems: 'center',
     marginHorizontal: 10,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    marginVertical: 20,
-    backgroundColor: 'transparent',
   },
 });
 
