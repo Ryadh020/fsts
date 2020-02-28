@@ -7,42 +7,66 @@ class Data extends React.Component {
         super(props)
         this.state = {
           n:0,
+          data : [],
+          editing:{},
+
+          dataPopedUp: false, // detect if the show data cliked or none
         }
+        this._updateData = this._updateData.bind(this)
     }
 
-    // data object:
-    data = {
-      hauteur : "4",
-      etat : "bon"
+    // data when editing the table form:
+    editing = {
+      hauteur : "",
+      etat : ""
     }
+
+    // all the data:
+    data =[]
 
     // push data to the table:
+    _updateData() {
+      this.data.push(this.editing);
 
+
+      this.setState({n : 1})
+    }
+
+    _popOutput() {
+      if (this.state.dataPopedUp) {
+        return(
+          <View style={styles.output}>
+            <Text>{this.editing.hauteur}</Text>
+            <Text>{this.editing.etat}</Text>
+          </View>
+        )
+      }
+    }
 
     render() {
       return(
         <View style={styles.dataContainer}>
           
-          <View style={styles.output}>
-            <Text>{this.data.hauteur}</Text>
-            <Text>{this.data.etat}</Text>
-          </View>
+          {this._popOutput()}
 
           <View style={styles.table}>
             <TextInput
               style={styles.input}
-              placeholder={"tap"}
-              onChangeText={e => this.data.hauteur = e}
+              placeholder={"tappez la hauteur de la construction"}
+              onChangeText={e => this.editing.hauteur = e}
             ></TextInput>
             <TextInput
               style={styles.input}
-              placeholder={"tap"}
-              onChangeText={e => this.data.etat = e}
+              placeholder={"tappez son etat"}
+              onChangeText={e => this.editing.etat = e}
             ></TextInput>
 
             <Button
-              onPress={()=> this.setState({n : 2})}
+              onPress={this._updateData}
             >submit</Button>
+            <Button
+              onPress={() => this.setState({dataPopedUp : true})}
+            >showData</Button>
           </View>
         </View>
 
