@@ -26,10 +26,10 @@ class Data extends React.Component {
     }
 
     _popOutput() {
-      if (this.state.dataPopedUp) {
+      if (this.state.dataPopedUp && this.data.length >0) {
         return(
           <View style={styles.output}>
-            <Text>{this.data[0].hauteur}</Text>
+            <Text>R+{this.data[0].hauteur}</Text>   
             <Text>{this.data[0].etat}</Text>
           </View>
         )
