@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
       display : "flex",
       flexDirection : "column",
       justifyContent : "space-around",
-      alignItems : "center"
+      alignItems : "center",
     },
     logoContainer : {
       display : "flex",

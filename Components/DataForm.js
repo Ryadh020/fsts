@@ -1,34 +1,48 @@
 import React from "react"
 import {View, Text, StyleSheet, Dimensions, TextInput} from "react-native"
+import { Button } from "react-native-paper";
 
 class Data extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-          input : "test",
+          n:0,
         }
     }
 
+    // data object:
+    data = {
+      hauteur : "4",
+      etat : "bon"
+    }
 
-    
+    // push data to the table:
+
+
     render() {
       return(
         <View style={styles.dataContainer}>
           
           <View style={styles.output}>
-            <Text>{this.state.input}</Text>
-            <Text>{this.state.input}</Text>
+            <Text>{this.data.hauteur}</Text>
+            <Text>{this.data.etat}</Text>
           </View>
 
           <View style={styles.table}>
             <TextInput
               style={styles.input}
-              placeholder={"test"}
+              placeholder={"tap"}
+              onChangeText={e => this.data.hauteur = e}
             ></TextInput>
             <TextInput
               style={styles.input}
-              placeholder={"test"}
+              placeholder={"tap"}
+              onChangeText={e => this.data.etat = e}
             ></TextInput>
+
+            <Button
+              onPress={()=> this.setState({n : 2})}
+            >submit</Button>
           </View>
         </View>
 
@@ -47,7 +61,7 @@ const styles = StyleSheet.create({
   },
   table: {
     position: "absolute",
-    top: (Dimensions.get('window').height) * 0.5,
+    top: (Dimensions.get('window').height) * 0.3,
     left: (Dimensions.get('window').height) * 0.025,
     width: (Dimensions.get('window').width) * 0.9,
     height: (Dimensions.get('window').height) * 0.4,
@@ -67,7 +81,7 @@ const styles = StyleSheet.create({
   },
   output: {
     position: "absolute",
-    top: (Dimensions.get('window').height) * 0.25,
+    top: (Dimensions.get('window').height) * 0.05,
     left: (Dimensions.get('window').height) * 0.025,
     width: (Dimensions.get('window').width) * 0.9,
     height: (Dimensions.get('window').height) * 0.2,
