@@ -6,10 +6,6 @@ class Data extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-          n:0,
-          data : [],
-          editing:{},
-
           dataPopedUp: false, // detect if the show data cliked or none
         }
         this._updateData = this._updateData.bind(this)
@@ -27,17 +23,14 @@ class Data extends React.Component {
     // push data to the table:
     _updateData() {
       this.data.push(this.editing);
-
-
-      this.setState({n : 1})
     }
 
     _popOutput() {
       if (this.state.dataPopedUp) {
         return(
           <View style={styles.output}>
-            <Text>{this.editing.hauteur}</Text>
-            <Text>{this.editing.etat}</Text>
+            <Text>{this.data[0].hauteur}</Text>
+            <Text>{this.data[0].etat}</Text>
           </View>
         )
       }
