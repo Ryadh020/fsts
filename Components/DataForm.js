@@ -1,6 +1,7 @@
 import React from "react"
 import {View, Text, StyleSheet, Dimensions, TextInput} from "react-native"
 import { Button } from "react-native-paper";
+import { connect } from 'react-redux'
 
 class Data extends React.Component {
     constructor(props){
@@ -36,12 +37,9 @@ class Data extends React.Component {
       }
     }
 
-    render() {
-      return(
-        <View style={styles.dataContainer}>
-          
-          {this._popOutput()}
-
+    _inputTable() {
+      if(this.props.clicked) {
+        return(
           <View style={styles.table}>
             <TextInput
               style={styles.input}
@@ -61,6 +59,17 @@ class Data extends React.Component {
               onPress={() => this.setState({dataPopedUp : true})}
             >showData</Button>
           </View>
+        )
+      }
+    }
+
+    render() {
+      return(
+        <View style={styles.dataContainer}>
+          
+          {this._popOutput()}
+          {this._inputTable()}
+
         </View>
 
       )
@@ -111,4 +120,11 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Data
+const mapStateToProps = (state) => {
+  return {
+    tool: state.toggleTool.tool,
+    clicked: state.showTable.clicked,
+  }
+}
+
+export default connect(mapStateToProps)(Data) // connect the drawingtools component to the global state

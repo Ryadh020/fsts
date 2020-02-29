@@ -51,6 +51,10 @@ class App extends React.Component {
     if (this.props.tool == "Marker") {
       this.markers.push(<MarkerCreator cords={latLng} data={this.state.markerNumber} key={"MN-" + this.state.markerNumber}></MarkerCreator>) // push a new marker to the list :
       this.setState({markerNumber : this.state.markerNumber + 1}) // update the counter of markers :
+        // set global state to true (marker is clicked):
+      let action = { type: "MarkerClicked", value: "Marker" }
+      this.props.dispatch(action)
+
     } else if (this.props.tool == "Line") {
       this.Lines.push(<LineCreator cords={latLng} data={this.state.LineNumber} key={"MN-" + this.state.LineNumber}></LineCreator>) // push a new LIne to the list :
       this.setState({LineNumber : this.state.LineNumber + 1}) // update the counter of Lines : *"change to lines later"
@@ -219,7 +223,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return {
-    tool: state.toggleTool.tool
+    tool: state.toggleTool.tool,
+    clicked: state.showTable.clicked,
   }
 }
 
