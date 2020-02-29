@@ -40,6 +40,8 @@ class Data extends React.Component {
             <Text>{this.markersdata[0].etat}</Text>
           </View>
         )
+      } else if(!this.props.Choosed){
+        return;
       }
     }
 

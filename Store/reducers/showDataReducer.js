@@ -4,22 +4,17 @@ const initialState = { shoosed : false/*, id */}  // the number of the selected 
 function showData(state = initialState, action) {
     let nextState
     switch (action.type) {
-      case 'MarkerChoosed':
+      case 'ShapeFocused':
         nextState = { 
           ...state, 
           shoosed : true,
           //id : action.value,  // make the clicked to false to detect that the marker is clicked 
         }
         return nextState || state
-      case 'LineChoosed':
+      case 'shapeBlured':
         nextState = {
           ...state,
-          //id : action.value,
-        }
-        return nextState || state
-      case 'PolygoneChoosed':
-        nextState = {
-          ...state,
+          shoosed : false,
           //id : action.value,
         }
         return nextState || state

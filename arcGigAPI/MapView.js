@@ -4,7 +4,6 @@ import { StyleSheet, View, Dimensions, Text, TouchableOpacity, } from 'react-nat
 import { connect } from 'react-redux'
 
 import DrawingTools from '../Components/DrawingTools' // components takes in charge displaying drawing tools.
-import MarkerCreator from '../Components/DrawingTools/MarkerCreator' // components takes in charge drawing markers.
 import LineCreator from '../Components/DrawingTools/LineCreator' // components takes in charge drawing markers.
 import Data from "../Components/DataForm" // a table to put data about the marker/line/polygone.
 
@@ -47,19 +46,30 @@ class App extends React.Component {
   polygoneCordinates = []
 
     // pop up marker data on cliking the marker:
-  _showMarkerData() {
+  _shapeFocused() {
     // get the key of the component
 
     // send the component key to the global state:
-    let action = { type: "MarkerChoosed"/*, value: {componentKey}*/}
+    let action = { type: "ShapeFocused"/*, value: {componentKey}*/}
+    this.props.dispatch(action)
+  }
+
+  _HideDataTable() {
+    let action = { type: "shapeBlured"}
     this.props.dispatch(action)
   }
 
   _Darw(e) {
     const latLng = e.nativeEvent.coordinate  // change the marker location to the touched one
     if (this.props.tool == "Marker") {
-      this.markers.push(<MarkerCreator onPress={() => this._showMarkerData()} cords={latLng} data={this.state.markerNumber} key={"MN-" + this.state.markerNumber}></MarkerCreator>) // push a new marker to the list :
-      this.setState({markerNumber : this.state.markerNumber + 1}) // update the counter of markers :
+        // push a new marker to the list :
+      this.markers.push(<Marker 
+                          onPress={()=> this._shapeFocused()} 
+                          coordinate={latLng} data={this.state.markerNumber} 
+                          key={"MN-" + this.state.markerNumber}
+                        ></Marker>)
+         // update the counter of markers :
+      this.setState({markerNumber : this.state.markerNumber + 1})
         // set global state to true (marker is clicked):
       let action = { type: "MarkerClicked"}
       this.props.dispatch(action)
@@ -154,6 +164,7 @@ class App extends React.Component {
           initialRegion = {this.state.region}
           style={styles.mapStyle} 
           onLongPress={this._Darw}
+          onPress={() => this._HideDataTable()}
         >
         {this.markers}
         {this.Lines}
