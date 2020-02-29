@@ -50,7 +50,7 @@ class App extends React.Component {
     // get the key of the component
 
     // send the component key to the global state:
-    let action = { type: "ShapeFocused"/*, value: {componentKey}*/}
+    let action = { type: "ShapeFocused", value: this.state.markerNumber}
     this.props.dispatch(action)
   }
 
