@@ -1,4 +1,4 @@
-const initialState = { clicked : false }  // detect if the drawing tool is cliked
+const initialState = { clicked : false}  // detect if the drawing tool is cliked
 
   // change the state to the spicified one of the the tools
 function showTable(state = initialState, action) {
@@ -7,7 +7,13 @@ function showTable(state = initialState, action) {
       case 'MarkerClicked':
         nextState = { 
           ...state, 
-          clicked : true  // make the clicked to false to detect that the marker is clicked 
+          clicked : true,  // make the clicked to false to detect that the marker is clicked 
+        }
+        return nextState || state
+      case 'MarkerSubmited':
+        nextState = { 
+            ...state, 
+            clicked : false,  // make the clicked to false to detect that the marker is clicked 
         }
         return nextState || state
       case 'LineClicked':

@@ -7,7 +7,7 @@ class Data extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-          dataPopedUp: false, // detect if the show data cliked or none
+          
         }
         this._updateData = this._updateData.bind(this)
     }
@@ -24,10 +24,12 @@ class Data extends React.Component {
     // push data to the table:
     _updateData() {
       this.data.push(this.editing);
+      let action = { type: "MarkerSubmited"}
+      this.props.dispatch(action)
     }
 
     _popOutput() {
-      if (this.state.dataPopedUp && this.data.length >0) {
+      if (this.props.Choosed) {
         return(
           <View style={styles.output}>
             <Text>R+{this.data[0].hauteur}</Text>   
@@ -55,9 +57,6 @@ class Data extends React.Component {
             <Button
               onPress={this._updateData}
             >submit</Button>
-            <Button
-              onPress={() => this.setState({dataPopedUp : true})}
-            >showData</Button>
           </View>
         )
       }
@@ -124,6 +123,8 @@ const mapStateToProps = (state) => {
   return {
     tool: state.toggleTool.tool,
     clicked: state.showTable.clicked,
+    Choosed: state.showData.shoosed,
+    id: state.showData.id,
   }
 }
 
