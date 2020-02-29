@@ -51,14 +51,14 @@ class App extends React.Component {
     // get the key of the component
 
     // send the component key to the global state:
-    let action = { type: "MarkerChoosed", value: {componentKey}}
+    let action = { type: "MarkerChoosed"/*, value: {componentKey}*/}
     this.props.dispatch(action)
   }
 
   _Darw(e) {
     const latLng = e.nativeEvent.coordinate  // change the marker location to the touched one
     if (this.props.tool == "Marker") {
-      this.markers.push(<MarkerCreator onPress={() => this._showData()} cords={latLng} data={this.state.markerNumber} key={"MN-" + this.state.markerNumber}></MarkerCreator>) // push a new marker to the list :
+      this.markers.push(<MarkerCreator onPress={() => this._showMarkerData()} cords={latLng} data={this.state.markerNumber} key={"MN-" + this.state.markerNumber}></MarkerCreator>) // push a new marker to the list :
       this.setState({markerNumber : this.state.markerNumber + 1}) // update the counter of markers :
         // set global state to true (marker is clicked):
       let action = { type: "MarkerClicked"}
@@ -198,8 +198,8 @@ class App extends React.Component {
             </TouchableOpacity>
           )}
         </View>
-        <DrawingTools/>
         <Data/>
+        <DrawingTools/>
       </View>
     );
   }

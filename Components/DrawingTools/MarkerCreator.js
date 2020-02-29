@@ -12,6 +12,7 @@ class MarkerCreator extends React.Component {
   render() {
       return(
         <Marker
+          onPress={this.props.onPress}
           coordinate={this.props.cords}
           title={"Marker"}
           description={`${this.props.data}`}

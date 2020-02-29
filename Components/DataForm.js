@@ -7,7 +7,7 @@ class Data extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-          
+          pushed:0,
         }
         this._updateData = this._updateData.bind(this)
     }
@@ -19,21 +19,25 @@ class Data extends React.Component {
     }
 
     // all the data:
-    data =[]
+    markersdata =[]
 
     // push data to the table:
     _updateData() {
-      this.data.push(this.editing);
+      this.markersdata.push(this.editing);
+
+        // hide the dataTable:
       let action = { type: "MarkerSubmited"}
       this.props.dispatch(action)
     }
 
-    _popOutput() {
+    
+
+    componentDidMount() {           // pop up the data of the choosed shape
       if (this.props.Choosed) {
         return(
           <View style={styles.output}>
-            <Text>R+{this.data[0].hauteur}</Text>   
-            <Text>{this.data[0].etat}</Text>
+            <Text>R+{this.markersdata[0].hauteur}</Text>
+            <Text>{this.markersdata[0].etat}</Text>
           </View>
         )
       }
@@ -66,7 +70,7 @@ class Data extends React.Component {
       return(
         <View style={styles.dataContainer}>
           
-          {this._popOutput()}
+          {this.componentDidMount()}
           {this._inputTable()}
 
         </View>
