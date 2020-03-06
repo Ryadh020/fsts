@@ -27,6 +27,8 @@ class Data extends React.Component {
       const { markersdata } = this.state;
 
       this.setState({markersdata : [...markersdata, this.state.editing]})
+        // refresh the data after subbmitting
+      this.setState({editing : {}})
 
       //this.markersdata.push(this.state.editing);
 
@@ -61,7 +63,7 @@ class Data extends React.Component {
             <TextInput
               style={styles.input}
               placeholder={"tappez la hauteur de la construction"}
-              onChangeText={e => this.setState({editing : {...editing, hauteur : e} })}
+              onChangeText={e => {this.setState({editing : {...editing, hauteur : e} })} }
             ></TextInput>
             <TextInput
               style={styles.input}
