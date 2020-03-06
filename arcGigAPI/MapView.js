@@ -20,7 +20,7 @@ class App extends React.Component {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       },
-      markerNumber: -1,  // number of markers (counter) "use it to assign keys and helps with counting"
+      markerNumber: 0,  // number of markers (counter) "use it to assign keys and helps with counting"
       LineNumber: 0,  // number of Lines (counter) "use it to assign keys and helps with counting"
 
       polygons: [],   // to contain polygones and show them on mapping the array
@@ -49,10 +49,8 @@ class App extends React.Component {
   
     // pop up marker data on cliking the marker:
   _shapeFocused(id) {
-    //get the key of the component
-    let key = id;
     // send the component key to the global state:
-    let action = { type: "ShapeFocused", value: key}
+    let action = { type: "ShapeFocused", value: id}
     this.props.dispatch(action)
   }
 
@@ -61,16 +59,10 @@ class App extends React.Component {
     this.props.dispatch(action)
   }
 
-  /*<Marker 
-                          onPress={(event)=> this._shapeFocused(event) } 
-                          coordinate={latLng} data={this.state.markerNumber} 
-                          key={"MN-" + this.state.markerNumber}
-                        ></Marker>*/
-                        
   _Darw(e) {
     const latLng = e.nativeEvent.coordinate  // change the marker location to the touched one
     if (this.props.tool == "Marker") {
-        // push a new marker to the list :
+        // push a new marker data to the list :
       this.markers.push(
                          {latiLngi : latLng,
                           key : this.state.markerNumber
@@ -87,6 +79,8 @@ class App extends React.Component {
       this.Lines.push(<LineCreator cords={latLng} data={this.state.LineNumber} key={"MN-" + this.state.LineNumber}></LineCreator>) // push a new LIne to the list :
       this.setState({LineNumber : this.state.LineNumber + 1}) // update the counter of Lines : *"change to lines later"
     } 
+
+
     else if (this.props.tool == "Polygone") {
       const { editing, creatingHole } = this.state;
       if (!editing) {

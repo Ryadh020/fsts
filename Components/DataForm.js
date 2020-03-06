@@ -3,27 +3,32 @@ import {View, Text, StyleSheet, Dimensions, TextInput} from "react-native"
 import { Button } from "react-native-paper";
 import { connect } from 'react-redux'
 
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
+
 class Data extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-          pushed:0,
+          editing : {},  // to store live data when filling inputs
+          markersdata : []
         }
         this._updateData = this._updateData.bind(this)
     }
 
     // data when editing the table form:
-    editing = {
-      hauteur : "",
-      etat : ""
-    }
+
 
     // all the data:
-    markersdata =[]
+    
 
     // push data to the table:
     _updateData() {
-      this.markersdata.push(this.editing);
+      const { markersdata } = this.state;
+
+      this.setState({markersdata : [...markersdata, this.state.editing]})
+
+      //this.markersdata.push(this.state.editing);
 
         // hide the dataTable:
       let action = { type: "MarkerSubmited"}
@@ -34,12 +39,15 @@ class Data extends React.Component {
 
     componentDidMount() {           // pop up the data of the choosed shape
       if (this.props.Choosed) {
-        return(
-          <View style={styles.output}>
-            <Text>R+{this.props.id}</Text>
-            <Text>{this.props.id}</Text>
-          </View>
-        )
+       // this.markersdata.map(index => {
+          return(
+            <View style={styles.output}>
+              <Text>R+{this.state.markersdata[this.props.id].hauteur}</Text>
+              <Text>{this.state.markersdata[this.props.id].etat}</Text>
+            </View>
+          )
+       // })
+
       } else if(!this.props.Choosed){
         return;
       }
@@ -47,17 +55,18 @@ class Data extends React.Component {
 
     _inputTable() {
       if(this.props.clicked) {
+        const { editing } = this.state;
         return(
           <View style={styles.table}>
             <TextInput
               style={styles.input}
               placeholder={"tappez la hauteur de la construction"}
-              onChangeText={e => this.editing.hauteur = e}
+              onChangeText={e => this.setState({editing : {...editing, hauteur : e} })}
             ></TextInput>
             <TextInput
               style={styles.input}
               placeholder={"tappez son etat"}
-              onChangeText={e => this.editing.etat = e}
+              onChangeText={e => this.setState({editing : {...editing, etat : e} })}
             ></TextInput>
 
             <Button
@@ -84,18 +93,18 @@ class Data extends React.Component {
 const styles = StyleSheet.create({
   dataContainer: {
     position: "absolute",
-    width: (Dimensions.get('window').width) ,
-    height: (Dimensions.get('window').height),
+    width: (width) ,
+    height: (height),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
   },
   table: {
     position: "absolute",
-    top: (Dimensions.get('window').height) * 0.3,
-    left: (Dimensions.get('window').height) * 0.025,
-    width: (Dimensions.get('window').width) * 0.9,
-    height: (Dimensions.get('window').height) * 0.4,
+    top: (height) * 0.3,
+    left: (height) * 0.025,
+    width: (width) * 0.9,
+    height: (height) * 0.4,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -104,7 +113,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   input: {
-      width: (Dimensions.get('window').width) * 0.7,
+      width: (width) * 0.7,
       height:45,
       borderColor: 'gray', 
       borderWidth: 1 ,
@@ -112,10 +121,10 @@ const styles = StyleSheet.create({
   },
   output: {
     position: "absolute",
-    top: (Dimensions.get('window').height) * 0.05,
-    left: (Dimensions.get('window').height) * 0.025,
-    width: (Dimensions.get('window').width) * 0.9,
-    height: (Dimensions.get('window').height) * 0.2,
+    top: (height) * 0.05,
+    left: (height) * 0.025,
+    width: (width) * 0.9,
+    height: (height) * 0.2,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
