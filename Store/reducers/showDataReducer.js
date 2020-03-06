@@ -1,4 +1,4 @@
-const initialState = { shoosed : false, id }  // the number of the selected shape
+const initialState = { shoosed : false, id : 0 }  // the number of the selected shape
 
   // change the state to the spicified one of the the tools
 function showData(state = initialState, action) {

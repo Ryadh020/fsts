@@ -37,7 +37,7 @@ class Data extends React.Component {
         return(
           <View style={styles.output}>
             <Text>R+{this.props.id}</Text>
-            <Text>{this.markersdata[0].etat}</Text>
+            <Text>{this.props.id}</Text>
           </View>
         )
       } else if(!this.props.Choosed){

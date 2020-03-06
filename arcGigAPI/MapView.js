@@ -20,14 +20,14 @@ class App extends React.Component {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       },
-      markerNumber: 0,  // number of markers (counter) "use it to assign keys and helps with counting"
+      markerNumber: -1,  // number of markers (counter) "use it to assign keys and helps with counting"
       LineNumber: 0,  // number of Lines (counter) "use it to assign keys and helps with counting"
 
       polygons: [],   // to contain polygones and show them on mapping the array
       editing: null,  // to contains polygons data
       creatingHole: false,  // detect if a hole is on creating
 
-      DrawingTool : "Marker"
+      //DrawingTool : "Marker"
     }
     this._Darw = this._Darw.bind(this)
   }
@@ -39,18 +39,20 @@ class App extends React.Component {
   markers = []
     // the list of Lines
   Lines = []
+  
     // the list of Plygones
   Plygones = []
   
     // array to contain polygone cordinates:
   polygoneCordinates = []
 
+  
     // pop up marker data on cliking the marker:
-  _shapeFocused() {
-    // get the key of the component
-
+  _shapeFocused(e) {
+    //get the key of the component
+    let key = "e.props.value";
     // send the component key to the global state:
-    let action = { type: "ShapeFocused", value: this.state.markerNumber}
+    let action = { type: "ShapeFocused", value: key}
     this.props.dispatch(action)
   }
 
@@ -59,20 +61,27 @@ class App extends React.Component {
     this.props.dispatch(action)
   }
 
+  /*<Marker 
+                          onPress={(event)=> this._shapeFocused(event) } 
+                          coordinate={latLng} data={this.state.markerNumber} 
+                          key={"MN-" + this.state.markerNumber}
+                        ></Marker>*/
+                        
   _Darw(e) {
     const latLng = e.nativeEvent.coordinate  // change the marker location to the touched one
     if (this.props.tool == "Marker") {
         // push a new marker to the list :
-      this.markers.push(<Marker 
-                          onPress={()=> this._shapeFocused()} 
-                          coordinate={latLng} data={this.state.markerNumber} 
-                          key={"MN-" + this.state.markerNumber}
-                        ></Marker>)
+      this.markers.push(
+                         {latiLngi : latLng,
+                          key : this.state.markerNumber
+                        }
+                       )
          // update the counter of markers :
       this.setState({markerNumber : this.state.markerNumber + 1})
         // set global state to true (marker is clicked):
       let action = { type: "MarkerClicked"}
       this.props.dispatch(action)
+
 
     } else if (this.props.tool == "Line") {
       this.Lines.push(<LineCreator cords={latLng} data={this.state.LineNumber} key={"MN-" + this.state.LineNumber}></LineCreator>) // push a new LIne to the list :
@@ -166,8 +175,26 @@ class App extends React.Component {
           onLongPress={this._Darw}
           onPress={() => this._HideDataTable()}
         >
-        {this.markers}
+
+
+        {this.markers.map(index =>(
+          <Marker
+            onPress={(event)=> this._shapeFocused(event) } 
+            coordinate={index.latiLngi}
+            key={"MN-" + index.key}
+          >
+
+          </Marker>
+        ))}
+
+
+        
+
+
         {this.Lines}
+
+
+
         {this.state.polygons.map(polygon => (
           <Polygon
             key={polygon.id}
@@ -178,6 +205,10 @@ class App extends React.Component {
             strokeWidth={1}
           />
         ))}
+
+
+
+
         {this.state.editing && (
           <Polygon
             key={this.state.editing.id}
