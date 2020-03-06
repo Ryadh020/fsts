@@ -48,9 +48,9 @@ class App extends React.Component {
 
   
     // pop up marker data on cliking the marker:
-  _shapeFocused(e) {
+  _shapeFocused(id) {
     //get the key of the component
-    let key = "e.props.value";
+    let key = id;
     // send the component key to the global state:
     let action = { type: "ShapeFocused", value: key}
     this.props.dispatch(action)
@@ -179,11 +179,10 @@ class App extends React.Component {
 
         {this.markers.map(index =>(
           <Marker
-            onPress={(event)=> this._shapeFocused(event) } 
+            onPress={()=> this._shapeFocused(index.key) } 
             coordinate={index.latiLngi}
             key={"MN-" + index.key}
           >
-
           </Marker>
         ))}
 
