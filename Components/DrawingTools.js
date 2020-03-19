@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
       width : 45,
       height : 45,
       padding : 10,
-      backgroundColor : "hsla(44, 0%, 85%, 0.8)",
+      backgroundColor: 'rgba(255,255,255,0.7)',
       borderRadius : 50
     },
     xoContainer : {

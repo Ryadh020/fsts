@@ -51,12 +51,17 @@ class Data extends React.Component {
           <View style={styles.table}>
             <TextInput
               style={styles.input}
-              placeholder={"tappez la hauteur de la construction"}
+              placeholder={"hauteur de la construction"}
               onChangeText={e => {this.setState({editing : {...editing, hauteur : e} })} }
             ></TextInput>
             <TextInput
               style={styles.input}
-              placeholder={"tappez son etat"}
+              placeholder={"etat de la construction"}
+              onChangeText={e => this.setState({editing : {...editing, etat : e} })}
+            ></TextInput>
+            <TextInput
+              style={styles.input}
+              placeholder={"Détails"}
               onChangeText={e => this.setState({editing : {...editing, etat : e} })}
             ></TextInput>
 
@@ -92,15 +97,15 @@ const styles = StyleSheet.create({
   },
   table: {
     position: "absolute",
-    top: (height) * 0.3,
-    left: (height) * 0.025,
-    width: (width) * 0.9,
-    height: (height) * 0.4,
+    top: (height) * 0.5,
+    left: (height) * 0.06,
+    width: (width) * 0.75,
+    height: (height) * 0.25,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
 
-    backgroundColor: "red",
+    backgroundColor: 'rgba(255,255,255,0.7)',
     borderRadius: 20,
   },
   input: {
