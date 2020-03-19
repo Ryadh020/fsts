@@ -212,12 +212,22 @@ class App extends React.Component {
         <View style={styles.buttonContainer}>
           {this.state.editing && (
             <TouchableOpacity
+              style={[styles.bubble, styles.button]}
+            >
+            <Image 
+              style={{width: 30, height: 30}} 
+              source={require("../Images/back.png")}
+            />
+          </TouchableOpacity>
+          )}
+          {this.state.editing && (
+            <TouchableOpacity
               onPress={() => this.createHole()}
               style={[styles.bubble, styles.button]}
             >     
               <Image 
-                style={{width: 45, height: 45}} 
                 source={this.state.creatingHole ? require("../Images/finish_hole.png") : require("../Images/hole.png")} 
+                style={{width: 35, height: 35}}
               />
             </TouchableOpacity>
           )}
@@ -227,8 +237,8 @@ class App extends React.Component {
               style={[styles.bubble, styles.button]}
             >
               <Image 
-                style={{width: 45, height: 45}} 
                 source={require("../Images/done.png")} 
+                style={{width: 30, height: 30}}
               />
             </TouchableOpacity>
           )}
@@ -247,12 +257,14 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     position: "absolute",
+    bottom: 35,
+    left: 55,
     flexDirection: 'row',
     marginVertical: 20,
-    backgroundColor: 'transparent',
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    borderRadius: 20
   },
   bubble: {
-    backgroundColor: 'rgba(255,255,255,0.7)',
     paddingHorizontal: 18,
     paddingVertical: 12,
     borderRadius: 20,
