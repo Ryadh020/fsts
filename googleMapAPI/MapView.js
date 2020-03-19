@@ -1,13 +1,12 @@
 import React from 'react';
-import MapView, { MAP_TYPES, Marker, Polygon  } from 'react-native-maps';
-import { StyleSheet, View, Dimensions, Text, TouchableOpacity, } from 'react-native';
+import MapView, { Marker, Polygon  } from 'react-native-maps';
+import { StyleSheet, View, Dimensions, Text, TouchableOpacity, Image} from 'react-native';
 import { connect } from 'react-redux'
 
 import DrawingTools from '../Components/DrawingTools' // components takes in charge displaying drawing tools.
-import LineCreator from '../Components/DrawingTools/LineCreator' // components takes in charge drawing markers.
 import Data from "../Components/DataForm" // a table to put data about the marker/line/polygone.
 
-let id = 0;
+let id = 0; // for polgones counting
 
 class App extends React.Component {
 
@@ -39,9 +38,6 @@ class App extends React.Component {
   markers = []
     // the list of Lines
   Lines = []
-  
-    // the list of Plygones
-  Plygones = []
   
     // array to contain polygone cordinates:
   polygoneCordinates = []
@@ -218,10 +214,11 @@ class App extends React.Component {
             <TouchableOpacity
               onPress={() => this.createHole()}
               style={[styles.bubble, styles.button]}
-            >
-              <Text>
-                {this.state.creatingHole ? 'Finish Hole' : 'Create Hole'}
-              </Text>
+            >     
+              <Image 
+                style={{width: 45, height: 45}} 
+                source={this.state.creatingHole ? require("../Images/finish_hole.png") : require("../Images/hole.png")} 
+              />
             </TouchableOpacity>
           )}
           {this.state.editing && (
@@ -229,7 +226,10 @@ class App extends React.Component {
               onPress={() => this.finish()}
               style={[styles.bubble, styles.button]}
             >
-              <Text>Finish</Text>
+              <Image 
+                style={{width: 45, height: 45}} 
+                source={require("../Images/done.png")} 
+              />
             </TouchableOpacity>
           )}
         </View>

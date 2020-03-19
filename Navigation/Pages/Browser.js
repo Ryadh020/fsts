@@ -2,7 +2,7 @@ import React from'react'
 import {View, Text, Button, StyleSheet, SafeAreaView, Image} from 'react-native'
 import { MAP_TYPES } from 'react-native-maps';
 
-import  WebMapView  from '../arcGigAPI/MapView'
+import  WebMapView  from '../../googleMapAPI/MapView'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 class Browser extends React.Component {
@@ -11,11 +11,11 @@ constructor(props) {
     this.state = {
       mapType : MAP_TYPES.STANDARD
     }
-    this._changeLocation = this._changeLocation.bind(this)
+    this._changeMapType = this._changeMapType.bind(this)
 }
 
     // the setting function
-    _changeLocation() {
+    _changeMapType() {
         this.setState({ mapType : MAP_TYPES.SATELLITE });
       }
 
@@ -24,8 +24,8 @@ render() {
         <View style={styles.main}>
             <WebMapView mapType={this.state.mapType} style={styles.map}></WebMapView>
             <View  style={styles.LayoutButtons}>
-                <TouchableOpacity onPress={this._changeLocation} style={styles.MapType}>
-                <Image style={{width: 45, height: 45}} source={require("../Images/earth.png")} />
+                <TouchableOpacity onPress={this._changeMapType} style={styles.MapType}>
+                <Image style={{width: 45, height: 45}} source={require("../../Images/earth.png")} />
                 </TouchableOpacity>
             </View>
         </View>

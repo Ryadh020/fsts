@@ -1,8 +1,8 @@
 import { createAppContainer } from 'react-navigation';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 
-import Browser from '../Components/Browser'
-import MyMaps from '../Components/MyMaps'
+import Browser from './Pages/Browser'
+import MyMaps from './Pages/MyMaps'
 
   const TabNavigator = createMaterialBottomTabNavigator({
     Browser: {

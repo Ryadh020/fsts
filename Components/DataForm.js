@@ -16,28 +16,17 @@ class Data extends React.Component {
         this._updateData = this._updateData.bind(this)
     }
 
-    // data when editing the table form:
-
-
-    // all the data:
-    
-
     // push data to the table:
     _updateData() {
       const { markersdata } = this.state;
-
+        // fill the markers array with live data
       this.setState({markersdata : [...markersdata, this.state.editing]})
         // refresh the data after subbmitting
       this.setState({editing : {}})
-
-      //this.markersdata.push(this.state.editing);
-
         // hide the dataTable:
       let action = { type: "MarkerSubmited"}
       this.props.dispatch(action)
     }
-
-    
 
     componentDidMount() {           // pop up the data of the choosed shape
       if (this.props.Choosed) {
