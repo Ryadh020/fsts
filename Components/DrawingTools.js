@@ -21,7 +21,7 @@ class DrawingTools extends React.Component {
           styles.DrawingButtons = {  // Spand the toolBar
             position : "absolute",
             height: 210,
-            top : 110,
+            top : 150,
             right : 15,
             display : "flex",
             flexDirection : "column",
@@ -33,7 +33,7 @@ class DrawingTools extends React.Component {
           styles.DrawingButtons = {  // Shrink the toolBar
             position : "absolute",
             height: 0,
-            top : 140,
+            top : 180,
             right : 15,
             display : "flex",
             flexDirection : "column",
@@ -77,7 +77,7 @@ class DrawingTools extends React.Component {
             <TouchableOpacity onPress={this._PolygoneTool} style={styles.logoContainer}>
               <Image style={styles.logo} source={require("../Images/Polygone.png")} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={this._DrawingToolsToggle} style={styles.logoContainer}>
+            <TouchableOpacity onPress={this._DrawingToolsToggle} style={styles.xoContainer}>
               <Image style={styles.XO} 
                      source={ShowHideButtonImage} 
               />
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     DrawingButtons : {  // for the right side buttons (marker/line/Polygone ....etc.)
       position : "absolute",
       height: 0,
-      top : 140,
+      top : 180,
       right : 15,
       display : "flex",
       flexDirection : "column",
@@ -106,6 +106,16 @@ const styles = StyleSheet.create({
       height : 45,
       padding : 10,
       backgroundColor : "hsla(44, 0%, 85%, 0.8)",
+      borderRadius : 50
+    },
+    xoContainer : {
+      display : "flex",
+      justifyContent : "center",
+      alignItems : "center",
+      width : 45,
+      height : 45,
+      padding : 10,
+      backgroundColor : "black",
       borderRadius : 50
     },
     XO : { // ordinary button
