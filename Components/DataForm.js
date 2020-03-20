@@ -11,33 +11,55 @@ class Data extends React.Component {
         super(props)
         this.state = {
           editing : {},  // to store live data when filling inputs
-          markersdata : []
+          markersdata : [],
+          polygonsData: [],
         }
         this._updateData = this._updateData.bind(this)
     }
 
     // push data to the table:
     _updateData() {
-      const { markersdata } = this.state;
-        // fill the markers array with live data
-      this.setState({markersdata : [...markersdata, this.state.editing]})
-        // refresh the data after subbmitting
-      this.setState({editing : {}})
-        // hide the dataTable:
-      let action = { type: "MarkerSubmited"}
-      this.props.dispatch(action)
+        // push data to markers array :
+      if(this.props.tool == "Marker") {
+        const { markersdata } = this.state;
+          // fill the markers array with live data
+        this.setState({markersdata : [...markersdata, this.state.editing]})
+          // refresh the data after subbmitting
+        this.setState({editing : {}})
+          // hide the dataTable:
+        let action = { type: "MarkerSubmited"}
+        this.props.dispatch(action)
+      } 
+      
+      
+      else if(this.props.tool == "Line") {
+
+      } 
+      
+      
+      else if(this.props.tool == "Polygone") {
+        const { polygonsData } = this.state;
+          // fill the polygons array with live data
+        this.setState({polygonsData : [...polygonsData, this.state.editing]})
+          // refresh the data after subbmitting
+        this.setState({editing : {}})
+          // hide the dataTable:
+        let action = { type: "PolygoneSubmited"}
+        this.props.dispatch(action)
+      }
+
+
     }
 
     componentDidMount() {           // pop up the data of the choosed shape
       if (this.props.Choosed) {
-       // this.markersdata.map(index => {
           return(
             <View style={styles.output}>
               <Text>R+{this.state.markersdata[this.props.id].hauteur}</Text>
               <Text>{this.state.markersdata[this.props.id].etat}</Text>
+              <Text>{this.state.markersdata[this.props.id].more}</Text>
             </View>
           )
-       // })
 
       } else if(!this.props.Choosed){
         return;
@@ -45,7 +67,7 @@ class Data extends React.Component {
     }
 
     _inputTable() {
-      if(this.props.clicked) {
+      if(this.props.created) {
         const { editing } = this.state;
         return(
           <View style={styles.table}>
@@ -62,7 +84,7 @@ class Data extends React.Component {
             <TextInput
               style={styles.input}
               placeholder={"Détails"}
-              onChangeText={e => this.setState({editing : {...editing, etat : e} })}
+              onChangeText={e => this.setState({editing : {...editing, more : e} })}
             ></TextInput>
 
             <Button
@@ -133,7 +155,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
   return {
     tool: state.toggleTool.tool,
-    clicked: state.showTable.clicked,
+    created: state.showTable.clicked,
     Choosed: state.showData.shoosed,
     id: state.showData.id,
   }

@@ -66,8 +66,8 @@ class App extends React.Component {
                        )
          // update the counter of markers :
       this.setState({markerNumber : this.state.markerNumber + 1})
-        // set global state to true (marker is clicked):
-      let action = { type: "MarkerClicked"}
+        // set global state to true (marker is created):
+      let action = { type: "MarkerCreated"}
       this.props.dispatch(action)
 
 
@@ -119,7 +119,12 @@ class App extends React.Component {
       editing: null,
       creatingHole: false,
     });
+      // set global state to true (polygon is created):
+    let action = { type: "PolygoneCreated"}
+    this.props.dispatch(action)
   }
+
+
     // start creating a hole:
   createHole() {
     const { editing, creatingHole } = this.state;

@@ -4,7 +4,7 @@ const initialState = { clicked : false}  // detect if the drawing tool is cliked
 function showTable(state = initialState, action) {
     let nextState
     switch (action.type) {
-      case 'MarkerClicked':
+      case 'MarkerCreated':
         nextState = { 
           ...state, 
           clicked : true,  // make the clicked to false to detect that the marker is clicked 
@@ -16,17 +16,29 @@ function showTable(state = initialState, action) {
             clicked : false,  // make the clicked to false to detect that the marker is clicked 
         }
         return nextState || state
-      case 'LineClicked':
+      case 'LineCreated':
         nextState = {
           ...state,
           clicked : true
         }
         return nextState || state
-      case 'PolygoneClicked':
+      case 'LineSubmited':
+        nextState = {
+          ...state,
+        clicked : false
+      }
+        return nextState || state
+      case 'PolygoneCreated':
         nextState = {
           ...state,
           clicked : true
         }
+        return nextState || state
+      case 'PolygoneSubmited':
+        nextState = { 
+            ...state, 
+          clicked : false,  // make the clicked to false to detect that the marker is clicked 
+      }
         return nextState || state
       default:
       return state
