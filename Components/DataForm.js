@@ -53,6 +53,7 @@ class Data extends React.Component {
 
     componentDidMount() {           // pop up the data of the choosed shape
       if (this.props.Choosed) {
+        if(this.props.tool == "Marker") {
           return(
             <View style={styles.output}>
               <Text>R+{this.state.markersdata[this.props.id].hauteur}</Text>
@@ -60,6 +61,16 @@ class Data extends React.Component {
               <Text>{this.state.markersdata[this.props.id].more}</Text>
             </View>
           )
+        } else if(this.props.tool == "Polygone") {
+          return(
+            <View style={styles.output}>
+              <Text>R+{this.state.polygonsData[this.props.id].hauteur}</Text>
+              <Text>{this.state.polygonsData[this.props.id].etat}</Text>
+              <Text>{this.state.polygonsData[this.props.id].more}</Text>
+            </View>
+          )
+        }
+
 
       } else if(!this.props.Choosed){
         return;

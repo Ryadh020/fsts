@@ -25,6 +25,7 @@ class App extends React.Component {
       polygons: [],   // to contain polygones and show them on mapping the array
       editing: null,  // to contains polygons data
       creatingHole: false,  // detect if a hole is on creating
+      text: "ezezeezezez"
 
       //DrawingTool : "Marker"
     }
@@ -49,6 +50,22 @@ class App extends React.Component {
     let action = { type: "ShapeFocused", value: id}
     this.props.dispatch(action)
   }
+
+    // select the clicked drawing tool
+  _MarkerTool() {
+    let action = { type: "Marker", value: "Marker" }
+    this.props.dispatch(action)
+  }
+  _LineTool() {
+    let action = { type: "Line", value: "Line" }
+    this.props.dispatch(action)
+  }
+  _PolygoneTool() {
+    let action = { type: "Polygone", value: "Polygone" }
+    this.props.dispatch(action)
+  }
+
+
 
   _HideDataTable() {
     let action = { type: "shapeBlured"}
@@ -174,7 +191,7 @@ class App extends React.Component {
 
         {this.markers.map(index =>(
           <Marker
-            onPress={()=> this._shapeFocused(index.key) } 
+            onPress={()=> {this._MarkerTool(), this._shapeFocused(index.key)} }  
             coordinate={index.latiLngi}
             key={"MN-" + index.key}
           >
@@ -191,6 +208,9 @@ class App extends React.Component {
 
         {this.state.polygons.map(polygon => (
           <Polygon
+            tappable={true}
+            onPress={()=> {this._PolygoneTool(),this._shapeFocused(polygon.id)}}
+
             key={polygon.id}
             coordinates={polygon.coordinates}
             holes={polygon.holes}
@@ -214,6 +234,10 @@ class App extends React.Component {
           />
         )}
         </MapView>
+
+        <Text style={{position: "absolute", top: 0, left: 0}}>{this.state.text}</Text>  
+
+
         <View style={styles.buttonContainer}>
           {this.state.editing && (
             <TouchableOpacity
