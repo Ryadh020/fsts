@@ -187,7 +187,7 @@ class App extends React.Component {
     this.props.dispatch(action)
 
       // set global state to true (polyline is created):
-    let action2 = { type: "disabled", value : " "}
+    let action2 = { type: "disabled", value : "Line"}
     this.props.dispatch(action2)
   }
 

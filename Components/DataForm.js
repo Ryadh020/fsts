@@ -12,6 +12,7 @@ class Data extends React.Component {
         this.state = {
           editing : {},  // to store live data when filling inputs
           markersdata : [],
+          polyLinesData : [],
           polygonsData: [],
         }
         this._updateData = this._updateData.bind(this)
@@ -34,6 +35,19 @@ class Data extends React.Component {
       
       else if(this.props.tool == "Line") {
 
+
+        const { polyLinesData } = this.state;
+        // fill the lines array with live data
+      this.setState({polyLinesData : [...polyLinesData, this.state.editing]})
+        // refresh the data after subbmitting
+      this.setState({editing : {}})
+        // hide the dataTable:
+      let action = { type: "MarkerSubmited"}
+      this.props.dispatch(action)
+
+
+
+      
       } 
       
       
