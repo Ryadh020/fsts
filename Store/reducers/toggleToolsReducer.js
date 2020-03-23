@@ -1,4 +1,4 @@
-const initialState = { tool: "" }  // the globale state of drawing tools
+const initialState = { tool: "", drawing: false }  // the globale state of drawing tools
 
   // change the state to the spicified one of the the tools
 function toggleTool(state = initialState, action) {
@@ -13,7 +13,8 @@ function toggleTool(state = initialState, action) {
       case 'Line':
         nextState = {
           ...state,
-          tool: action.value[0]
+          tool: action.value[0],
+          drawing : action.value[1]
         }
         return nextState || state
       case 'Polygone':

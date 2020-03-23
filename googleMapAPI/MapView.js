@@ -91,7 +91,7 @@ class App extends React.Component {
 
 
     } else if (this.props.tool == "Line") {
-      this.setState({scrollable : false, drawLine: true}) // stop scrolling the map
+      
     } 
 
 
@@ -166,6 +166,10 @@ class App extends React.Component {
       }
       this.setState({ creatingHole: false });
     }
+  }
+  // start line 
+  startLine(){
+    this.setState({scrollable : false, drawLine: true}) // stop scrolling the map
   }
 
   // when fiishing creating polyline :
@@ -296,22 +300,20 @@ class App extends React.Component {
             <TouchableOpacity
               style={[styles.bubble, styles.button]}
             >
-            <Image 
+              <Image 
               style={{width: 30, height: 30}} 
               source={require("../Images/back.png")}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
               onPress={() => this.createHole()}
               style={[styles.bubble, styles.button]}
-          >     
+            >     
               <Image 
                 source={this.state.creatingHole ? require("../Images/finish_hole.png") : require("../Images/hole.png")} 
                 style={{width: 35, height: 35}}
               />
             </TouchableOpacity>
-
             <TouchableOpacity
               onPress={() => this.finishPolygone()}
               style={[styles.bubble, styles.button]}
@@ -324,17 +326,37 @@ class App extends React.Component {
           </View>
         )}
      
-
-        <View style={styles.buttonContainer}>
-          {this.state.LineEditing && (
+        {this.props.drawing  && (
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={[styles.bubble, styles.button]}
+            >
+              <Image 
+              style={{width: 30, height: 30}} 
+              source={require("../Images/back.png")}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => this.startLine()}
+              style={[styles.bubble, styles.button]}
+            >     
+              <Image 
+                source={require("../Images/start.png")} 
+                style={{width: 30, height: 30}}
+              />
+            </TouchableOpacity>
             <TouchableOpacity
               onPress={() => this.finishLine()}
               style={[styles.bubble, styles.button]}
             >
-              <Text>Finish</Text>
+              <Image 
+                source={require("../Images/done.png")} 
+                style={{width: 30, height: 30}}
+              />
             </TouchableOpacity>
-          )}
-        </View>
+          </View>
+        )}
+
 
 
         <Data/>
@@ -379,6 +401,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
   return {
     tool: state.toggleTool.tool,
+    drawing: state.toggleTool.drawing,
     clicked: state.showTable.clicked,
   }
 }
