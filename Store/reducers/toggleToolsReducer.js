@@ -7,7 +7,8 @@ function toggleTool(state = initialState, action) {
       case 'Marker':
         nextState = { 
           ...state, 
-          tool: action.value
+          tool: action.value[0],
+          drawing : action.value[1]
         }
         return nextState || state
       case 'Line':
@@ -20,13 +21,15 @@ function toggleTool(state = initialState, action) {
       case 'Polygone':
         nextState = {
           ...state,
-          tool: action.value
+          tool: action.value[0],
+          drawing : action.value[1]
         }
         return nextState || state
       case 'disabled':
         nextState = { 
           ...state, 
-          tool: action.value
+          tool: action.value,
+          drawing : false
         }
         return nextState || state
       default:

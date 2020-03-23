@@ -180,8 +180,15 @@ class App extends React.Component {
       LineEditing: null,
       drawLine: false,
 
-      scrollable : true // stop scrolling the map
+      scrollable : true // enavle map scrolling
     });
+      // set global state to true (polyline is created):
+    let action = { type: "PolygoneCreated"}
+    this.props.dispatch(action)
+
+      // set global state to true (polyline is created):
+    let action2 = { type: "disabled", value : " "}
+    this.props.dispatch(action2)
   }
 
   // add data to polyline array when pan dragging (to draw it in the render):
@@ -295,13 +302,13 @@ class App extends React.Component {
 
 
 
-        {this.state.polygoneEditing && (
+        {this.props.drawing == "drawingPolygone" && (
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={[styles.bubble, styles.button]}
             >
               <Image 
-              style={{width: 30, height: 30}} 
+              style={{width: 20, height: 20}} 
               source={require("../Images/back.png")}
               />
             </TouchableOpacity>
@@ -311,7 +318,7 @@ class App extends React.Component {
             >     
               <Image 
                 source={this.state.creatingHole ? require("../Images/finish_hole.png") : require("../Images/hole.png")} 
-                style={{width: 35, height: 35}}
+                style={{width: 30, height: 30}}
               />
             </TouchableOpacity>
             <TouchableOpacity
@@ -320,19 +327,19 @@ class App extends React.Component {
             >
               <Image 
                 source={require("../Images/done.png")} 
-                style={{width: 30, height: 30}}
+                style={{width: 25, height: 25}}
               />
             </TouchableOpacity>
           </View>
         )}
      
-        {this.props.drawing  && (
+        {this.props.drawing == "drawingLine"  && (
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={[styles.bubble, styles.button]}
             >
               <Image 
-              style={{width: 30, height: 30}} 
+              style={{width: 20, height: 20}} 
               source={require("../Images/back.png")}
               />
             </TouchableOpacity>
@@ -351,7 +358,7 @@ class App extends React.Component {
             >
               <Image 
                 source={require("../Images/done.png")} 
-                style={{width: 30, height: 30}}
+                style={{width: 25, height: 25}}
               />
             </TouchableOpacity>
           </View>
@@ -381,6 +388,7 @@ const styles = StyleSheet.create({
     bottom: 35,
     left: 55,
     flexDirection: 'row',
+    alignItems: "center",
     marginVertical: 20,
     backgroundColor: 'rgba(255,255,255,0.7)',
     borderRadius: 20
@@ -388,7 +396,6 @@ const styles = StyleSheet.create({
   bubble: {
     paddingHorizontal: 18,
     paddingVertical: 12,
-    borderRadius: 20,
   },
   button: {
     width: 80,
