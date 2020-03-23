@@ -1,5 +1,5 @@
 import React from 'react';
-import MapView, { Marker, Polygon, Polyline } from 'react-native-maps';
+import MapView, { Marker, Polygon, Polyline, ProviderPropType } from 'react-native-maps';
 import { StyleSheet, View, Dimensions, Text, TouchableOpacity, Image} from 'react-native';
 import { connect } from 'react-redux'
 
@@ -7,6 +7,7 @@ import DrawingTools from '../Components/DrawingTools' // components takes in cha
 import Data from "../Components/DataForm" // a table to put data about the marker/line/polygone.
 
 let PolygoneId = 0; // for polygones counting
+let lineId = 0;  // for Polylines counting
 
 class App extends React.Component {
 
@@ -28,11 +29,10 @@ class App extends React.Component {
       
 
         // PolyLines data :
-        //////////////
-        ///////////////
-        ////////////////////
-        //////////////////////
-        ////////////////////////
+      polylines: [],
+      LineEditing: null,
+
+
       scrollable : true,  // for map scrolling
       text: "ezezeezezez",      // just for debuging
     }
@@ -130,7 +130,7 @@ class App extends React.Component {
     }
   }
     // finish drawing:
-  finish() {
+  finishPolygone() {
     const { polygons, polygoneEditing } = this.state;
     this.setState({
       polygons: [...polygons, polygoneEditing],
@@ -141,7 +141,6 @@ class App extends React.Component {
     let action = { type: "PolygoneCreated"}
     this.props.dispatch(action)
   }
-
 
     // start creating a hole:
   createHole() {
@@ -169,6 +168,37 @@ class App extends React.Component {
     }
   }
 
+  // when fiishing creating polyline :
+  finishLine() {
+    const { polylines, LineEditing } = this.state;
+    this.setState({
+      polylines: [...polylines, LineEditing],
+      LineEditing: null,
+
+      scrollable : true // stop scrolling the map
+    });
+  }
+
+  // add data to polyline array when pan dragging (to draw it in the render):
+  onPanDrag(e) {
+    const { LineEditing } = this.state;
+    if (!LineEditing) {
+      this.setState({
+        LineEditing: {
+          lineId: lineId++,
+          coordinates: [e.nativeEvent.coordinate],
+        },
+      });
+    } else {
+      this.setState({
+        LineEditing: {
+          ...LineEditing,
+          coordinates: [...LineEditing.coordinates, e.nativeEvent.coordinate],
+        },
+      });
+    }
+  }
+
   render() {
     const mapOptions = {
       scrollEnabled: true,
@@ -188,6 +218,7 @@ class App extends React.Component {
           scrollEnabled={this.state.scrollable}
           onLongPress={this._Darw}
           onPress={() => this._HideDataTable()}
+          onPanDrag={e => this.onPanDrag(e)}
         >
 
 
@@ -203,18 +234,25 @@ class App extends React.Component {
 
 
 
-<Polyline
-		coordinates={[
-			{ latitude: 36.365, longitude: 6.61472 },
-      { latitude: 36.380, longitude: 6.61490 },
-      { latitude: 36.390, longitude: 6.61950 },  
-		]}
-		strokeColor="red" // fallback for when `strokeColors` is not supported by the map-provider
-		strokeWidth={6}
-	/>
+        {this.state.polylines.map(polyline => (
+          <Polyline
+            key={polyline.lineId}
+            coordinates={polyline.coordinates}
+            strokeColor="#000"
+            fillColor="rgba(255,0,0,0.5)"
+            strokeWidth={1}
+          />
+        ))}
 
-
-
+        {this.state.LineEditing && (
+          <Polyline
+            key="editingPolyline"
+            coordinates={this.state.LineEditing.coordinates}
+            strokeColor="#F00"
+            fillColor="rgba(255,0,0,0.5)"
+            strokeWidth={1}
+          />
+        )}
 
 
 
@@ -271,7 +309,7 @@ class App extends React.Component {
           )}
           {this.state.polygoneEditing && (
             <TouchableOpacity
-              onPress={() => this.finish()}
+              onPress={() => this.finishPolygone()}
               style={[styles.bubble, styles.button]}
             >
               <Image 
@@ -281,12 +319,30 @@ class App extends React.Component {
             </TouchableOpacity>
           )}
         </View>
+
+        <View style={styles.buttonContainer}>
+          {this.state.LineEditing && (
+            <TouchableOpacity
+              onPress={() => this.finishLine()}
+              style={[styles.bubble, styles.button]}
+            >
+              <Text>Finish</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
+
         <Data/>
         <DrawingTools/>
       </View>
     );
   }
 }
+
+App.propTypes = {
+  provider: ProviderPropType,
+};
+
 
 const styles = StyleSheet.create({
   mapStyle: {

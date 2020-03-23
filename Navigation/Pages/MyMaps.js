@@ -35,7 +35,7 @@ class PolylineCreator extends React.Component {
     };
   }
 
-  finish() {
+  finishLine() {
     const { polylines, LineEditing } = this.state;
     this.setState({
       polylines: [...polylines, LineEditing],
@@ -103,7 +103,7 @@ class PolylineCreator extends React.Component {
         <View style={styles.buttonContainer}>
           {this.state.LineEditing && (
             <TouchableOpacity
-              onPress={() => this.finish()}
+              onPress={() => this.finishLine()}
               style={[styles.bubble, styles.button]}
             >
               <Text>Finish</Text>
