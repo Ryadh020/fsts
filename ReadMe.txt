@@ -26,4 +26,5 @@ I. Navigation Folder: "fsts\Navigation\Route.js"
 			   . send a value to the reducer "fsts\Store\reducers\showTableReducer.js" to tell that the tool is drawen and fill data about it in "fsts\Components\DataForm.js"
 			   . When finish drawing tool, in the "fsts\Components\DataForm.js":
 				. fill <TextInput>'s with the specified informations in an object in the state "editing"
+				. search from the global store the acuale drawing tool "this.props.too = "marker/mplygone ..etc"
 				. fii an array in the state with data : push "editing".

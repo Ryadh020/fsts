@@ -21,7 +21,7 @@ class DrawingTools extends React.Component {
           styles.DrawingButtons = {  // Spand the toolBar
             position : "absolute",
             height: 210,
-            top : 150,
+            top : 140,
             right : 15,
             display : "flex",
             flexDirection : "column",
@@ -33,7 +33,7 @@ class DrawingTools extends React.Component {
           styles.DrawingButtons = {  // Shrink the toolBar
             position : "absolute",
             height: 0,
-            top : 180,
+            top : 160,
             right : 15,
             display : "flex",
             flexDirection : "column",
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     DrawingButtons : {  // for the right side buttons (marker/line/Polygone ....etc.)
       position : "absolute",
       height: 0,
-      top : 180,
+      top : 140,
       right : 15,
       display : "flex",
       flexDirection : "column",

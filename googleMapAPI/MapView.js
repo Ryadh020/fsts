@@ -1,12 +1,12 @@
 import React from 'react';
-import MapView, { Marker, Polygon  } from 'react-native-maps';
+import MapView, { Marker, Polygon, Polyline } from 'react-native-maps';
 import { StyleSheet, View, Dimensions, Text, TouchableOpacity, Image} from 'react-native';
 import { connect } from 'react-redux'
 
 import DrawingTools from '../Components/DrawingTools' // components takes in charge displaying drawing tools.
 import Data from "../Components/DataForm" // a table to put data about the marker/line/polygone.
 
-let id = 0; // for polgones counting
+let PolygoneId = 0; // for polygones counting
 
 class App extends React.Component {
 
@@ -20,14 +20,21 @@ class App extends React.Component {
         longitudeDelta: 0.0421,
       },
       markerNumber: 0,  // number of markers (counter) "use it to assign keys and helps with counting"
-      LineNumber: 0,  // number of Lines (counter) "use it to assign keys and helps with counting"
 
+        // polygons data :
       polygons: [],   // to contain polygones and show them on mapping the array
-      editing: null,  // to contains polygons data
+      polygoneEditing: null,  // to contains polygons data
       creatingHole: false,  // detect if a hole is on creating
-      text: "ezezeezezez"
+      
 
-      //DrawingTool : "Marker"
+        // PolyLines data :
+        //////////////
+        ///////////////
+        ////////////////////
+        //////////////////////
+        ////////////////////////
+      scrollable : false,  // for map scrolling
+      text: "ezezeezezez",      // just for debuging
     }
     this._Darw = this._Darw.bind(this)
   }
@@ -37,11 +44,6 @@ class App extends React.Component {
 
     // the list of markers
   markers = []
-    // the list of Lines
-  Lines = []
-  
-    // array to contain polygone cordinates:
-  polygoneCordinates = []
 
   
     // pop up marker data on cliking the marker:
@@ -95,33 +97,33 @@ class App extends React.Component {
 
 
     else if (this.props.tool == "Polygone") {
-      const { editing, creatingHole } = this.state;
-      if (!editing) {
+      const { polygoneEditing, creatingHole } = this.state;
+      if (!polygoneEditing) {
         this.setState({
-          editing: {
-            id: id++,
+          polygoneEditing: {
+            PolygoneId: PolygoneId++,
             coordinates: [e.nativeEvent.coordinate],
             holes: [],
           },
         });
       } else if (!creatingHole) {
         this.setState({
-          editing: {
-            ...editing,
-            coordinates: [...editing.coordinates, e.nativeEvent.coordinate],
+          polygoneEditing: {
+            ...polygoneEditing,
+            coordinates: [...polygoneEditing.coordinates, e.nativeEvent.coordinate],
           },
         });
       } else {
-        const holes = [...editing.holes];
+        const holes = [...polygoneEditing.holes];
         holes[holes.length - 1] = [
           ...holes[holes.length - 1],
           e.nativeEvent.coordinate,
         ];
         this.setState({
-          editing: {
-            ...editing,
-            id: id++, // keep incrementing id to trigger display refresh
-            coordinates: [...editing.coordinates],
+          polygoneEditing: {
+            ...polygoneEditing,
+            PolygoneId: PolygoneId++, // keep incrementing id to trigger display refresh
+            coordinates: [...polygoneEditing.coordinates],
             holes,
           },
         });
@@ -130,10 +132,10 @@ class App extends React.Component {
   }
     // finish drawing:
   finish() {
-    const { polygons, editing } = this.state;
+    const { polygons, polygoneEditing } = this.state;
     this.setState({
-      polygons: [...polygons, editing],
-      editing: null,
+      polygons: [...polygons, polygoneEditing],
+      polygoneEditing: null,
       creatingHole: false,
     });
       // set global state to true (polygon is created):
@@ -144,22 +146,22 @@ class App extends React.Component {
 
     // start creating a hole:
   createHole() {
-    const { editing, creatingHole } = this.state;
+    const { polygoneEditing, creatingHole } = this.state;
     if (!creatingHole) {
       this.setState({
         creatingHole: true,
-        editing: {
-          ...editing,
-          holes: [...editing.holes, []],
+        polygoneEditing: {
+          ...polygoneEditing,
+          holes: [...polygoneEditing.holes, []],
         },
       });
     } else {
-      const holes = [...editing.holes];
+      const holes = [...polygoneEditing.holes];
       if (holes[holes.length - 1].length === 0) {
         holes.pop();
         this.setState({
-          editing: {
-            ...editing,
+          polygoneEditing: {
+            ...polygoneEditing,
             holes,
           },
         });
@@ -173,7 +175,7 @@ class App extends React.Component {
       scrollEnabled: true,
     };
 
-    if (this.state.editing) {
+    if (this.state.polygoneEditing) {
       mapOptions.scrollEnabled = false;
       mapOptions.onPanDrag = e => this.onPress(e);
     }
@@ -184,6 +186,7 @@ class App extends React.Component {
           mapType = {this.props.mapType}
           initialRegion = {this.state.region}
           style={styles.mapStyle} 
+          scrollEnabled={this.state.scrollable}
           onLongPress={this._Darw}
           onPress={() => this._HideDataTable()}
         >
@@ -199,19 +202,29 @@ class App extends React.Component {
         ))}
 
 
-        
 
 
-        {this.Lines}
+<Polyline
+		coordinates={[
+			{ latitude: 36.365, longitude: 6.61472 },
+      { latitude: 36.380, longitude: 6.61490 },
+      { latitude: 36.390, longitude: 6.61950 },  
+		]}
+		strokeColor="red" // fallback for when `strokeColors` is not supported by the map-provider
+		strokeWidth={6}
+	/>
+
+
+
 
 
 
         {this.state.polygons.map(polygon => (
           <Polygon
             tappable={true}
-            onPress={()=> {this._PolygoneTool(),this._shapeFocused(polygon.id)}}
+            onPress={()=> {this._PolygoneTool(),this._shapeFocused(polygon.PolygoneId)}}
 
-            key={polygon.id}
+            key={polygon.PolygoneId}
             coordinates={polygon.coordinates}
             holes={polygon.holes}
             strokeColor="#F00"
@@ -220,14 +233,11 @@ class App extends React.Component {
           />
         ))}
 
-
-
-
-        {this.state.editing && (
+        {this.state.polygoneEditing && (
           <Polygon
-            key={this.state.editing.id}
-            coordinates={this.state.editing.coordinates}
-            holes={this.state.editing.holes}
+            key={this.state.polygoneEditing.PolygoneId}
+            coordinates={this.state.polygoneEditing.coordinates}
+            holes={this.state.polygoneEditing.holes}
             strokeColor="#000"
             fillColor="rgba(255,0,0,0.5)"
             strokeWidth={1}
@@ -239,7 +249,7 @@ class App extends React.Component {
 
 
         <View style={styles.buttonContainer}>
-          {this.state.editing && (
+          {this.state.polygoneEditing && (
             <TouchableOpacity
               style={[styles.bubble, styles.button]}
             >
@@ -249,7 +259,7 @@ class App extends React.Component {
             />
           </TouchableOpacity>
           )}
-          {this.state.editing && (
+          {this.state.polygoneEditing && (
             <TouchableOpacity
               onPress={() => this.createHole()}
               style={[styles.bubble, styles.button]}
@@ -260,7 +270,7 @@ class App extends React.Component {
               />
             </TouchableOpacity>
           )}
-          {this.state.editing && (
+          {this.state.polygoneEditing && (
             <TouchableOpacity
               onPress={() => this.finish()}
               style={[styles.bubble, styles.button]}
