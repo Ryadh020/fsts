@@ -33,7 +33,7 @@ class App extends React.Component {
         ////////////////////
         //////////////////////
         ////////////////////////
-      scrollable : false,  // for map scrolling
+      scrollable : true,  // for map scrolling
       text: "ezezeezezez",      // just for debuging
     }
     this._Darw = this._Darw.bind(this)
@@ -91,8 +91,7 @@ class App extends React.Component {
 
 
     } else if (this.props.tool == "Line") {
-      this.Lines.push(<LineCreator cords={latLng} data={this.state.LineNumber} key={"MN-" + this.state.LineNumber}></LineCreator>) // push a new LIne to the list :
-      this.setState({LineNumber : this.state.LineNumber + 1}) // update the counter of Lines : *"change to lines later"
+      this.setState({scrollable : false}) // stop scrolling the map
     } 
 
 
