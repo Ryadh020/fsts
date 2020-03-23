@@ -54,7 +54,7 @@ class DrawingTools extends React.Component {
         this.props.dispatch(action)
     }
     _LineTool() {
-        let action = { type: "Line", value: "Line" }
+        let action = { type: "Line", value: ["Line", true] }
         this.props.dispatch(action)
     }
     _PolygoneTool() {

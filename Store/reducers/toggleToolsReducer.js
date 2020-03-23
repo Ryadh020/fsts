@@ -13,7 +13,7 @@ function toggleTool(state = initialState, action) {
       case 'Line':
         nextState = {
           ...state,
-          tool: action.value
+          tool: action.value[0]
         }
         return nextState || state
       case 'Polygone':

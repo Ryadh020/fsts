@@ -31,7 +31,7 @@ class App extends React.Component {
         // PolyLines data :
       polylines: [],
       LineEditing: null,
-
+      drawLine : false,
 
       scrollable : true,  // for map scrolling
       text: "ezezeezezez",      // just for debuging
@@ -91,7 +91,7 @@ class App extends React.Component {
 
 
     } else if (this.props.tool == "Line") {
-      this.setState({scrollable : false}) // stop scrolling the map
+      this.setState({scrollable : false, drawLine: true}) // stop scrolling the map
     } 
 
 
@@ -135,7 +135,7 @@ class App extends React.Component {
     this.setState({
       polygons: [...polygons, polygoneEditing],
       polygoneEditing: null,
-      creatingHole: false,
+      creatingHole: false
     });
       // set global state to true (polygon is created):
     let action = { type: "PolygoneCreated"}
@@ -174,6 +174,7 @@ class App extends React.Component {
     this.setState({
       polylines: [...polylines, LineEditing],
       LineEditing: null,
+      drawLine: false,
 
       scrollable : true // stop scrolling the map
     });
@@ -182,20 +183,24 @@ class App extends React.Component {
   // add data to polyline array when pan dragging (to draw it in the render):
   onPanDrag(e) {
     const { LineEditing } = this.state;
-    if (!LineEditing) {
-      this.setState({
-        LineEditing: {
-          lineId: lineId++,
-          coordinates: [e.nativeEvent.coordinate],
-        },
-      });
-    } else {
-      this.setState({
-        LineEditing: {
-          ...LineEditing,
-          coordinates: [...LineEditing.coordinates, e.nativeEvent.coordinate],
-        },
-      });
+    if(this.state.drawLine) {
+      if (!LineEditing) {
+        this.setState({
+          LineEditing: {
+            lineId: lineId++,
+            coordinates: [e.nativeEvent.coordinate],
+          },
+        });
+      } else {
+        this.setState({
+          LineEditing: {
+            ...LineEditing,
+            coordinates: [...LineEditing.coordinates, e.nativeEvent.coordinate],
+          },
+        });
+      }
+    }else {
+      return;
     }
   }
 
@@ -285,8 +290,9 @@ class App extends React.Component {
         <Text style={{position: "absolute", top: 0, left: 0}}>{this.state.text}</Text>  
 
 
-        <View style={styles.buttonContainer}>
-          {this.state.polygoneEditing && (
+
+        {this.state.polygoneEditing && (
+          <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={[styles.bubble, styles.button]}
             >
@@ -295,19 +301,17 @@ class App extends React.Component {
               source={require("../Images/back.png")}
             />
           </TouchableOpacity>
-          )}
-          {this.state.polygoneEditing && (
-            <TouchableOpacity
+
+          <TouchableOpacity
               onPress={() => this.createHole()}
               style={[styles.bubble, styles.button]}
-            >     
+          >     
               <Image 
                 source={this.state.creatingHole ? require("../Images/finish_hole.png") : require("../Images/hole.png")} 
                 style={{width: 35, height: 35}}
               />
             </TouchableOpacity>
-          )}
-          {this.state.polygoneEditing && (
+
             <TouchableOpacity
               onPress={() => this.finishPolygone()}
               style={[styles.bubble, styles.button]}
@@ -317,8 +321,9 @@ class App extends React.Component {
                 style={{width: 30, height: 30}}
               />
             </TouchableOpacity>
-          )}
-        </View>
+          </View>
+        )}
+     
 
         <View style={styles.buttonContainer}>
           {this.state.LineEditing && (
