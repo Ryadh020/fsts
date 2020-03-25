@@ -34,7 +34,7 @@ class App extends React.Component {
       drawLine : false,
 
       scrollable : true,  // for map scrolling
-      text: "ezezeezezez",      // just for debuging
+      text: "debuging",      // just for debuging
     }
     this._Darw = this._Darw.bind(this)
   }
@@ -356,7 +356,7 @@ class App extends React.Component {
             >
               <Image 
               style={{width: 20, height: 20}} 
-              source={require("../Images/back.png")}
+              source={this.state.polygoneEditing? require("../Images/back.png"): require("../Images/back_blured.png")}
               />
             </TouchableOpacity>
             <TouchableOpacity
@@ -373,7 +373,7 @@ class App extends React.Component {
               style={[styles.bubble, styles.button]}
             >
               <Image 
-                source={require("../Images/done.png")} 
+                source={this.state.polygoneEditing? require("../Images/done.png"): require("../Images/done_blured.png")}
                 style={{width: 25, height: 25}}
               />
             </TouchableOpacity>
@@ -387,7 +387,7 @@ class App extends React.Component {
             >
               <Image 
               style={{width: 20, height: 20}} 
-              source={require("../Images/back.png")}
+              source={this.state.LineEditing? require("../Images/back.png"): require("../Images/back_blured.png")}
               />
             </TouchableOpacity>
             <TouchableOpacity
@@ -395,7 +395,7 @@ class App extends React.Component {
               style={[styles.bubble, styles.button]}
             >     
               <Image 
-                source={require("../Images/start.png")} 
+                source={this.state.LineEditing? require("../Images/start_blured.png"): require("../Images/start.png")} 
                 style={{width: 30, height: 30}}
               />
             </TouchableOpacity>
@@ -404,7 +404,7 @@ class App extends React.Component {
               style={[styles.bubble, styles.button]}
             >
               <Image 
-                source={require("../Images/done.png")} 
+                source={this.state.LineEditing? require("../Images/done.png"): require("../Images/done_blured.png")} 
                 style={{width: 25, height: 25}}
               />
             </TouchableOpacity>
