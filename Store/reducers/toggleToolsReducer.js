@@ -1,4 +1,4 @@
-const initialState = { tool: "", drawing: false }  // the globale state of drawing tools
+const initialState = { tool: "", drawingPan: false}  // the globale state of drawing tools
 
   // change the state to the spicified one of the the tools
 function toggleTool(state = initialState, action) {
@@ -7,29 +7,44 @@ function toggleTool(state = initialState, action) {
       case 'Marker':
         nextState = { 
           ...state, 
-          tool: action.value[0],
-          drawing : action.value[1]
+          tool: action.value
+        }
+        return nextState || state
+      case 'MarkerPan':
+        nextState = { 
+          ...state, 
+          drawingPan: action.value
         }
         return nextState || state
       case 'Line':
         nextState = {
           ...state,
-          tool: action.value[0],
-          drawing : action.value[1]
+          tool: action.value
+        }
+        return nextState || state
+      case 'LinePan':
+        nextState = { 
+          ...state, 
+          drawingPan: action.value
         }
         return nextState || state
       case 'Polygone':
         nextState = {
           ...state,
-          tool: action.value[0],
-          drawing : action.value[1]
+          tool: action.value
+        }
+        return nextState || state
+      case 'PolygonPan':
+        nextState = { 
+          ...state, 
+          drawingPan: action.value
         }
         return nextState || state
       case 'disabled':
         nextState = { 
           ...state, 
           tool: action.value,
-          drawing : false
+          drawingPan : false
         }
         return nextState || state
       default:

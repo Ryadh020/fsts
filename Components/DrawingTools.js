@@ -50,16 +50,29 @@ class DrawingTools extends React.Component {
         // change the components to put in the set array (marker/line/polygone) 
         // creat and send actions with the spicified data to the toggleToll reducer
     _MarkerTool() {
-        let action = { type: "Marker", value: ["Marker", "drawingMarker"] }
+          // select the drawing tool
+        let action = { type: "Marker", value: "Marker" }
         this.props.dispatch(action)
+
+          // select the panel drawing tool
+        let action2 = { type: "MarkerPan", value: "MarkerPan" }
+        this.props.dispatch(action2)
     }
     _LineTool() {
-        let action = { type: "Line", value: ["Line", "drawingLine"] }
+        let action = { type: "Line", value: "Line" }
         this.props.dispatch(action)
+
+          // select the panel drawing tool
+        let action2 = { type: "LinePan", value: "LinePan" }
+        this.props.dispatch(action2)
     }
     _PolygoneTool() {
-        let action = { type: "Polygone", value: ["Polygone", "drawingPolygone" ]}
+        let action = { type: "Polygone", value: "Polygone"}
         this.props.dispatch(action)
+
+          // select the panel drawing tool
+        let action2 = { type: "PolygonPan", value: "PolygonPan" }
+        this.props.dispatch(action2)
     }
 
     render() {

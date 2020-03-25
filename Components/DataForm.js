@@ -32,10 +32,7 @@ class Data extends React.Component {
         this.props.dispatch(action)
       } 
       
-      
       else if(this.props.tool == "Line") {
-
-
         const { polyLinesData } = this.state;
         // fill the lines array with live data
       this.setState({polyLinesData : [...polyLinesData, this.state.editing]})
@@ -44,12 +41,7 @@ class Data extends React.Component {
         // hide the dataTable:
       let action = { type: "MarkerSubmited"}
       this.props.dispatch(action)
-
-
-
-      
       } 
-      
       
       else if(this.props.tool == "Polygone") {
         const { polygonsData } = this.state;
@@ -81,6 +73,14 @@ class Data extends React.Component {
               <Text>R+{this.state.polygonsData[this.props.id].hauteur}</Text>
               <Text>{this.state.polygonsData[this.props.id].etat}</Text>
               <Text>{this.state.polygonsData[this.props.id].more}</Text>
+            </View>
+          )
+        } else if(this.props.tool == "Line") {
+          return(
+            <View style={styles.output}>
+              <Text>R+{this.state.polyLinesData[this.props.id].hauteur}</Text>
+              <Text>{this.state.polyLinesData[this.props.id].etat}</Text>
+              <Text>{this.state.polyLinesData[this.props.id].more}</Text>
             </View>
           )
         }

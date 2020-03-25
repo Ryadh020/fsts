@@ -88,11 +88,8 @@ class App extends React.Component {
         // set global state to true (marker is created):
       let action = { type: "MarkerCreated"}
       this.props.dispatch(action)
+    }
 
-
-    } else if (this.props.tool == "Line") {
-      
-    } 
 
 
     else if (this.props.tool == "Polygone") {
@@ -131,41 +128,55 @@ class App extends React.Component {
   }
     // finish drawing:
   finishPolygone() {
-    const { polygons, polygoneEditing } = this.state;
-    this.setState({
-      polygons: [...polygons, polygoneEditing],
-      polygoneEditing: null,
-      creatingHole: false
-    });
-      // set global state to true (polygon is created):
-    let action = { type: "PolygoneCreated"}
-    this.props.dispatch(action)
+    if (this.state.polygoneEditing) {
+      const { polygons, polygoneEditing } = this.state;
+      this.setState({
+        polygons: [...polygons, polygoneEditing],
+        polygoneEditing: null,
+        creatingHole: false
+      });
+        // set global state to true (polygon is created):
+      let action = { type: "PolygoneCreated"}
+      this.props.dispatch(action)
+  
+        // set global state to true (polygon is created):
+      let action2 = { type: "disabled", value : "Polygone"}
+      this.props.dispatch(action2)
+    } else {
+      return
+    }
   }
 
     // start creating a hole:
   createHole() {
-    const { polygoneEditing, creatingHole } = this.state;
-    if (!creatingHole) {
-      this.setState({
-        creatingHole: true,
-        polygoneEditing: {
-          ...polygoneEditing,
-          holes: [...polygoneEditing.holes, []],
-        },
-      });
-    } else {
-      const holes = [...polygoneEditing.holes];
-      if (holes[holes.length - 1].length === 0) {
-        holes.pop();
+    if (this.state.polygoneEditing) {
+      const { polygoneEditing, creatingHole } = this.state;
+      if (!creatingHole) {
         this.setState({
+          creatingHole: true,
           polygoneEditing: {
             ...polygoneEditing,
-            holes,
+            holes: [...polygoneEditing.holes, []],
           },
         });
+      } else {
+        const holes = [...polygoneEditing.holes];
+        if (holes[holes.length - 1].length === 0) {
+          holes.pop();
+          this.setState({
+            polygoneEditing: {
+              ...polygoneEditing,
+              holes,
+            },
+          });
+        }
+        this.setState({ creatingHole: false });
       }
-      this.setState({ creatingHole: false });
+    } else {
+      return
     }
+
+
   }
   // start line 
   startLine(){
@@ -174,21 +185,28 @@ class App extends React.Component {
 
   // when fiishing creating polyline :
   finishLine() {
-    const { polylines, LineEditing } = this.state;
-    this.setState({
-      polylines: [...polylines, LineEditing],
-      LineEditing: null,
-      drawLine: false,
+    if (this.state.LineEditing) {
+      const { polylines, LineEditing } = this.state;
+      this.setState({
+        polylines: [...polylines, LineEditing],
+        LineEditing: null,
+        drawLine: false,
+  
+        scrollable : true // enavle map scrolling
+      });
+        // set global state to true (polyline is created):
+      let action = { type: "PolygoneCreated"}
+      this.props.dispatch(action)
+  
+        // set global state to true (polyline is created):
+      let action2 = { type: "disabled", value : "Line"}
+      this.props.dispatch(action2)
+    } else {
+      return // show an eroor message later
+    }
 
-      scrollable : true // enavle map scrolling
-    });
-      // set global state to true (polyline is created):
-    let action = { type: "PolygoneCreated"}
-    this.props.dispatch(action)
 
-      // set global state to true (polyline is created):
-    let action2 = { type: "disabled", value : "Line"}
-    this.props.dispatch(action2)
+
   }
 
   // add data to polyline array when pan dragging (to draw it in the render):
@@ -214,6 +232,7 @@ class App extends React.Component {
       return;
     }
   }
+
 
   render() {
     const mapOptions = {
@@ -248,15 +267,16 @@ class App extends React.Component {
         ))}
 
 
-
-
         {this.state.polylines.map(polyline => (
           <Polyline
+            tappable={true}
+            onPress={()=> {this._LineTool(), this._shapeFocused(polyline.lineId), this.setState({text : "done"})}}
+
             key={polyline.lineId}
             coordinates={polyline.coordinates}
             strokeColor="#000"
             fillColor="rgba(255,0,0,0.5)"
-            strokeWidth={1}
+            strokeWidth={5}
           />
         ))}
 
@@ -300,9 +320,36 @@ class App extends React.Component {
 
         <Text style={{position: "absolute", top: 0, left: 0}}>{this.state.text}</Text>  
 
+        {this.props.drawingPan == "MarkerPan" && (
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={[styles.bubble, styles.button]}
+            >
+              <Image 
+              style={{width: 20, height: 20}} 
+              source={require("../Images/back.png")}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.bubble, styles.button]}
+            >     
+              <Image 
+                source={this.state.creatingHole ? require("../Images/finish_hole.png") : require("../Images/hole.png")} 
+                style={{width: 30, height: 30}}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.bubble, styles.button]}
+            >
+              <Image 
+                source={require("../Images/done.png")} 
+                style={{width: 25, height: 25}}
+              />
+            </TouchableOpacity>
+          </View>
+        )}
 
-
-        {this.props.drawing == "drawingPolygone" && (
+        {this.props.drawingPan == "PolygonPan" && (
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={[styles.bubble, styles.button]}
@@ -333,7 +380,7 @@ class App extends React.Component {
           </View>
         )}
      
-        {this.props.drawing == "drawingLine"  && (
+        {this.props.drawingPan == "LinePan"  && (
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={[styles.bubble, styles.button]}
@@ -408,7 +455,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
   return {
     tool: state.toggleTool.tool,
-    drawing: state.toggleTool.drawing,
+    drawingPan: state.toggleTool.drawingPan,
     clicked: state.showTable.clicked,
   }
 }
