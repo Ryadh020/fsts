@@ -22,8 +22,8 @@ class App extends React.Component {
         longitudeDelta: 0.0421,
       },
       markerNumber: 0,  // number of markers (counter) "use it to assign keys and helps with counting"
-      markerIcon : require("../Images/Markers/home.png"),  // (default marker icon) & to detect the changing of select form
-      markerColor : require("../Images/Markers/trash_red.png"),  // (default marker icon) & to detect the changing of select form
+      markerIconURL : require("../Images/Markers/home.png"),  // (default marker icon) & to detect the changing of select form
+      markerIcon : "home",
 
         // polygons data :
       polygons: [],   // to contain polygones and show them on mapping the array
@@ -84,8 +84,7 @@ class App extends React.Component {
       this.markers.push(
                          {latiLngi : latLng,
                           key : this.state.markerNumber,
-                          icon : this.state.markerIcon,
-                          color: this.state.markerColor,
+                          icon : this.state.markerIconURL,
                         }
                        )
          // update the counter of markers :
@@ -331,14 +330,16 @@ class App extends React.Component {
 
             <View style={[styles.bubble, styles.button]} > 
 
+
+
               <RNPickerSelect
                 onValueChange={(value) => {
                   if(value == "trash") {
-                    this.setState({markerIcon : require("../Images/Markers/trash.png")})
+                    this.setState({markerIcon : "trash", markerIconURL : require("../Images/Markers/trash.png")})
                   } else if(value == "light") {
-                    this.setState({markerIcon : require("../Images/Markers/light.png")})
+                    this.setState({markerIcon : "light", markerIconURL : require("../Images/Markers/light.png")})
                   } else if(value == "chair") {
-                    this.setState({markerIcon : require("../Images/Markers/chair.png")})
+                    this.setState({markerIcon : "chair", markerIconURL : require("../Images/Markers/chair.png")})
                   }
                 }}
                 items={[
@@ -347,18 +348,54 @@ class App extends React.Component {
                   { label: 'chair', value: 'chair'},
                 ]}
               />
-
-
-
             </View>
+
+
+
+
+
 
             <View style={[styles.bubble, styles.button]} > 
               <RNPickerSelect
-                onValueChange={(value) => console.log(value)}
+                onValueChange={(value) => {
+                  if (value == "red") {
+                    if (this.state.markerIcon == "trash") {
+                      this.setState({markerIconURL : require("../Images/Markers/trash_red.png")})
+                    } else if (this.state.markerIcon == "light") {
+                      this.setState({markerIconURL : require("../Images/Markers/light_red.png")})
+                    } else if (this.state.markerIcon == "chair") {
+                      this.setState({markerIconURL : require("../Images/Markers/chair_red.png")})
+                    }
+                  } else if (value == "green") {
+                    if (this.state.markerIcon == "trash") {
+                      this.setState({markerIconURL : require("../Images/Markers/trash_green.png")})
+                    } else if (this.state.markerIcon == "light") {
+                      this.setState({markerIconURL : require("../Images/Markers/light_green.png")})
+                    } else if (this.state.markerIcon == "chair") {
+                      this.setState({markerIconURL : require("../Images/Markers/chair_green.png")})
+                    }
+                  } else if (value == "yellow") {
+                    if (this.state.markerIcon == "trash") {
+                      this.setState({markerIconURL : require("../Images/Markers/trash_yellow.png")})
+                    } else if (this.state.markerIcon == "light") {
+                      this.setState({markerIconURL : require("../Images/Markers/light_yellow.png")})
+                    } else if (this.state.markerIcon == "chair") {
+                      this.setState({markerIconURL : require("../Images/Markers/chair_yellow.png")})
+                    }
+                  } else {
+                    if (this.state.markerIcon == "trash") {
+                      this.setState({markerIconURL : require("../Images/Markers/trash.png")})
+                    } else if (this.state.markerIcon == "light") {
+                      this.setState({markerIconURL : require("../Images/Markers/light.png")})
+                    } else if (this.state.markerIcon == "chair") {
+                      this.setState({markerIconURL : require("../Images/Markers/chair.png")})
+                    }
+                  }
+                }}
                 items={[
-                  { label: 'Football', value: 'football', color: 'green'  },
-                  { label: 'Baseball', value: 'baseball', color: 'green'  },
-                  { label: 'Hockey', value: 'hockey', color: 'green'  },
+                  { label: 'red', value: 'red', color: 'red'  },
+                  { label: 'green', value: 'green', color: 'green'  },
+                  { label: 'yellow', value: 'yellow', color: 'yellow'  },
                 ]}
               />
             </View>
