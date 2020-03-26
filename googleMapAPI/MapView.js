@@ -2,6 +2,7 @@ import React from 'react';
 import MapView, { Marker, Polygon, Polyline, ProviderPropType } from 'react-native-maps';
 import { StyleSheet, View, Dimensions, Text, TouchableOpacity, Image} from 'react-native';
 import { connect } from 'react-redux'
+import RNPickerSelect from 'react-native-picker-select';
 
 import DrawingTools from '../Components/DrawingTools' // components takes in charge displaying drawing tools.
 import Data from "../Components/DataForm" // a table to put data about the marker/line/polygone.
@@ -21,6 +22,8 @@ class App extends React.Component {
         longitudeDelta: 0.0421,
       },
       markerNumber: 0,  // number of markers (counter) "use it to assign keys and helps with counting"
+      markerIcon : require("../Images/Markers/home.png"),  // (default marker icon) & to detect the changing of select form
+      markerColor : require("../Images/Markers/trash_red.png"),  // (default marker icon) & to detect the changing of select form
 
         // polygons data :
       polygons: [],   // to contain polygones and show them on mapping the array
@@ -80,7 +83,9 @@ class App extends React.Component {
         // push a new marker data to the list :
       this.markers.push(
                          {latiLngi : latLng,
-                          key : this.state.markerNumber
+                          key : this.state.markerNumber,
+                          icon : this.state.markerIcon,
+                          color: this.state.markerColor,
                         }
                        )
          // update the counter of markers :
@@ -262,6 +267,7 @@ class App extends React.Component {
             onPress={()=> {this._MarkerTool(), this._shapeFocused(index.key)} }  
             coordinate={index.latiLngi}
             key={"MN-" + index.key}
+            icon={index.icon}
           >
           </Marker>
         ))}
@@ -322,30 +328,41 @@ class App extends React.Component {
 
         {this.props.drawingPan == "MarkerPan" && (
           <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={[styles.bubble, styles.button]}
-            >
-              <Image 
-              style={{width: 20, height: 20}} 
-              source={require("../Images/back.png")}
+
+            <View style={[styles.bubble, styles.button]} > 
+
+              <RNPickerSelect
+                onValueChange={(value) => {
+                  if(value == "trash") {
+                    this.setState({markerIcon : require("../Images/Markers/trash.png")})
+                  } else if(value == "light") {
+                    this.setState({markerIcon : require("../Images/Markers/light.png")})
+                  } else if(value == "chair") {
+                    this.setState({markerIcon : require("../Images/Markers/chair.png")})
+                  }
+                }}
+                items={[
+                  { label: 'trash', value: 'trash' },
+                  { label: 'light', value: 'light'},
+                  { label: 'chair', value: 'chair'},
+                ]}
               />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.bubble, styles.button]}
-            >     
-              <Image 
-                source={this.state.creatingHole ? require("../Images/finish_hole.png") : require("../Images/hole.png")} 
-                style={{width: 30, height: 30}}
+
+
+
+            </View>
+
+            <View style={[styles.bubble, styles.button]} > 
+              <RNPickerSelect
+                onValueChange={(value) => console.log(value)}
+                items={[
+                  { label: 'Football', value: 'football', color: 'green'  },
+                  { label: 'Baseball', value: 'baseball', color: 'green'  },
+                  { label: 'Hockey', value: 'hockey', color: 'green'  },
+                ]}
               />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.bubble, styles.button]}
-            >
-              <Image 
-                source={require("../Images/done.png")} 
-                style={{width: 25, height: 25}}
-              />
-            </TouchableOpacity>
+            </View>
+
           </View>
         )}
 
