@@ -267,6 +267,7 @@ class App extends React.Component {
             coordinate={index.latiLngi}
             key={"MN-" + index.key}
             icon={index.icon}
+            draggable
           >
           </Marker>
         ))}
