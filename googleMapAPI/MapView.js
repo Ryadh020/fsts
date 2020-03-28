@@ -41,7 +41,7 @@ class App extends React.Component {
       polylineStrokeColor: "black",
       polylineStrokeWidth: 4,
 
-      polylineFillURL: require("../Images/Polygone/black.png"),
+      polylineFillURL: require("../Images/Polygone/black_hole.png"),
       polylineWidhtURL: require("../Images/Polygone/1.png"),
 
         // polygons data :
@@ -358,7 +358,7 @@ class App extends React.Component {
             />
             <View style={styles.btn} > 
               <RNPickerSelect
-                placeholder={{}}
+                //placeholder={{}}
                 onValueChange={(value) => {
                   if(value == "trash") {
                     this.setState({markerIcon : "trash", markerIconURL : require("../Images/Markers/trash.png")})
@@ -382,7 +382,7 @@ class App extends React.Component {
             />
             <View style={styles.btn} > 
               <RNPickerSelect
-                placeholder={{}}
+                //placeholder={{}}
                 onValueChange={(value) => {
                   if (value == "red") {
                     this.setState({markerColor : require("../Images/Markers/red.png")})
@@ -448,7 +448,7 @@ class App extends React.Component {
             />
             <View style={styles.polyBtn} > 
               <RNPickerSelect
-                placeholder={{}}
+                //placeholder={{}}
                 onValueChange={(value) => {
                   if(value == 'red') {
                     this.setState({polygoneFillColor : "red", polygoneFillURL: require("../Images/Polygone/red.png")})
@@ -535,11 +535,11 @@ class App extends React.Component {
                 //placeholder={{}}
                 onValueChange={(value) =>{
                   if(value == "red") {
-                    this.setState({polylineStrokeColor: "red", polylineFillURL: require("../Images/Polygone/red.png")})
+                    this.setState({polylineStrokeColor: "red", polylineFillURL: require("../Images/Polygone/red_hole.png")})
                   } else if(value == "green") {
-                    this.setState({polylineStrokeColor: "green", polylineFillURL: require("../Images/Polygone/green.png")})
+                    this.setState({polylineStrokeColor: "green", polylineFillURL: require("../Images/Polygone/green_hole.png")})
                   } else if(value == "yellow") {
-                    this.setState({polylineStrokeColor: "yellow", polylineFillURL: require("../Images/Polygone/yellow.png")})
+                    this.setState({polylineStrokeColor: "yellow", polylineFillURL: require("../Images/Polygone/yellow_hole.png")})
                   }
                 }}
 
