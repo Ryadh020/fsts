@@ -329,11 +329,10 @@ class App extends React.Component {
 
         {this.props.drawingPan == "MarkerPan" && (
           <View style={styles.panelContainer}>
-
             <Image 
                 source={this.state.markerIconURL} 
                 style={{width: 25, height: 25}}
-              />
+            />
             <View style={styles.btn} > 
               <RNPickerSelect
                 placeholder={{}}
@@ -354,16 +353,13 @@ class App extends React.Component {
               />
             </View>
 
-
-
-
-
             <Image 
               source={this.state.markerColor} 
               style={{width: 25, height: 25}}
             />
             <View style={styles.btn} > 
               <RNPickerSelect
+                placeholder={{}}
                 onValueChange={(value) => {
                   if (value == "red") {
                     this.setState({markerColor : require("../Images/Markers/red.png")})
@@ -421,7 +417,46 @@ class App extends React.Component {
         )}
 
         {this.props.drawingPan == "PolygonPan" && (
-          <View style={styles.buttonContainer}>
+
+        <View  style={{position: "absolute", left:0, bottom: 0}}>
+
+          <View style={styles.polyPanelContainer}>
+            <Image 
+                source={this.state.markerIconURL} 
+                style={{width: 25, height: 25}}
+            />
+            <View style={styles.polyBtn} > 
+              <RNPickerSelect
+                placeholder={{}}
+                onValueChange={(value) => console.log(value)}
+
+                items={[
+                  { label: 'trash', value: 'trash' },
+                  { label: 'light', value: 'light'},
+                  { label: 'chair', value: 'chair'},
+                ]}
+              />
+            </View>
+
+
+            <Image 
+              source={this.state.markerColor} 
+              style={{width: 25, height: 25}}
+            />
+            <View style={styles.polyBtn} > 
+              <RNPickerSelect
+                onValueChange={(value) => console.log(value)}
+                items={[
+                  { label: 'red', value: 'red', color: 'red'  },
+                  { label: 'green', value: 'green', color: 'green'  },
+                  { label: 'yellow', value: 'yellow', color: 'yellow'  },
+                ]}
+              />
+            </View>
+
+          </View>
+
+          <View style={styles.polyButtonContainer}>
             <TouchableOpacity
               style={[styles.bubble, styles.button]}
             >
@@ -449,10 +484,50 @@ class App extends React.Component {
               />
             </TouchableOpacity>
           </View>
+        </View>
         )}
      
         {this.props.drawingPan == "LinePan"  && (
-          <View style={styles.buttonContainer}>
+
+          <View  style={{position: "absolute", left:0, bottom: 0}}>
+
+          <View style={styles.polyPanelContainer}>
+            <Image 
+                source={this.state.markerIconURL} 
+                style={{width: 25, height: 25}}
+            />
+            <View style={styles.polyBtn} > 
+              <RNPickerSelect
+                placeholder={{}}
+                onValueChange={(value) => console.log(value)}
+
+                items={[
+                  { label: 'trash', value: 'trash' },
+                  { label: 'light', value: 'light'},
+                  { label: 'chair', value: 'chair'},
+                ]}
+              />
+            </View>
+
+
+            <Image 
+              source={this.state.markerColor} 
+              style={{width: 25, height: 25}}
+            />
+            <View style={styles.polyBtn} > 
+              <RNPickerSelect
+                onValueChange={(value) => console.log(value)}
+                items={[
+                  { label: 'red', value: 'red', color: 'red'  },
+                  { label: 'green', value: 'green', color: 'green'  },
+                  { label: 'yellow', value: 'yellow', color: 'yellow'  },
+                ]}
+              />
+            </View>
+
+          </View>
+
+          <View style={styles.polyButtonContainer}>
             <TouchableOpacity
               style={[styles.bubble, styles.button]}
             >
@@ -480,6 +555,9 @@ class App extends React.Component {
               />
             </TouchableOpacity>
           </View>
+            
+          </View>
+          
         )}
 
 
@@ -503,8 +581,8 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     position: "absolute",
-    bottom: 35,
-    left: 55,
+    bottom: "5%",
+    left: "15%",
     flexDirection: 'row',
     alignItems: "center",
     marginVertical: 20,
@@ -524,7 +602,7 @@ const styles = StyleSheet.create({
   // panel:
   panelContainer: {
     position: "absolute",
-    bottom: "15%",
+    bottom: "12%",
     left: "26%",
     paddingLeft: 25,
 
@@ -535,6 +613,37 @@ const styles = StyleSheet.create({
     borderRadius: 20
   },
   btn: {
+    width: 60,
+    paddingHorizontal: 16,
+    alignItems: 'center',
+    marginHorizontal: 0,
+  },
+  // Polypanel:
+  polyPanelContainer: {
+    width: 190,
+    position: "relative",
+    bottom: "27%",
+    left: "100%",
+    paddingLeft: 25,
+  
+    flexDirection: 'row',
+    alignItems: "center",
+  
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    borderRadius: 20
+  },
+  polyButtonContainer: {
+    position: "relative",
+    bottom: "25%",
+    left: "45%",
+  
+    flexDirection: 'row',
+    alignItems: "center",
+  
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    borderRadius: 20
+  },
+  polyBtn: {
     width: 60,
     paddingHorizontal: 16,
     alignItems: 'center',
