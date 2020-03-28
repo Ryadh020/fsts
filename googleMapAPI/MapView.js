@@ -116,6 +116,8 @@ class App extends React.Component {
             PolygoneId: PolygoneId++,
             coordinates: [e.nativeEvent.coordinate],
             holes: [],
+            polygoneStrokeColor: this.state.polygoneStrokeColor,
+            polygoneFillColor: this.state.polygoneFillColor
           },
         });
       } else if (!creatingHole) {
@@ -319,8 +321,8 @@ class App extends React.Component {
             coordinates={polygon.coordinates}
             holes={polygon.holes}
 
-            strokeColor= {this.state.polygoneStrokeColor}
-            fillColor={this.state.polygoneFillColor}
+            strokeColor= {polygon.polygoneStrokeColor}
+            fillColor={polygon.polygoneFillColor}
             strokeWidth={1}
           />
         ))}
@@ -451,9 +453,9 @@ class App extends React.Component {
                 }}
 
                 items={[
-                  { label: 'red', value: 'red' },
-                  { label: 'green', value: 'green'},
-                  { label: 'yellow', value: 'yellow'},
+                  { label: 'red', value: 'red', color: 'red'},
+                  { label: 'green', value: 'green', color: 'green'},
+                  { label: 'yellow', value: 'yellow', color: 'yellow'},
                 ]}
               />
             </View>
@@ -465,7 +467,15 @@ class App extends React.Component {
             />
             <View style={styles.polyBtn} > 
               <RNPickerSelect
-                onValueChange={(value) => console.log(value)}
+                onValueChange={(value) => {
+                  if (value == 'red') {
+                    this.setState({polygoneStrokeColor : "red", polygoneBorderURL: require("../Images/Polygone/red_hole.png")})
+                  } else if (value == 'green') {
+                    this.setState({polygoneStrokeColor : "green", polygoneBorderURL: require("../Images/Polygone/green_hole.png")})
+                  }else if (value == 'yellow') {
+                    this.setState({polygoneStrokeColor : "yellow", polygoneBorderURL: require("../Images/Polygone/yellow_hole.png")})
+                  }
+                }}
                 items={[
                   { label: 'red', value: 'red', color: 'red'  },
                   { label: 'green', value: 'green', color: 'green'  },
