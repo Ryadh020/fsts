@@ -34,8 +34,15 @@ class App extends React.Component {
       polygoneFillURL: require("../Images/Polygone/black.png"),
       polygoneBorderURL: require("../Images/Polygone/black_hole.png"),
         // for drawing
-      polygoneStrokeColor : "red",
-      polygoneFillColor: "red",
+      polygoneStrokeColor : "gray",
+      polygoneFillColor: "gray",
+
+      // Polyline drawing panel carachteristics :
+      polylineStrokeColor: "black",
+      polylineStrokeWidth: 4,
+
+      polylineFillURL: require("../Images/Polygone/black.png"),
+      polylineWidhtURL: require("../Images/Polygone/1.png"),
 
         // polygons data :
       polygons: [],   // to contain polygones and show them on mapping the array
@@ -236,6 +243,8 @@ class App extends React.Component {
           LineEditing: {
             lineId: lineId++,
             coordinates: [e.nativeEvent.coordinate],
+            polylineStrokeColor: this.state.polylineStrokeColor,
+            polylineStrokeWidth: this.state.polylineStrokeWidth 
           },
         });
       } else {
@@ -294,9 +303,9 @@ class App extends React.Component {
 
             key={polyline.lineId}
             coordinates={polyline.coordinates}
-            strokeColor="#000"
-            fillColor="rgba(255,0,0,0.5)"
-            strokeWidth={5}
+
+            strokeColor={polyline.polylineStrokeColor}
+            strokeWidth={polyline.polylineStrokeWidth}
           />
         ))}
 
@@ -431,9 +440,7 @@ class App extends React.Component {
         )}
 
         {this.props.drawingPan == "PolygonPan" && (
-
         <View  style={{position: "absolute", left:0, bottom: 0}}>
-
           <View style={styles.polyPanelContainer}>
             <Image 
                 source={this.state.polygoneFillURL} 
@@ -459,8 +466,6 @@ class App extends React.Component {
                 ]}
               />
             </View>
-
-
             <Image 
               source={this.state.polygoneBorderURL} 
               style={{width: 25, height: 25}}
@@ -483,7 +488,6 @@ class App extends React.Component {
                 ]}
               />
             </View>
-
           </View>
 
           <View style={styles.polyButtonContainer}>
@@ -508,10 +512,10 @@ class App extends React.Component {
               onPress={() => this.finishPolygone()}
               style={[styles.bubble, styles.button]}
             >
-              <Image 
-                source={this.state.polygoneEditing? require("../Images/done.png"): require("../Images/done_blured.png")}
-                style={{width: 25, height: 25}}
-              />
+            <Image 
+              source={this.state.polygoneEditing? require("../Images/done.png"): require("../Images/done_blured.png")}
+              style={{width: 25, height: 25}}
+            />
             </TouchableOpacity>
           </View>
         </View>
@@ -523,34 +527,50 @@ class App extends React.Component {
 
           <View style={styles.polyPanelContainer}>
             <Image 
-                source={this.state.markerIconURL} 
+                source={this.state.polylineFillURL} 
                 style={{width: 25, height: 25}}
             />
             <View style={styles.polyBtn} > 
               <RNPickerSelect
-                placeholder={{}}
-                onValueChange={(value) => console.log(value)}
+                //placeholder={{}}
+                onValueChange={(value) =>{
+                  if(value == "red") {
+                    this.setState({polylineStrokeColor: "red", polylineFillURL: require("../Images/Polygone/red.png")})
+                  } else if(value == "green") {
+                    this.setState({polylineStrokeColor: "green", polylineFillURL: require("../Images/Polygone/green.png")})
+                  } else if(value == "yellow") {
+                    this.setState({polylineStrokeColor: "yellow", polylineFillURL: require("../Images/Polygone/yellow.png")})
+                  }
+                }}
 
                 items={[
-                  { label: 'trash', value: 'trash' },
-                  { label: 'light', value: 'light'},
-                  { label: 'chair', value: 'chair'},
+                  { label: 'red', value: 'red', color: 'red'  },
+                  { label: 'green', value: 'green', color: 'green'  },
+                  { label: 'yellow', value: 'yellow', color: 'yellow'  },
                 ]}
               />
             </View>
 
 
             <Image 
-              source={this.state.markerColor} 
+              source={this.state.polylineWidhtURL} 
               style={{width: 25, height: 25}}
             />
             <View style={styles.polyBtn} > 
               <RNPickerSelect
-                onValueChange={(value) => console.log(value)}
+                onValueChange={(value) => {
+                  if(value == "1") {
+                    this.setState({polylineStrokeWidth : 4, polylineWidhtURL: require("../Images/Polygone/1.png")})
+                  } else if(value == "2") {
+                    this.setState({polylineStrokeWidth : 6, polylineWidhtURL: require("../Images/Polygone/2.png")})
+                  } else if(value == "3") {
+                    this.setState({polylineStrokeWidth : 8, polylineWidhtURL: require("../Images/Polygone/3.png")})
+                  }
+                }}
                 items={[
-                  { label: 'red', value: 'red', color: 'red'  },
-                  { label: 'green', value: 'green', color: 'green'  },
-                  { label: 'yellow', value: 'yellow', color: 'yellow'  },
+                  { label: '1', value: '1'},
+                  { label: '2', value: '2'},
+                  { label: '3', value: '3'},
                 ]}
               />
             </View>
