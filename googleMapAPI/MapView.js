@@ -22,9 +22,20 @@ class App extends React.Component {
         longitudeDelta: 0.0421,
       },
       markerNumber: 0,  // number of markers (counter) "use it to assign keys and helps with counting"
+
+      // Marker drawing panel carachteristics :
       markerIconURL : require("../Images/Markers/home.png"),  // (default marker icon) & to detect the changing of select form
       markerIcon : "home",
+        // for panel
       markerColor : require("../Images/Markers/black.png"),
+
+      // Polygone drawing panel carachteristics :
+        // for panel
+      polygoneFillURL: require("../Images/Polygone/black.png"),
+      polygoneBorderURL: require("../Images/Polygone/black_hole.png"),
+        // for drawing
+      polygoneStrokeColor : "red",
+      polygoneFillColor: "red",
 
         // polygons data :
       polygons: [],   // to contain polygones and show them on mapping the array
@@ -307,8 +318,9 @@ class App extends React.Component {
             key={polygon.PolygoneId}
             coordinates={polygon.coordinates}
             holes={polygon.holes}
-            strokeColor="#F00"
-            fillColor="rgba(255,0,0,0.5)"
+
+            strokeColor= {this.state.polygoneStrokeColor}
+            fillColor={this.state.polygoneFillColor}
             strokeWidth={1}
           />
         ))}
@@ -422,25 +434,33 @@ class App extends React.Component {
 
           <View style={styles.polyPanelContainer}>
             <Image 
-                source={this.state.markerIconURL} 
+                source={this.state.polygoneFillURL} 
                 style={{width: 25, height: 25}}
             />
             <View style={styles.polyBtn} > 
               <RNPickerSelect
                 placeholder={{}}
-                onValueChange={(value) => console.log(value)}
+                onValueChange={(value) => {
+                  if(value == 'red') {
+                    this.setState({polygoneFillColor : "red", polygoneFillURL: require("../Images/Polygone/red.png")})
+                  } else if(value == 'green') {
+                    this.setState({polygoneFillColor : "green", polygoneFillURL: require("../Images/Polygone/green.png")})
+                  } else if(value == 'yellow') {
+                    this.setState({polygoneFillColor : "yellow", polygoneFillURL: require("../Images/Polygone/yellow.png")})
+                  }
+                }}
 
                 items={[
-                  { label: 'trash', value: 'trash' },
-                  { label: 'light', value: 'light'},
-                  { label: 'chair', value: 'chair'},
+                  { label: 'red', value: 'red' },
+                  { label: 'green', value: 'green'},
+                  { label: 'yellow', value: 'yellow'},
                 ]}
               />
             </View>
 
 
             <Image 
-              source={this.state.markerColor} 
+              source={this.state.polygoneBorderURL} 
               style={{width: 25, height: 25}}
             />
             <View style={styles.polyBtn} > 
