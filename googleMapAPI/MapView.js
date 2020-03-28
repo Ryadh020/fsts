@@ -24,6 +24,7 @@ class App extends React.Component {
       markerNumber: 0,  // number of markers (counter) "use it to assign keys and helps with counting"
       markerIconURL : require("../Images/Markers/home.png"),  // (default marker icon) & to detect the changing of select form
       markerIcon : "home",
+      markerColor : require("../Images/Markers/black.png"),
 
         // polygons data :
       polygons: [],   // to contain polygones and show them on mapping the array
@@ -327,13 +328,15 @@ class App extends React.Component {
         <Text style={{position: "absolute", top: 0, left: 0}}>{this.state.text}</Text>  
 
         {this.props.drawingPan == "MarkerPan" && (
-          <View style={styles.buttonContainer}>
+          <View style={styles.panelContainer}>
 
-            <View style={[styles.bubble, styles.button]} > 
-
-
-
+            <Image 
+                source={this.state.markerIconURL} 
+                style={{width: 25, height: 25}}
+              />
+            <View style={styles.btn} > 
               <RNPickerSelect
+                placeholder={{}}
                 onValueChange={(value) => {
                   if(value == "trash") {
                     this.setState({markerIcon : "trash", markerIconURL : require("../Images/Markers/trash.png")})
@@ -355,35 +358,48 @@ class App extends React.Component {
 
 
 
-
-            <View style={[styles.bubble, styles.button]} > 
+            <Image 
+              source={this.state.markerColor} 
+              style={{width: 25, height: 25}}
+            />
+            <View style={styles.btn} > 
               <RNPickerSelect
                 onValueChange={(value) => {
                   if (value == "red") {
+                    this.setState({markerColor : require("../Images/Markers/red.png")})
                     if (this.state.markerIcon == "trash") {
                       this.setState({markerIconURL : require("../Images/Markers/trash_red.png")})
                     } else if (this.state.markerIcon == "light") {
                       this.setState({markerIconURL : require("../Images/Markers/light_red.png")})
                     } else if (this.state.markerIcon == "chair") {
                       this.setState({markerIconURL : require("../Images/Markers/chair_red.png")})
+                    }else if (this.state.markerIcon == "home") {
+                      this.setState({markerIconURL : require("../Images/Markers/home_red.png")})
                     }
                   } else if (value == "green") {
+                    this.setState({markerColor : require("../Images/Markers/green.png")})
                     if (this.state.markerIcon == "trash") {
                       this.setState({markerIconURL : require("../Images/Markers/trash_green.png")})
                     } else if (this.state.markerIcon == "light") {
                       this.setState({markerIconURL : require("../Images/Markers/light_green.png")})
                     } else if (this.state.markerIcon == "chair") {
                       this.setState({markerIconURL : require("../Images/Markers/chair_green.png")})
+                    }else if (this.state.markerIcon == "home") {
+                      this.setState({markerIconURL : require("../Images/Markers/home_green.png")})
                     }
                   } else if (value == "yellow") {
+                    this.setState({markerColor : require("../Images/Markers/yellow.png")})
                     if (this.state.markerIcon == "trash") {
                       this.setState({markerIconURL : require("../Images/Markers/trash_yellow.png")})
                     } else if (this.state.markerIcon == "light") {
                       this.setState({markerIconURL : require("../Images/Markers/light_yellow.png")})
                     } else if (this.state.markerIcon == "chair") {
                       this.setState({markerIconURL : require("../Images/Markers/chair_yellow.png")})
+                    }else if (this.state.markerIcon == "home") {
+                      this.setState({markerIconURL : require("../Images/Markers/home_yellow.png")})
                     }
                   } else {
+                    this.setState({markerColor : require("../Images/Markers/red.png")})
                     if (this.state.markerIcon == "trash") {
                       this.setState({markerIconURL : require("../Images/Markers/trash.png")})
                     } else if (this.state.markerIcon == "light") {
@@ -504,6 +520,25 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     alignItems: 'center',
     marginHorizontal: 10,
+  },
+  // panel:
+  panelContainer: {
+    position: "absolute",
+    bottom: "15%",
+    left: "26%",
+    paddingLeft: 25,
+
+    flexDirection: 'row',
+    alignItems: "center",
+
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    borderRadius: 20
+  },
+  btn: {
+    width: 60,
+    paddingHorizontal: 16,
+    alignItems: 'center',
+    marginHorizontal: 0,
   },
 });
 
