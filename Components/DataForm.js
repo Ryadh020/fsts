@@ -63,17 +63,34 @@ class Data extends React.Component {
         if(this.props.tool == "Marker") {
           return(
             <View style={styles.output}>
-              <Text>R+{this.state.markersdata[this.props.id].hauteur}</Text>
-              <Text>{this.state.markersdata[this.props.id].etat}</Text>
-              <Text>{this.state.markersdata[this.props.id].more}</Text>
+              <Text /*{this.state.markersdata[this.props.id].more}*/ style={styles.outputText}> remarques: </Text>
+              <TouchableOpacity
+                  style={{ margin: 5}}
+                  onPress={console.log("get galerie")}
+              >
+                    <Image 
+                      source={require("../Images/done.png")} 
+                      style={{width: 25, height: 25}}
+                    />
+              </TouchableOpacity>
             </View>
           )
         } else if(this.props.tool == "Polygone") {
           return(
             <View style={styles.output}>
-              <Text>R+{this.state.polygonsData[this.props.id].largeur}</Text>
-              <Text>{this.state.polygonsData[this.props.id].etat}</Text>
-              <Text>{this.state.polygonsData[this.props.id].more}</Text>
+              <Text /* {this.state.polygonsData[this.props.id].etat}*/style={styles.outputText} > etat : </Text>
+              <Text /* {this.state.polygonsData[this.props.id].largeur}*/style={styles.outputText} > Largeur: </Text>
+
+              <Text /*{this.state.markersdata[this.props.id].more}*/ style={styles.outputText}> remarques: </Text>
+              <TouchableOpacity
+                  style={{ margin: 5}}
+                  onPress={console.log("get galerie")}
+              >
+                    <Image 
+                      source={require("../Images/done.png")} 
+                      style={{width: 25, height: 25}}
+                    />
+              </TouchableOpacity>
             </View>
           )
         } else if(this.props.tool == "Line") {
@@ -304,16 +321,20 @@ const styles = StyleSheet.create({
   },
   output: {
     position: "absolute",
-    top: (height) * 0.05,
-    left: (height) * 0.025,
-    width: (width) * 0.9,
-    height: (height) * 0.2,
+    top: (height) * 0.1,
+    left: (height) * 0.11,
+    width: (width) * 0.6,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
 
-    backgroundColor: "green",
+    backgroundColor: 'rgba(255,255,255,0.7)',
     borderRadius: 20,
+  },
+  outputText: {
+    borderBottomColor: "black",
+    borderBottomWidth: 1, 
+    margin: 10
   }
 })
 
