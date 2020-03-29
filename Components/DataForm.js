@@ -188,25 +188,61 @@ class Data extends React.Component {
           } else if (this.props.tool == "Polygone") {
             return(
               <View style={styles.table}>
+
+                <RNPickerSelect
+                  placeholder={{label: 'deffinez letat de la construction', value: 'deffinez letat de la construction' }}
+                  onValueChange={(value) => {
+                    if(value == "bon") {
+                      this.setState({editing : {...editing, etat : "bon"} })
+                    } else if(value == "moyen") {
+                      this.setState({editing : {...editing, etat : "moyen"} })
+                    } else if(value == "mauvais") {
+                      this.setState({editing : {...editing, etat : "mauvais"} })
+                    }
+                  }}
+                  items={[
+                    { label: 'bon', value: 'bon' },
+                    { label: 'moyen', value: 'moyen'},
+                    { label: 'mauvais', value: 'mauvais'},
+                  ]}
+                />
+
+
                 <TextInput
                   style={styles.input}
                   placeholder={"hauteur de la construction"}
-                  onChangeText={e => {this.setState({editing : {...editing, hauteur : e} })} }
+                  onChangeText={e => {this.setState({editing : {...editing, largeur : e} })} }
                 ></TextInput>
+
+
                 <TextInput
-                  style={styles.input}
-                  placeholder={"etat de la construction"}
-                  onChangeText={e => this.setState({editing : {...editing, etat : e} })}
-                ></TextInput>
-                <TextInput
-                  style={styles.input}
-                  placeholder={"Détails"}
+                  style={styles.inputDetails}
+                  placeholder={"Remarks..."}
                   onChangeText={e => this.setState({editing : {...editing, more : e} })}
                 ></TextInput>
-    
-                <Button
-                  onPress={this._updateData}
-                >submit</Button>
+
+
+
+
+                <View style={{display: "flex", flexDirection: "row", justifyContent: "space-between", width: 100, margin: 15}}>
+                  <TouchableOpacity
+                    onPress={console.log()}
+                  >
+                    <Image 
+                      source={require("../Images/done.png")} 
+                      style={{width: 25, height: 25}}
+                    />
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={this._updateData}
+                  >
+                    <Image 
+                      source={require("../Images/done.png")} 
+                      style={{width: 25, height: 25}}
+                    />
+                </TouchableOpacity>
+              </View>
               </View>
             )
           }
