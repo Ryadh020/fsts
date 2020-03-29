@@ -1,5 +1,5 @@
 import React from "react"
-import {View, Text, StyleSheet, Dimensions, TextInput} from "react-native"
+import {View, Text, StyleSheet, Dimensions, TextInput, TouchableOpacity, Image} from "react-native"
 import { Button } from "react-native-paper";
 import { connect } from 'react-redux'
 
@@ -94,32 +94,88 @@ class Data extends React.Component {
     _inputTable() {
       if(this.props.created) {
         const { editing } = this.state;
-        return(
-          <View style={styles.table}>
-            <TextInput
-              style={styles.input}
-              placeholder={"hauteur de la construction"}
-              onChangeText={e => {this.setState({editing : {...editing, hauteur : e} })} }
-            ></TextInput>
-            <TextInput
-              style={styles.input}
-              placeholder={"etat de la construction"}
-              onChangeText={e => this.setState({editing : {...editing, etat : e} })}
-            ></TextInput>
-            <TextInput
-              style={styles.input}
-              placeholder={"Détails"}
-              onChangeText={e => this.setState({editing : {...editing, more : e} })}
-            ></TextInput>
+          if(this.props.tool == "Marker") { 
+            return(
+              <View style={styles.table}>
+                <TextInput
+                  style={styles.inputDetails}
+                  placeholder={"Remarks..."}
+                  onChangeText={e => this.setState({editing : {...editing, more : e} })}
+                ></TextInput>
+    
+                <View style={{display: "flex", flexDirection: "row", justifyContent: "space-between", width: 100, margin: 15}}>
+                  <TouchableOpacity
+                    onPress={console.log()}
+                  >
+                    <Image 
+                      source={require("../Images/done.png")} 
+                      style={{width: 25, height: 25}}
+                    />
+                  </TouchableOpacity>
 
-            <Button
-              onPress={this._updateData}
-            >submit</Button>
-          </View>
-        )
-      }
+                  <TouchableOpacity
+                    onPress={this._updateData}
+                  >
+                    <Image 
+                      source={require("../Images/done.png")} 
+                      style={{width: 25, height: 25}}
+                    />
+                  </TouchableOpacity>
+                </View>
+ 
+              </View>
+            )
+          } else if(this.props.tool == "Line") {
+            return(
+              <View style={styles.table}>
+                <TextInput
+                  style={styles.input}
+                  placeholder={"hauteur de la construction"}
+                  onChangeText={e => {this.setState({editing : {...editing, hauteur : e} })} }
+                ></TextInput>
+                <TextInput
+                  style={styles.input}
+                  placeholder={"etat de la construction"}
+                  onChangeText={e => this.setState({editing : {...editing, etat : e} })}
+                ></TextInput>
+                <TextInput
+                  style={styles.input}
+                  placeholder={"Détails"}
+                  onChangeText={e => this.setState({editing : {...editing, more : e} })}
+                ></TextInput>
+    
+                <Button
+                  onPress={this._updateData}
+                >submit</Button>
+              </View>
+            )
+          } else if (this.props.tool == "Polygone") {
+            return(
+              <View style={styles.table}>
+                <TextInput
+                  style={styles.input}
+                  placeholder={"hauteur de la construction"}
+                  onChangeText={e => {this.setState({editing : {...editing, hauteur : e} })} }
+                ></TextInput>
+                <TextInput
+                  style={styles.input}
+                  placeholder={"etat de la construction"}
+                  onChangeText={e => this.setState({editing : {...editing, etat : e} })}
+                ></TextInput>
+                <TextInput
+                  style={styles.input}
+                  placeholder={"Détails"}
+                  onChangeText={e => this.setState({editing : {...editing, more : e} })}
+                ></TextInput>
+    
+                <Button
+                  onPress={this._updateData}
+                >submit</Button>
+              </View>
+            )
+          }
+        }
     }
-
     render() {
       return(
         <View style={styles.dataContainer}>
@@ -147,7 +203,6 @@ const styles = StyleSheet.create({
     top: (height) * 0.5,
     left: (height) * 0.06,
     width: (width) * 0.75,
-    height: (height) * 0.25,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -161,6 +216,19 @@ const styles = StyleSheet.create({
       borderColor: 'gray', 
       borderWidth: 1 ,
       borderRadius: 15,
+  },
+  inputDetails: {
+    width: (width) * 0.7,
+    height:105,
+    paddingLeft: 15,
+    marginTop: 10,
+
+
+
+    borderColor: 'gray', 
+    borderWidth: 0.3 ,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
   },
   output: {
     position: "absolute",
