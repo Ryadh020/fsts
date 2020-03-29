@@ -2,6 +2,7 @@ import React from "react"
 import {View, Text, StyleSheet, Dimensions, TextInput, TouchableOpacity, Image} from "react-native"
 import { Button } from "react-native-paper";
 import { connect } from 'react-redux'
+import RNPickerSelect from 'react-native-picker-select';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -70,7 +71,7 @@ class Data extends React.Component {
         } else if(this.props.tool == "Polygone") {
           return(
             <View style={styles.output}>
-              <Text>R+{this.state.polygonsData[this.props.id].hauteur}</Text>
+              <Text>R+{this.state.polygonsData[this.props.id].largeur}</Text>
               <Text>{this.state.polygonsData[this.props.id].etat}</Text>
               <Text>{this.state.polygonsData[this.props.id].more}</Text>
             </View>
@@ -128,26 +129,61 @@ class Data extends React.Component {
           } else if(this.props.tool == "Line") {
             return(
               <View style={styles.table}>
+                <RNPickerSelect
+                  placeholder={{label: 'deffinez letat de la voirie', value: 'deffinez letat de la voirie' }}
+                  onValueChange={(value) => {
+                    if(value == "bon") {
+                      this.setState({editing : {...editing, etat : "bon"} })
+                    } else if(value == "moyen") {
+                      this.setState({editing : {...editing, etat : "moyen"} })
+                    } else if(value == "mauvais") {
+                      this.setState({editing : {...editing, etat : "mauvais"} })
+                    }
+                  }}
+                  items={[
+                    { label: 'bon', value: 'bon' },
+                    { label: 'moyen', value: 'moyen'},
+                    { label: 'mauvais', value: 'mauvais'},
+                  ]}
+                />
+
+
                 <TextInput
                   style={styles.input}
-                  placeholder={"hauteur de la construction"}
-                  onChangeText={e => {this.setState({editing : {...editing, hauteur : e} })} }
+                  placeholder={"Largeur de la voirie"}
+                  onChangeText={e => {this.setState({editing : {...editing, largeur : e} })} }
                 ></TextInput>
+
+
                 <TextInput
-                  style={styles.input}
-                  placeholder={"etat de la construction"}
-                  onChangeText={e => this.setState({editing : {...editing, etat : e} })}
-                ></TextInput>
-                <TextInput
-                  style={styles.input}
-                  placeholder={"Détails"}
+                  style={styles.inputDetails}
+                  placeholder={"Remarks..."}
                   onChangeText={e => this.setState({editing : {...editing, more : e} })}
                 ></TextInput>
-    
-                <Button
-                  onPress={this._updateData}
-                >submit</Button>
+
+
+
+
+                <View style={{display: "flex", flexDirection: "row", justifyContent: "space-between", width: 100, margin: 15}}>
+                  <TouchableOpacity
+                    onPress={console.log()}
+                  >
+                    <Image 
+                      source={require("../Images/done.png")} 
+                      style={{width: 25, height: 25}}
+                    />
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={this._updateData}
+                  >
+                    <Image 
+                      source={require("../Images/done.png")} 
+                      style={{width: 25, height: 25}}
+                    />
+                </TouchableOpacity>
               </View>
+            </View>
             )
           } else if (this.props.tool == "Polygone") {
             return(
@@ -211,19 +247,19 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   input: {
-      width: (width) * 0.7,
-      height:45,
-      borderColor: 'gray', 
-      borderWidth: 1 ,
-      borderRadius: 15,
+    width: (width) * 0.7,
+    height:45,
+    paddingLeft: 15,
+
+    borderColor: 'gray', 
+    borderWidth: 0.3 ,
+    borderRadius: 10,
   },
   inputDetails: {
     width: (width) * 0.7,
     height:105,
     paddingLeft: 15,
     marginTop: 10,
-
-
 
     borderColor: 'gray', 
     borderWidth: 0.3 ,
