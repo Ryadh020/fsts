@@ -1,5 +1,6 @@
 import React from 'react';
 import MapView, { Marker, Polygon, Polyline, ProviderPropType } from 'react-native-maps';
+import { MAP_TYPES } from 'react-native-maps';
 import { StyleSheet, View, Dimensions, Text, TouchableOpacity, Image} from 'react-native';
 import { connect } from 'react-redux'
 import RNPickerSelect from 'react-native-picker-select';
@@ -22,6 +23,8 @@ class App extends React.Component {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       },
+      mapType : MAP_TYPES.STANDARD,
+
       markerNumber: 0,  // number of markers (counter) "use it to assign keys and helps with counting"
 
       // Marker drawing panel carachteristics :
@@ -62,6 +65,12 @@ class App extends React.Component {
       text: "debuging",      // just for debuging
     }
     this._Darw = this._Darw.bind(this)
+    this._changeMapType = this._changeMapType.bind(this)
+  }
+
+    // the setting function
+  _changeMapType() {
+    this.setState({ mapType : MAP_TYPES.SATELLITE });
   }
 
     // Helper location:
@@ -71,20 +80,15 @@ class App extends React.Component {
   markers = []
 
   //shapes = [this.markers]
-
   // store data function:
-  
   _storeData = async () => {
-
     //let shapes = this.data ;
-
     try {
       await AsyncStorage.setItem('savedMap', JSON.stringify(this.markers));
       console.log("data saved")
 
     } catch (error) {
       console.log("error");
-      
     }
   };
   
@@ -294,7 +298,7 @@ class App extends React.Component {
     return (
       <View>
         <MapView
-          mapType = {this.props.mapType}
+          mapType = {this.state.mapType}
           initialRegion = {this.state.region}
           style={styles.mapStyle} 
           scrollEnabled={this.state.scrollable}
@@ -642,7 +646,12 @@ class App extends React.Component {
                 source={require("../Images/done.png")} 
                 style={{width: 25, height: 25}}
               />
-            </TouchableOpacity>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={this._changeMapType} style={styles.MapType}>
+            <Image style={{width: 45, height: 45}} source={require("../Images/earth.png")} />
+        </TouchableOpacity>
+
       </View>
     );
   }
@@ -654,6 +663,21 @@ App.propTypes = {
 
 
 const styles = StyleSheet.create({
+  /* change map type button */
+  MapType : { // ordinary button
+    position : "absolute",
+    top : "25%",
+    left : 15,
+
+    display : "flex",
+    justifyContent : "center",
+    alignItems : "center",
+    width : 45,
+    height : 45,
+    padding : 5,
+    backgroundColor : "hsla(44, 0%, 85%, 0.5)",
+    borderRadius : 50
+  },
   mapStyle: {
     width: (Dimensions.get('window').width),
     height: (Dimensions.get('window').height) * 0.93,

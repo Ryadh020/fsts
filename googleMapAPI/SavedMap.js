@@ -61,7 +61,6 @@ class App extends React.Component {
       polylineWidhtURL: require("../Images/Polygone/1.png"),
 
       text: "test",     // just for debuging
-      storage: "not yet"
     }
     this._Darw = this._Darw.bind(this)
     this._changeMapType = this._changeMapType.bind(this)
@@ -88,7 +87,6 @@ class App extends React.Component {
     // Helpers :
   //Storage = ["45454"]   // data storage Storag (saved maps)
   latLng = {latitude: 36.365, longitude: 6.61472}
-
 
     // pop up marker data on cliking the marker:
   _shapeFocused(id) {
