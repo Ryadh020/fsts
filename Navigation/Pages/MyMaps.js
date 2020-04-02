@@ -1,157 +1,121 @@
-import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Dimensions,
-  TouchableOpacity,
-} from 'react-native';
+import React from'react'
+import {View, Text, Button, StyleSheet, SafeAreaView, Image} from 'react-native'
+import { MAP_TYPES } from 'react-native-maps';
+import { AsyncStorage } from 'react-native';
 
-import MapView, { Polyline, ProviderPropType } from 'react-native-maps';
+import SavedMap from '../../googleMapAPI/SavedMap'
 
-const { width, height } = Dimensions.get('window');
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const ASPECT_RATIO = width / height;
-const LATITUDE = 37.78825;
-const LONGITUDE = -122.4324;
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-
-let lineId = 0;
-
-class PolylineCreator extends React.Component {
-  constructor(props) {
-    super(props);
-
+class MyMaps extends React.Component {
+constructor(props) {
+    super(props)
     this.state = {
-      region: {
-        latitude: LATITUDE,
-        longitude: LONGITUDE,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA,
-      },
-      polylines: [],
-      LineEditing: null,
-    };
-  }
+      mapType: MAP_TYPES.STANDARD,
+      currentMap: 1,
 
-  finishLine() {
-    const { polylines, LineEditing } = this.state;
-    this.setState({
-      polylines: [...polylines, LineEditing],
-      LineEditing: null,
-    });
-  }
-
-  onPanDrag(e) {
-    const { LineEditing } = this.state;
-    if (!LineEditing) {
-      this.setState({
-        LineEditing: {
-          lineId: lineId++,
-          coordinates: [e.nativeEvent.coordinate],
-        },
-      });
-    } else {
-      this.setState({
-        LineEditing: {
-          ...LineEditing,
-          coordinates: [...LineEditing.coordinates, e.nativeEvent.coordinate],
-        },
-      });
-    }
-  }
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <MapView
-          provider={this.props.provider}
-          style={styles.map}
-          initialRegion={this.state.region}
-          scrollEnabled={false}
-          onPanDrag={e => this.onPanDrag(e)}
-        >
-
-
-          {this.state.polylines.map(polyline => (
-            <Polyline
-              key={polyline.lineId}
-              coordinates={polyline.coordinates}
-              strokeColor="#000"
-              fillColor="rgba(255,0,0,0.5)"
-              strokeWidth={1}
-            />
-          ))}
-
-          {this.state.LineEditing && (
-            <Polyline
-              key="editingPolyline"
-              coordinates={this.state.LineEditing.coordinates}
-              strokeColor="#F00"
-              fillColor="rgba(255,0,0,0.5)"
-              strokeWidth={1}
-            />
-          )}
-
-
+      Storage: [
+        {
+          latiLngi : {latitude: 0, longitude: 0},
           
-        </MapView>
-
-
-
-        <View style={styles.buttonContainer}>
-          {this.state.LineEditing && (
-            <TouchableOpacity
-              onPress={() => this.finishLine()}
-              style={[styles.bubble, styles.button]}
-            >
-              <Text>Finish</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-
-
-
-      </View>
-    );
-  }
+        }
+      ]
+    }
+    this._changeMapType = this._changeMapType.bind(this)
 }
 
-PolylineCreator.propTypes = {
-  provider: ProviderPropType,
-};
+    // the setting function
+    _changeMapType() {
+        this.setState({ mapType : MAP_TYPES.SATELLITE });
+    }
+
+
+    _getData =  async () => { 
+        
+        try {
+          const value = await AsyncStorage.getItem('savedMap');
+          if (value !== null) {
+            // We have data!!
+            console.log("data retrived: " + value)
+            
+            
+            //let data = JSON.parse(value)    // parse data string
+
+
+            this.setState({Storage : JSON.parse(value) })
+            
+          }
+        } catch (error) {
+          // Error retrieving data
+          console.log("Error retrieving data")
+        }
+    }
+    
+    
+
+
+render() {
+    return (
+        <SafeAreaView style={styles.main}>
+            <SavedMap mapType={this.state.mapType} style={styles.map} data={this.state.Storage /*[this.state.currentMap]*/}></SavedMap>
+
+
+            
+
+            <View  style={styles.LayoutButtons}>
+                <TouchableOpacity onPress={this._changeMapType} style={styles.MapType}>
+                <Image style={{width: 45, height: 45}} source={require("../../Images/earth.png")} />
+                </TouchableOpacity>
+
+ 
+
+                <TouchableOpacity onPress={() => this._getData()} style={styles.MapType}>
+                  <Image 
+                    source={require("../../Images/done.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+                </TouchableOpacity>
+            </View>
+
+        </SafeAreaView>
+    )
+}
+}
 
 const styles = StyleSheet.create({
-  container: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  map: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  bubble: {
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-    borderRadius: 20,
-  },
-  latlng: {
-    width: 200,
-    alignItems: 'stretch',
-  },
-  button: {
-    width: 80,
-    paddingHorizontal: 12,
-    alignItems: 'center',
-    marginHorizontal: 10,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    marginVertical: 20,
-    backgroundColor: 'transparent',
-  },
-});
+    main : {
+        flex : 1,
+        justifyContent : 'flex-end',
+        alignItems : 'center'
+    },
+    LayoutButtons : {  // for the left side buttons (sattelite/map ....etc.)
+        position : "absolute",
+        top : "25%",
+        left : 15,
+        display : "flex",
+        flexDirection : "column",
+        justifyContent : "center",
+        alignItems : "center",
+    },
+    MapType : { // ordinary button
+        display : "flex",
+        justifyContent : "center",
+        alignItems : "center",
+        width : 45,
+        height : 45,
+        padding : 5,
+        backgroundColor : "hsla(44, 0%, 85%, 0.5)",
+        borderRadius : 50
+    },
+    DrawingButtons : {  // for the right side buttons (marker/line/Polygone ....etc.)
+        position : "absolute",
+        top : 150,
+        right : 15,
+        display : "flex",
+        flexDirection : "column",
+        justifyContent : "space-around",
+        alignItems : "center"
+    }
+})
 
-export default PolylineCreator;
+export default MyMaps

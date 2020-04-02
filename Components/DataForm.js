@@ -63,13 +63,13 @@ class Data extends React.Component {
         if(this.props.tool == "Marker") {
           return(
             <View style={styles.output}>
-              <Text /*{this.state.markersdata[this.props.id].more}*/ style={styles.outputText}> remarques: </Text>
+              <Text style={styles.outputText}> remarques: {this.state.markersdata[this.props.id].more}</Text>
               <TouchableOpacity
                   style={{ margin: 5}}
                   onPress={console.log("get galerie")}
               >
                     <Image 
-                      source={require("../Images/done.png")} 
+                      source={require("../Images/Galery.png")} 
                       style={{width: 25, height: 25}}
                     />
               </TouchableOpacity>
@@ -78,16 +78,16 @@ class Data extends React.Component {
         } else if(this.props.tool == "Polygone") {
           return(
             <View style={styles.output}>
-              <Text /* {this.state.polygonsData[this.props.id].etat}*/style={styles.outputText} > etat : </Text>
-              <Text /* {this.state.polygonsData[this.props.id].hauteur}*/style={styles.outputText} > Hauteur: </Text>
+              <Text style={styles.outputText} > etat : {this.state.polygonsData[this.props.id].etat}</Text>
+              <Text style={styles.outputText} > Hauteur: R+{this.state.polygonsData[this.props.id].hauteur}</Text>
 
-              <Text /*{this.state.markersdata[this.props.id].more}*/ style={styles.outputText}> remarques: </Text>
+              <Text  style={styles.outputText}> remarques: {this.state.polygonsData[this.props.id].more}</Text>
               <TouchableOpacity
                   style={{ margin: 5}}
                   onPress={console.log("get galerie")}
               >
                     <Image 
-                      source={require("../Images/done.png")} 
+                      source={require("../Images/Galery.png")} 
                       style={{width: 25, height: 25}}
                     />
               </TouchableOpacity>
@@ -96,16 +96,16 @@ class Data extends React.Component {
         } else if(this.props.tool == "Line") {
           return(
             <View style={styles.output}>
-              <Text /* {this.state.polygonsData[this.props.id].etat}*/style={styles.outputText} > etat : </Text>
-              <Text /* {this.state.polygonsData[this.props.id].largeur}*/style={styles.outputText} > Largeur: </Text>
+              <Text style={styles.outputText} > etat : {this.state.polyLinesData[this.props.id].etat}</Text>
+              <Text style={styles.outputText} > Largeur: {this.state.polyLinesData[this.props.id].largeur}</Text>
 
-              <Text /*{this.state.markersdata[this.props.id].more}*/ style={styles.outputText}> remarques: </Text>
+              <Text style={styles.outputText}> remarques: {this.state.polyLinesData[this.props.id].more}</Text>
               <TouchableOpacity
                   style={{ margin: 5}}
                   onPress={console.log("get galerie")}
               >
                     <Image 
-                      source={require("../Images/done.png")} 
+                      source={require("../Images/Galery.png")} 
                       style={{width: 25, height: 25}}
                     />
               </TouchableOpacity>
@@ -130,17 +130,15 @@ class Data extends React.Component {
                   placeholder={"Remarks..."}
                   onChangeText={e => this.setState({editing : {...editing, more : e} })}
                 ></TextInput>
-    
                 <View style={{display: "flex", flexDirection: "row", justifyContent: "space-between", width: 100, margin: 15}}>
                   <TouchableOpacity
-                    onPress={console.log()}
+                    onPress={console.log("take pictures")}
                   >
                     <Image 
-                      source={require("../Images/done.png")} 
+                      source={require("../Images/camera.png")} 
                       style={{width: 25, height: 25}}
                     />
                   </TouchableOpacity>
-
                   <TouchableOpacity
                     onPress={this._updateData}
                   >
@@ -150,7 +148,6 @@ class Data extends React.Component {
                     />
                   </TouchableOpacity>
                 </View>
- 
               </View>
             )
           } else if(this.props.tool == "Line") {
@@ -173,34 +170,25 @@ class Data extends React.Component {
                     { label: 'mauvais', value: 'mauvais'},
                   ]}
                 />
-
-
                 <TextInput
                   style={styles.input}
                   placeholder={"Largeur de la voirie"}
                   onChangeText={e => {this.setState({editing : {...editing, largeur : e} })} }
                 ></TextInput>
-
-
                 <TextInput
                   style={styles.inputDetails}
                   placeholder={"Remarks..."}
                   onChangeText={e => this.setState({editing : {...editing, more : e} })}
                 ></TextInput>
-
-
-
-
                 <View style={{display: "flex", flexDirection: "row", justifyContent: "space-between", width: 100, margin: 15}}>
                   <TouchableOpacity
-                    onPress={console.log()}
+                    onPress={console.log("take pictures")}
                   >
                     <Image 
-                      source={require("../Images/done.png")} 
+                      source={require("../Images/camera.png")} 
                       style={{width: 25, height: 25}}
                     />
                   </TouchableOpacity>
-
                   <TouchableOpacity
                     onPress={this._updateData}
                   >
@@ -215,7 +203,6 @@ class Data extends React.Component {
           } else if (this.props.tool == "Polygone") {
             return(
               <View style={styles.table}>
-
                 <RNPickerSelect
                   placeholder={{label: 'deffinez letat de la construction', value: 'deffinez letat de la construction' }}
                   onValueChange={(value) => {
@@ -233,34 +220,25 @@ class Data extends React.Component {
                     { label: 'mauvais', value: 'mauvais'},
                   ]}
                 />
-
-
                 <TextInput
                   style={styles.input}
                   placeholder={"hauteur de la construction"}
-                  onChangeText={e => {this.setState({editing : {...editing, largeur : e} })} }
+                  onChangeText={e => {this.setState({editing : {...editing, hauteur : e} })} }
                 ></TextInput>
-
-
                 <TextInput
                   style={styles.inputDetails}
                   placeholder={"Remarks..."}
                   onChangeText={e => this.setState({editing : {...editing, more : e} })}
                 ></TextInput>
-
-
-
-
                 <View style={{display: "flex", flexDirection: "row", justifyContent: "space-between", width: 100, margin: 15}}>
                   <TouchableOpacity
-                    onPress={console.log()}
+                    onPress={console.log("take pictures")}
                   >
                     <Image 
-                      source={require("../Images/done.png")} 
+                      source={require("../Images/camera.png")} 
                       style={{width: 25, height: 25}}
                     />
                   </TouchableOpacity>
-
                   <TouchableOpacity
                     onPress={this._updateData}
                   >

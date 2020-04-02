@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^10.0.0",
+    "@react-native-community/async-storage": "^1.8.1",
     "@react-navigation/bottom-tabs": "^5.0.0-alpha.34",
     "@react-navigation/native": "^5.0.0-alpha.0",
     "esri-loader": "^2.13.0",

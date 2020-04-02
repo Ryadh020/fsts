@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     },
     LayoutButtons : {  // for the left side buttons (sattelite/map ....etc.)
         position : "absolute",
-        top : 150,
+        top : "25%",
         left : 15,
         display : "flex",
         flexDirection : "column",

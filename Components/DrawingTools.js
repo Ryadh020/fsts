@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     DrawingButtons : {  // for the right side buttons (marker/line/Polygone ....etc.)
       position : "absolute",
       height: 0,
-      top : 140,
+      top : "30%",
       right : 15,
       display : "flex",
       flexDirection : "column",

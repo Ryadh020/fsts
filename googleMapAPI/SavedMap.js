@@ -3,7 +3,6 @@ import MapView, { Marker, Polygon, Polyline, ProviderPropType } from 'react-nati
 import { StyleSheet, View, Dimensions, Text, TouchableOpacity, Image} from 'react-native';
 import { connect } from 'react-redux'
 import RNPickerSelect from 'react-native-picker-select';
-import { AsyncStorage } from 'react-native';
 
 import DrawingTools from '../Components/DrawingTools' // components takes in charge displaying drawing tools.
 import Data from "../Components/DataForm" // a table to put data about the marker/line/polygone.
@@ -45,8 +44,6 @@ class App extends React.Component {
       polylineFillURL: require("../Images/Polygone/black_hole.png"),
       polylineWidhtURL: require("../Images/Polygone/1.png"),
 
-
-      
         // polygons data :
       polygons: [],   // to contain polygones and show them on mapping the array
       polygoneEditing: null,  // to contains polygons data
@@ -59,7 +56,7 @@ class App extends React.Component {
       drawLine : false,
 
       scrollable : true,  // for map scrolling
-      text: "debuging",      // just for debuging
+      text: "test"     // just for debuging
     }
     this._Darw = this._Darw.bind(this)
   }
@@ -68,31 +65,8 @@ class App extends React.Component {
   latLng = {latitude: 36.365, longitude: 6.61472}
 
     // the list of markers
-  markers = [
-    {latiLngi : {latitude: 36.365, longitude: 6.61472},
-      key : 1,
-      icon : require("../Images/Polygone/black_hole.png"),
-    }
-  ]
+  markers = this.props.data[0]
 
-  shapes = [this.markers]
-
-  // store data function:
-  
-  _storeData = async () => {
-
-    //let shapes = this.data ;
-
-    try {
-      await AsyncStorage.setItem('savedMap', JSON.stringify(this.shapes));
-      console.log("data saved")
-
-    } catch (error) {
-      console.log("error");
-      
-    }
-  };
-  
     // pop up marker data on cliking the marker:
   _shapeFocused(id) {
     // send the component key to the global state:
@@ -639,15 +613,6 @@ class App extends React.Component {
 
         <Data/>
         <DrawingTools/>
-        <TouchableOpacity
-              onPress={() => this._storeData()}
-              style={{position:"absolute", bottom: 45, left: 45}}
-            >
-              <Image 
-                source={require("../Images/done.png")} 
-                style={{width: 25, height: 25}}
-              />
-            </TouchableOpacity>
       </View>
     );
   }
