@@ -3,12 +3,15 @@ import MapView, { Marker, Polygon, Polyline, ProviderPropType } from 'react-nati
 import { StyleSheet, View, Dimensions, Text, TouchableOpacity, Image} from 'react-native';
 import { connect } from 'react-redux'
 import RNPickerSelect from 'react-native-picker-select';
+import { MAP_TYPES } from 'react-native-maps';
+import { AsyncStorage } from 'react-native';
 
 import DrawingTools from '../Components/DrawingTools' // components takes in charge displaying drawing tools.
 import Data from "../Components/DataForm" // a table to put data about the marker/line/polygone.
 
 let PolygoneId = 0; // for polygones counting
 let lineId = 0;  // for Polylines counting
+let markerId = 0;  // for markers counting
 
 class App extends React.Component {
 
@@ -21,51 +24,71 @@ class App extends React.Component {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       },
-      markerNumber: 0,  // number of markers (counter) "use it to assign keys and helps with counting"
+      mapType: MAP_TYPES.STANDARD, // map type
 
-      // Marker drawing panel carachteristics :
+        // markers data
+      markers: [],   
+      markersEditing: null,
       markerIconURL : require("../Images/Markers/home.png"),  // (default marker icon) & to detect the changing of select form
-      markerIcon : "home",
-        // for panel
-      markerColor : require("../Images/Markers/black.png"),
+      markerIcon : "home",  
+      markerColor : require("../Images/Markers/black.png"),   // for panel
 
-      // Polygone drawing panel carachteristics :
-        // for panel
-      polygoneFillURL: require("../Images/Polygone/black.png"),
-      polygoneBorderURL: require("../Images/Polygone/black_hole.png"),
-        // for drawing
-      polygoneStrokeColor : "gray",
-      polygoneFillColor: "gray",
-
-      // Polyline drawing panel carachteristics :
-      polylineStrokeColor: "black",
-      polylineStrokeWidth: 4,
-
-      polylineFillURL: require("../Images/Polygone/black_hole.png"),
-      polylineWidhtURL: require("../Images/Polygone/1.png"),
 
         // polygons data :
       polygons: [],   // to contain polygones and show them on mapping the array
       polygoneEditing: null,  // to contains polygons data
       creatingHole: false,  // detect if a hole is on creating
+        // drawing panel carachteristics :
+          // for panel
+      polygoneFillURL: require("../Images/Polygone/black.png"),
+      polygoneBorderURL: require("../Images/Polygone/black_hole.png"),
+          // for drawing
+      polygoneStrokeColor : "gray",
+      polygoneFillColor: "gray",
       
 
         // PolyLines data :
       polylines: [],
       LineEditing: null,
       drawLine : false,
-
       scrollable : true,  // for map scrolling
-      text: "test"     // just for debuging
+        //  drawing panel carachteristics :
+          // for panel
+      polylineStrokeColor: "black",
+      polylineStrokeWidth: 4,
+          // for drawing
+      polylineFillURL: require("../Images/Polygone/black_hole.png"),
+      polylineWidhtURL: require("../Images/Polygone/1.png"),
+
+      text: "test",     // just for debuging
+      storage: "not yet"
     }
     this._Darw = this._Darw.bind(this)
+    this._changeMapType = this._changeMapType.bind(this)
   }
 
-    // Helper location:
+    // change the map type :
+  _changeMapType() {
+    this.setState({ mapType : MAP_TYPES.SATELLITE });
+  }
+
+    // get saved maps from the Storage :
+  _getData =  async () => { 
+    try {
+      const value = await AsyncStorage.getItem('savedMap');
+      if (value !== null) {
+        console.log("data retrived: " + value)
+        this.setState({markers : JSON.parse(value)})
+      }
+    } catch (error) {
+      console.log("Error retrieving data")
+    }
+  }
+
+    // Helpers :
+  //Storage = ["45454"]   // data storage Storag (saved maps)
   latLng = {latitude: 36.365, longitude: 6.61472}
 
-    // the list of markers
-  markers = this.props.data[0]
 
     // pop up marker data on cliking the marker:
   _shapeFocused(id) {
@@ -89,7 +112,6 @@ class App extends React.Component {
   }
 
 
-
   _HideDataTable() {
     let action = { type: "shapeBlured"}
     this.props.dispatch(action)
@@ -98,22 +120,18 @@ class App extends React.Component {
   _Darw(e) {
     const latLng = e.nativeEvent.coordinate  // change the marker location to the touched one
     if (this.props.tool == "Marker") {
+
         // push a new marker data to the list :
-      this.markers.push(
-                         {latiLngi : latLng,
-                          key : this.state.markerNumber,
-                          icon : this.state.markerIconURL,
-                        }
-                       )
-         // update the counter of markers :
-      this.setState({markerNumber : this.state.markerNumber + 1})
+      const { markers } = this.state;
+      this.setState({
+        markers: [...markers, {latiLngi : latLng, key : markerId, icon : this.state.markerIconURL,}],
+      });
+      // update the counter of markers :
+      markerId++
         // set global state to true (marker is created):
       let action = { type: "MarkerCreated"}
       this.props.dispatch(action)
     }
-
-
-
     else if (this.props.tool == "Polygone") {
       const { polygoneEditing, creatingHole } = this.state;
       if (!polygoneEditing) {
@@ -273,7 +291,7 @@ class App extends React.Component {
     return (
       <View>
         <MapView
-          mapType = {this.props.mapType}
+          mapType = {this.state.mapType}
           initialRegion = {this.state.region}
           style={styles.mapStyle} 
           scrollEnabled={this.state.scrollable}
@@ -283,7 +301,7 @@ class App extends React.Component {
         >
 
 
-        {this.markers.map(index =>(
+        {this.state.markers.map(index =>(
           <Marker
             onPress={()=> {this._MarkerTool(), this._shapeFocused(index.key)} }  
             coordinate={index.latiLngi}
@@ -347,7 +365,7 @@ class App extends React.Component {
         )}
         </MapView>
 
-        <Text style={{position: "absolute", top: 0, left: 0}}>{this.state.text}</Text>  
+        <Text style={{position: "absolute", top: 0, left: 0}}> `${this.state.storage}` </Text>  
 
         {this.props.drawingPan == "MarkerPan" && (
           <View style={styles.panelContainer}>
@@ -604,13 +622,19 @@ class App extends React.Component {
               />
             </TouchableOpacity>
           </View>
-            
           </View>
-          
         )}
+        <View  style={styles.LayoutButtons}>
+
+          <TouchableOpacity onPress={this._changeMapType} style={styles.MapType}>
+            <Image style={{width: 45, height: 45}} source={require("../Images/earth.png")} />
+          </TouchableOpacity>
 
 
-
+          <TouchableOpacity onPress={() => this._getData()} style={styles.MapType}>
+            <Image style={{width: 45, height: 45}} source={require("../Images/done.png")} />
+          </TouchableOpacity>
+        </View>
         <Data/>
         <DrawingTools/>
       </View>
@@ -624,6 +648,26 @@ App.propTypes = {
 
 
 const styles = StyleSheet.create({
+  /* map Style */
+  LayoutButtons : {  // for the left side buttons (sattelite/map ....etc.)
+    position : "absolute",
+    top : "25%",
+    left : 15,
+    display : "flex",
+    flexDirection : "column",
+    justifyContent : "center",
+    alignItems : "center",
+  },
+  MapType : { // ordinary button
+    display : "flex",
+    justifyContent : "center",
+    alignItems : "center",
+    width : 45,
+    height : 45,
+    padding : 5,
+    backgroundColor : "hsla(44, 0%, 85%, 0.5)",
+    borderRadius : 50
+  },
   mapStyle: {
     width: (Dimensions.get('window').width),
     height: (Dimensions.get('window').height) * 0.93,

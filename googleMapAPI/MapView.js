@@ -68,14 +68,9 @@ class App extends React.Component {
   latLng = {latitude: 36.365, longitude: 6.61472}
 
     // the list of markers
-  markers = [
-    {latiLngi : {latitude: 36.365, longitude: 6.61472},
-      key : 1,
-      icon : require("../Images/Polygone/black_hole.png"),
-    }
-  ]
+  markers = []
 
-  shapes = [this.markers]
+  //shapes = [this.markers]
 
   // store data function:
   
@@ -84,7 +79,7 @@ class App extends React.Component {
     //let shapes = this.data ;
 
     try {
-      await AsyncStorage.setItem('savedMap', JSON.stringify(this.shapes));
+      await AsyncStorage.setItem('savedMap', JSON.stringify(this.markers));
       console.log("data saved")
 
     } catch (error) {
