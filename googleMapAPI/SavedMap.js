@@ -68,7 +68,7 @@ class App extends React.Component {
 
     // change the map type :
   _changeMapType() {
-    this.setState({ mapType : MAP_TYPES.SATELLITE });
+    this.state.mapType == MAP_TYPES.STANDARD? this.setState({ mapType : MAP_TYPES.SATELLITE }):this.setState({ mapType : MAP_TYPES.STANDARD })
   }
 
     // get saved maps from the Storage :
@@ -625,7 +625,10 @@ class App extends React.Component {
         <View  style={styles.LayoutButtons}>
 
           <TouchableOpacity onPress={this._changeMapType} style={styles.MapType}>
-            <Image style={{width: 45, height: 45}} source={require("../Images/earth.png")} />
+            <Image 
+              style={{width: 45, height: 45}} 
+              source={this.state.mapType == MAP_TYPES.STANDARD? require("../Images/earth.png"): require("../Images/map.png") } 
+            />
           </TouchableOpacity>
 
 

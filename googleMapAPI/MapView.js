@@ -49,7 +49,6 @@ class App extends React.Component {
       polylineWidhtURL: require("../Images/Polygone/1.png"),
 
 
-      
         // polygons data :
       polygons: [],   // to contain polygones and show them on mapping the array
       polygoneEditing: null,  // to contains polygons data
@@ -68,9 +67,9 @@ class App extends React.Component {
     this._changeMapType = this._changeMapType.bind(this)
   }
 
-    // the setting function
+    // the map type change function
   _changeMapType() {
-    this.setState({ mapType : MAP_TYPES.SATELLITE });
+    this.state.mapType == MAP_TYPES.STANDARD? this.setState({ mapType : MAP_TYPES.SATELLITE }):this.setState({ mapType : MAP_TYPES.STANDARD })
   }
 
     // Helper location:
@@ -113,8 +112,6 @@ class App extends React.Component {
     this.props.dispatch(action)
   }
 
-
-
   _HideDataTable() {
     let action = { type: "shapeBlured"}
     this.props.dispatch(action)
@@ -136,8 +133,6 @@ class App extends React.Component {
       let action = { type: "MarkerCreated"}
       this.props.dispatch(action)
     }
-
-
 
     else if (this.props.tool == "Polygone") {
       const { polygoneEditing, creatingHole } = this.state;
@@ -306,7 +301,6 @@ class App extends React.Component {
           onPress={() => this._HideDataTable()}
           onPanDrag={e => this.onPanDrag(e)}
         >
-
 
         {this.markers.map(index =>(
           <Marker
@@ -649,7 +643,10 @@ class App extends React.Component {
         </TouchableOpacity>
 
         <TouchableOpacity onPress={this._changeMapType} style={styles.MapType}>
-            <Image style={{width: 45, height: 45}} source={require("../Images/earth.png")} />
+            <Image 
+              style={{width: 45, height: 45}} 
+              source={this.state.mapType == MAP_TYPES.STANDARD? require("../Images/earth.png"): require("../Images/map.png") } 
+            />
         </TouchableOpacity>
 
       </View>
