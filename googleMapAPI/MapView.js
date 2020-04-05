@@ -25,7 +25,7 @@ class App extends React.Component {
       },
       mapType : MAP_TYPES.STANDARD,
 
-      workName: "alg",        // the actual workspace name:
+      workName: "empty",        // the actual workspace name:
 
       alertMessage : "HELLO WORLD",      // alert message
 
@@ -85,20 +85,12 @@ class App extends React.Component {
 
   // create a new map of work space : 
   _newWorkSpace() {
-
     if(this.state.workName == "empty") { // detect if there is no current work space:
+        // pop up name work text Input
+      let action = { type: "NewWork"}
+      this.props.dispatch(action)
 
-      // create a temporal database of shapes with name
-      let shapes = {
-        name: this.state.workName,
-        markers: [],
-        polylines: [],
-        polygones: []
-      }
-  
-      console.log(`work name : ${shapes.name}`)
-
-    } else {
+    } else if(this.state.workName !== "empty") {
       this.setState({alertMessage : "save ur work or delet it"})
           // pop up an alert message
       let action = { type: "ShowAlert"}
@@ -108,9 +100,21 @@ class App extends React.Component {
         this.props.dispatch(action)
       }, 1500);
     }
-
-    
   }
+
+    // add a name to the current work space:
+  _fillWorkSpaceName() {
+    // create a temporal database of shapes with name
+    let shapes = {
+      name: this.state.workName,
+      markers: [],
+      polylines: [],
+      polygones: []
+    }
+    let action = { type: "NewWorkDone"}
+    this.props.dispatch(action)
+  }
+    
 
 
   // store data function:
@@ -674,7 +678,7 @@ class App extends React.Component {
         <View style={[styles.manageButtonsContainer, styles.container]}>
           <View style={styles.manageButtons}>
             <TouchableOpacity
-              onPress={() => { this._newWorkSpace() , console.log("new map created") } }
+              onPress={() => { this._newWorkSpace()} }
             >
               <Image 
                 source={require("../Images/Manage/new.png")} 
@@ -699,6 +703,28 @@ class App extends React.Component {
             </TouchableOpacity>
           </View>
         </View>
+
+        {this.props.newWork && (
+          <View style={[styles.NameInputContainer, styles.container]}>
+            <View style={styles.NameInput}>
+              <TextInput
+                style={styles.inputDetails}
+                placeholder={"Title Name"}
+                onChangeText={e => this.setState({workName : e})}
+              ></TextInput>
+              <TouchableOpacity
+                onPress={() => this._fillWorkSpaceName()}
+              style={{width: 25, height: 25, margin: 10}}
+              >
+                <Image 
+                  source={this.state.LineEditing? require("../Images/done.png"): require("../Images/done_blured.png")} 
+                  style={{width: 25, height: 25}}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+
 
         {this.props.alert && (
           <View style={[styles.AlertMessageContainer, styles.container]}>
@@ -843,18 +869,30 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.7)',
     borderRadius: 15
   },
-  inputText: {
-    width: (Dimensions.get('window').width) * 0.7,
-    height:105,
+    // Name input:
+  NameInputContainer: {
+    bottom: "80%",
+  },
+  NameInput: {
+    flexDirection: 'row',
+    alignItems: "center",
+    justifyContent: "space-between",
+
+    padding: 10,
+  
+    backgroundColor: 'rgba(255,255,255,0.6)',
+    borderRadius: 25
+  },
+  inputDetails: {
+    width: 200,
+    height:45,
     paddingLeft: 15,
-    marginTop: 10,
 
     borderColor: 'gray', 
     borderWidth: 0.3 ,
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
+    borderRadius: 15,
   },
-    // manage buttons:
+    // Alert  message:
     AlertMessageContainer: {
     bottom: "90%",
   },
@@ -877,6 +915,7 @@ const mapStateToProps = (state) => {
     drawingPan: state.toggleTool.drawingPan,
     clicked: state.showTable.clicked,
     alert: state.showAlert.alert,
+    newWork: state.NewWork.newWork,
   }
 }
 
