@@ -1,7 +1,7 @@
 import React from 'react';
 import MapView, { Marker, Polygon, Polyline, ProviderPropType } from 'react-native-maps';
 import { MAP_TYPES } from 'react-native-maps';
-import { StyleSheet, View, Dimensions, Text, TouchableOpacity, Image} from 'react-native';
+import { StyleSheet, View, Dimensions, Text, TouchableOpacity, Image, TextInput} from 'react-native';
 import { connect } from 'react-redux'
 import RNPickerSelect from 'react-native-picker-select';
 import { AsyncStorage } from 'react-native';
@@ -24,6 +24,10 @@ class App extends React.Component {
         longitudeDelta: 0.0421,
       },
       mapType : MAP_TYPES.STANDARD,
+
+      workName: "alg",        // the actual workspace name:
+
+      alertMessage : "HELLO WORLD",      // alert message
 
       markerNumber: 0,  // number of markers (counter) "use it to assign keys and helps with counting"
 
@@ -78,11 +82,46 @@ class App extends React.Component {
     // the list of markers
   markers = []
 
-  //shapes = [this.markers]
+
+  // create a new map of work space : 
+  _newWorkSpace() {
+
+    if(this.state.workName == "empty") { // detect if there is no current work space:
+
+      // create a temporal database of shapes with name
+      let shapes = {
+        name: this.state.workName,
+        markers: [],
+        polylines: [],
+        polygones: []
+      }
+  
+      console.log(`work name : ${shapes.name}`)
+
+    } else {
+      this.setState({alertMessage : "save ur work or delet it"})
+          // pop up an alert message
+      let action = { type: "ShowAlert"}
+      this.props.dispatch(action)
+      setTimeout(() => {
+        let action = { type: "HideAlert"}
+        this.props.dispatch(action)
+      }, 1500);
+    }
+
+    
+  }
+
+
   // store data function:
   _storeData = async () => {
-    //let shapes = this.data ;
     try {
+        // update tomporal database :
+      this.shapes.markers = this.markers
+      this.shapes.polylines = this.state.polylines
+      this.shapes.polygones = this.state.polygons
+
+        // send data
       await AsyncStorage.setItem('savedMap', JSON.stringify(this.markers));
       console.log("data saved")
 
@@ -632,20 +671,16 @@ class App extends React.Component {
         <DrawingTools/>
 
 
-        <View style={styles.manageButtonsContainer}>
+        <View style={[styles.manageButtonsContainer, styles.container]}>
           <View style={styles.manageButtons}>
-
-
             <TouchableOpacity
-              onPress={() => console.log("new map created")}
+              onPress={() => { this._newWorkSpace() , console.log("new map created") } }
             >
               <Image 
                 source={require("../Images/Manage/new.png")} 
                 style={{width: 25, height: 25}}
               />
             </TouchableOpacity>
-
-
             <TouchableOpacity
               onPress={() => console.log("shapes deleted")}
             >
@@ -654,19 +689,24 @@ class App extends React.Component {
                 style={{width: 25, height: 25}}
               />
             </TouchableOpacity>
-
-
             <TouchableOpacity
               onPress={() => this._storeData()}
             >
               <Image 
                 source={require("../Images/Manage/save.png")} 
-                style={{width: 25, height: 25}}
+                style={{width: 22, height: 22}}
               />
             </TouchableOpacity>
           </View>
         </View>
 
+        {this.props.alert && (
+          <View style={[styles.AlertMessageContainer, styles.container]}>
+            <View style={styles.AlertMessage}>
+              <Text>{this.state.alertMessage}</Text>
+            </View>
+          </View>
+        )}
 
         <TouchableOpacity onPress={this._changeMapType} style={styles.MapType}>
             <Image 
@@ -774,11 +814,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 0,
   },
-  // manage buttons:
-  manageButtonsContainer: {
+
+  // All buttons Container :
+  container: {
     position: "absolute",
     left: "0%",
-    bottom: "1%",
 
     width: (Dimensions.get('window').width),
     height: 50,
@@ -786,6 +826,11 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center"
+  },
+
+  // manage buttons:
+  manageButtonsContainer: {
+    bottom: "1%",
   },
   manageButtons: {
     flexDirection: 'row',
@@ -798,6 +843,32 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.7)',
     borderRadius: 15
   },
+  inputText: {
+    width: (Dimensions.get('window').width) * 0.7,
+    height:105,
+    paddingLeft: 15,
+    marginTop: 10,
+
+    borderColor: 'gray', 
+    borderWidth: 0.3 ,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+  },
+    // manage buttons:
+    AlertMessageContainer: {
+    bottom: "90%",
+  },
+  AlertMessage: {
+    flexDirection: 'row',
+    alignItems: "center",
+    justifyContent: "center",
+  
+    width: 150,
+    padding: 10,
+    
+    backgroundColor: 'rgba(255,50,0,0.6)',
+    borderRadius: 10
+  },
 });
 
 const mapStateToProps = (state) => {
@@ -805,6 +876,7 @@ const mapStateToProps = (state) => {
     tool: state.toggleTool.tool,
     drawingPan: state.toggleTool.drawingPan,
     clicked: state.showTable.clicked,
+    alert: state.showAlert.alert,
   }
 }
 
