@@ -540,9 +540,7 @@ class App extends React.Component {
         )}
      
         {this.props.drawingPan == "LinePan"  && (
-
           <View  style={{position: "absolute", left:0, bottom: 0}}>
-
           <View style={styles.polyPanelContainer}>
             <Image 
                 source={this.state.polylineFillURL} 
@@ -632,15 +630,43 @@ class App extends React.Component {
 
         <Data/>
         <DrawingTools/>
-        <TouchableOpacity
-              onPress={() => this._storeData()}
-              style={{position:"absolute", bottom: 45, left: 45}}
+
+
+        <View style={styles.manageButtonsContainer}>
+          <View style={styles.manageButtons}>
+
+
+            <TouchableOpacity
+              onPress={() => console.log("new map created")}
             >
               <Image 
-                source={require("../Images/done.png")} 
+                source={require("../Images/Manage/new.png")} 
                 style={{width: 25, height: 25}}
               />
-        </TouchableOpacity>
+            </TouchableOpacity>
+
+
+            <TouchableOpacity
+              onPress={() => console.log("shapes deleted")}
+            >
+              <Image 
+                source={require("../Images/Manage/delete.png")} 
+                style={{width: 25, height: 25}}
+              />
+            </TouchableOpacity>
+
+
+            <TouchableOpacity
+              onPress={() => this._storeData()}
+            >
+              <Image 
+                source={require("../Images/Manage/save.png")} 
+                style={{width: 25, height: 25}}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+
 
         <TouchableOpacity onPress={this._changeMapType} style={styles.MapType}>
             <Image 
@@ -648,7 +674,6 @@ class App extends React.Component {
               source={this.state.mapType == MAP_TYPES.STANDARD? require("../Images/earth.png"): require("../Images/map.png") } 
             />
         </TouchableOpacity>
-
       </View>
     );
   }
@@ -663,7 +688,7 @@ const styles = StyleSheet.create({
   /* change map type button */
   MapType : { // ordinary button
     position : "absolute",
-    top : "25%",
+    top : "27%",
     left : 15,
 
     display : "flex",
@@ -748,6 +773,30 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     alignItems: 'center',
     marginHorizontal: 0,
+  },
+  // manage buttons:
+  manageButtonsContainer: {
+    position: "absolute",
+    left: "0%",
+    bottom: "1%",
+
+    width: (Dimensions.get('window').width),
+    height: 50,
+
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  manageButtons: {
+    flexDirection: 'row',
+    alignItems: "center",
+    justifyContent: "space-between",
+
+    width: 150,
+    padding: 10,
+  
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    borderRadius: 15
   },
 });
 

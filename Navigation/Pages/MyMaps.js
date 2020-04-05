@@ -4,20 +4,19 @@ import {View, Text, Button, StyleSheet, SafeAreaView, Image} from 'react-native'
 import SavedMap from '../../googleMapAPI/SavedMap'
 
 class MyMaps extends React.Component {
-constructor(props) {
-    super(props)
-    this.state = {
-      currentMap: 1,
+    constructor(props) {
+        super(props)
+        this.state = {
+        }
     }
-}
 
-render() {
-    return (
-        <SafeAreaView style={styles.main}>
-            <SavedMap style={styles.map}></SavedMap>
-        </SafeAreaView>
-    )
-}
+    render() {
+        return (
+            <SafeAreaView style={styles.main}>
+                <SavedMap style={styles.map}></SavedMap>
+            </SafeAreaView>
+        )
+    }
 }
 
 const styles = StyleSheet.create({

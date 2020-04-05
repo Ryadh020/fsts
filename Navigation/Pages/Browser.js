@@ -1,7 +1,6 @@
 import React from'react'
 import {View, Text, Button, StyleSheet, SafeAreaView, Image} from 'react-native'
 import  WebMapView  from '../../googleMapAPI/MapView'
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 class Browser extends React.Component {
 constructor(props) {
