@@ -74,7 +74,7 @@ class App extends React.Component {
       drawLine : false,
 
       scrollable : true,  // for map scrolling
-      text: "debuging",      // just for debuging
+      text: " ",      // just for debuging
     }
     this._Darw = this._Darw.bind(this)
     this._changeMapType = this._changeMapType.bind(this)
@@ -92,9 +92,10 @@ class App extends React.Component {
   markers = []
 
   _deleteAllShapes() {
-    this.markers = []
-    this.setState({polylines : [], polygones: [], saved: false})
+      this.markers = []
+      this.setState({polylines : [], polygons: [], saved: false, workName: "empty"})
   }
+
 
   // create a new map of work space : 
   _newWorkSpace() {
@@ -103,23 +104,18 @@ class App extends React.Component {
       let action = { type: "NewWork"}
       this.props.dispatch(action)
 
-      console.log(`there is no workspace`);
-
     } else if(this.state.workName !== "empty") {
-      
       if(this.state.saved) {  // detect if the work is saved : (it is)
 
           // delete all the previous work:
         this._deleteAllShapes()
-
           // pop up name work text Input
         let action = { type: "NewWork"}
         this.props.dispatch(action)
 
       } else {
 
-
-        this.setState({alertMessage : "save ur work or delet it"})
+        this.setState({alertMessage : "save your current work or delete it"})
           // pop up an alert message
         let action = { type: "ShowAlert"}
         this.props.dispatch(action)
@@ -127,12 +123,7 @@ class App extends React.Component {
           let action = { type: "HideAlert"}
           this.props.dispatch(action)
         }, 1500);
-
-        console.log(`there is a current workspace : ${this.state.workName}`);
-
-
       }
-      
     }
   }
 
@@ -148,15 +139,9 @@ class App extends React.Component {
       // hide text input:
     let action = { type: "NewWorkDone"}
     this.props.dispatch(action)
-
       // the new work is not saved:
     this.setState({saved: false})
-
-    console.log(`u have created new workspace: ${shapes.name}`);
-    
   }
-    
-
 
   _fillDrawedShapes() {
     // detect if there is a name:
@@ -164,10 +149,7 @@ class App extends React.Component {
         // fill a temporal database to send it to the storage
         shapes.markers = this.markers
         shapes.polylines = this.state.polylines
-        shapes.polygones = this.state.polygons
-
-        console.log(`u saved : ${shapes}`)
-      
+        shapes.polygones = this.state.polygons   
     } else {
       console.log("there is no curent project, set a name");
         // pop up an alert message
@@ -175,12 +157,12 @@ class App extends React.Component {
       let action = { type: "ShowAlert"}
       this.props.dispatch(action)
       setTimeout(() => {
-        let action = { type: "HideAlert"}
-        this.props.dispatch(action)
+        let action2 = { type: "HideAlert"}
+        this.props.dispatch(action2)
       }, 1500);
         // pop up name work text Input
-      let action2 = { type: "NewWork"}
-      this.props.dispatch(action2)
+      let action3 = { type: "NewWork"}
+      this.props.dispatch(action3)
     }
   }
 
@@ -189,10 +171,9 @@ class App extends React.Component {
   _storeData = async () => {
   if(this.state.workName !== "empty") {
 
-
     try {
       // send data
-    await AsyncStorage.setItem('savedMap', JSON.stringify(this.markers));
+    await AsyncStorage.setItem(`${this.state.workName}`, JSON.stringify(this.markers));
     console.log("data saved")
 
     this.setState({saved: true,})  // tell that the project is saved
@@ -201,11 +182,9 @@ class App extends React.Component {
       console.log("error");
     }
 
-
   } else {
     return;
   }
-
   };
   
     // pop up marker data on cliking the marker:
@@ -235,56 +214,66 @@ class App extends React.Component {
   }
 
   _Darw(e) {
-    const latLng = e.nativeEvent.coordinate  // change the marker location to the touched one
-    if (this.props.tool == "Marker") {
-        // push a new marker data to the list :
-      this.markers.push(
-                         {latiLngi : latLng,
-                          key : this.state.markerNumber,
-                          icon : this.state.markerIconURL,
-                        }
-                       )
-         // update the counter of markers :
-      this.setState({markerNumber : this.state.markerNumber + 1})
-        // set global state to true (marker is created):
-      let action = { type: "MarkerCreated"}
-      this.props.dispatch(action)
-    }
-
-    else if (this.props.tool == "Polygone") {
-      const { polygoneEditing, creatingHole } = this.state;
-      if (!polygoneEditing) {
-        this.setState({
-          polygoneEditing: {
-            PolygoneId: PolygoneId++,
-            coordinates: [e.nativeEvent.coordinate],
-            holes: [],
-            polygoneStrokeColor: this.state.polygoneStrokeColor,
-            polygoneFillColor: this.state.polygoneFillColor
-          },
-        });
-      } else if (!creatingHole) {
-        this.setState({
-          polygoneEditing: {
-            ...polygoneEditing,
-            coordinates: [...polygoneEditing.coordinates, e.nativeEvent.coordinate],
-          },
-        });
-      } else {
-        const holes = [...polygoneEditing.holes];
-        holes[holes.length - 1] = [
-          ...holes[holes.length - 1],
-          e.nativeEvent.coordinate,
-        ];
-        this.setState({
-          polygoneEditing: {
-            ...polygoneEditing,
-            PolygoneId: PolygoneId++, // keep incrementing id to trigger display refresh
-            coordinates: [...polygoneEditing.coordinates],
-            holes,
-          },
-        });
+    if(this.state.workName !== "empty") {
+      const latLng = e.nativeEvent.coordinate  // change the marker location to the touched one
+      if (this.props.tool == "Marker") {
+          // push a new marker data to the list :
+        this.markers.push(
+                           {latiLngi : latLng,
+                            key : this.state.markerNumber,
+                            icon : this.state.markerIconURL,
+                          }
+                         )
+           // update the counter of markers :
+        this.setState({markerNumber : this.state.markerNumber + 1})
+          // set global state to true (marker is created):
+        let action = { type: "MarkerCreated"}
+        this.props.dispatch(action)
       }
+  
+      else if (this.props.tool == "Polygone") {
+        const { polygoneEditing, creatingHole } = this.state;
+        if (!polygoneEditing) {
+          this.setState({
+            polygoneEditing: {
+              PolygoneId: PolygoneId++,
+              coordinates: [e.nativeEvent.coordinate],
+              holes: [],
+              polygoneStrokeColor: this.state.polygoneStrokeColor,
+              polygoneFillColor: this.state.polygoneFillColor
+            },
+          });
+        } else if (!creatingHole) {
+          this.setState({
+            polygoneEditing: {
+              ...polygoneEditing,
+              coordinates: [...polygoneEditing.coordinates, e.nativeEvent.coordinate],
+            },
+          });
+        } else {
+          const holes = [...polygoneEditing.holes];
+          holes[holes.length - 1] = [
+            ...holes[holes.length - 1],
+            e.nativeEvent.coordinate,
+          ];
+          this.setState({
+            polygoneEditing: {
+              ...polygoneEditing,
+              PolygoneId: PolygoneId++, // keep incrementing id to trigger display refresh
+              coordinates: [...polygoneEditing.coordinates],
+              holes,
+            },
+          });
+        }
+      }
+    }else {
+      this.setState({alertMessage : "create a new project"})
+      let action = { type: "ShowAlert"}
+      this.props.dispatch(action)
+      setTimeout(() => {
+        let action2 = { type: "HideAlert"}
+        this.props.dispatch(action2)
+      }, 1500);
     }
   }
     // finish drawing:
@@ -372,27 +361,37 @@ class App extends React.Component {
 
   // add data to polyline array when pan dragging (to draw it in the render):
   onPanDrag(e) {
-    const { LineEditing } = this.state;
-    if(this.state.drawLine) {
-      if (!LineEditing) {
-        this.setState({
-          LineEditing: {
-            lineId: lineId++,
-            coordinates: [e.nativeEvent.coordinate],
-            polylineStrokeColor: this.state.polylineStrokeColor,
-            polylineStrokeWidth: this.state.polylineStrokeWidth 
-          },
-        });
-      } else {
-        this.setState({
-          LineEditing: {
-            ...LineEditing,
-            coordinates: [...LineEditing.coordinates, e.nativeEvent.coordinate],
-          },
-        });
+    if(this.state.workName !== "empty") {
+      const { LineEditing } = this.state;
+      if(this.state.drawLine) {
+        if (!LineEditing) {
+          this.setState({
+            LineEditing: {
+              lineId: lineId++,
+              coordinates: [e.nativeEvent.coordinate],
+              polylineStrokeColor: this.state.polylineStrokeColor,
+              polylineStrokeWidth: this.state.polylineStrokeWidth 
+            },
+          });
+        } else {
+          this.setState({
+            LineEditing: {
+              ...LineEditing,
+              coordinates: [...LineEditing.coordinates, e.nativeEvent.coordinate],
+            },
+          });
+        }
+      }else {
+        return;
       }
     }else {
-      return;
+      this.setState({alertMessage : "create a new project"})
+      let action = { type: "ShowAlert"}
+      this.props.dispatch(action)
+      setTimeout(() => {
+        let action2 = { type: "HideAlert"}
+        this.props.dispatch(action2)
+      }, 1500);
     }
   }
 
@@ -760,7 +759,7 @@ class App extends React.Component {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => console.log("shapes deleted")}
+              onPress={() => this.setState({deleteAlert: true})}
             >
               <Image 
                 source={require("../Images/Manage/delete.png")} 
@@ -818,16 +817,15 @@ class App extends React.Component {
         )}
 
 
-
-        {!this.state.deleteAlert && (
+        {this.state.deleteAlert && (
           <View style={[styles.NameInputContainer, styles.container]}>
             <View style={styles.column}>
               <Text style={styles.deletealert}>Delete current work</Text>
               <View style={styles.row}>
-                <TouchableOpacity onPress={()=> this._deleteAllShapes()} style={styles.Button}>
+                <TouchableOpacity onPress={()=> {this._deleteAllShapes(), this.setState({deleteAlert: false})} } style={styles.Button}>
                   <Text style={{textAlign: "center"}}>yes</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={()=> this.setState({deleteAlert: true})} style={styles.Button}>
+                <TouchableOpacity onPress={()=> this.setState({deleteAlert: false})} style={styles.Button}>
                   <Text style={{textAlign: "center"}}>no</Text>
                 </TouchableOpacity>
               </View>
@@ -835,6 +833,13 @@ class App extends React.Component {
           </View>
         )}
 
+
+
+        <View style={[styles.curentWorkContainer]}>
+          <View style={styles.curentWork}>
+            <Text>{this.state.workName}</Text>
+          </View>
+        </View>
 
         {this.props.alert && (
           <View style={[styles.AlertMessageContainer, styles.container]}>
@@ -1007,7 +1012,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
 
-    padding: 10,
+    padding: 3,
   
     backgroundColor: 'rgba(255,255,255,0.6)',
     borderRadius: 25
@@ -1042,6 +1047,33 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.6)',
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
+  },
+  // current work: 
+  curentWorkContainer: {
+    position: "absolute",
+    bottom: "94%",
+    left: "0%",
+    paddingLeft: 5,
+
+    width: (Dimensions.get('window').width),
+    height: 50,
+
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "flex-start"
+  },
+  curentWork: {
+    flexDirection: 'row',
+    alignItems: "center",
+    justifyContent: "center",
+  
+    width: 150,
+    padding: 8,
+    
+    backgroundColor: 'rgba(250,250,250,0.6)',
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
+    borderTopRightRadius: 15,
   },
 });
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import MapView, { Marker, Polygon, Polyline, ProviderPropType } from 'react-native-maps';
-import { StyleSheet, View, Dimensions, Text, TouchableOpacity, Image} from 'react-native';
+import { StyleSheet, View, Dimensions, Text, TouchableOpacity, Image, FlatList} from 'react-native';
 import { connect } from 'react-redux'
 import RNPickerSelect from 'react-native-picker-select';
 import { MAP_TYPES } from 'react-native-maps';
@@ -8,10 +8,14 @@ import { AsyncStorage } from 'react-native';
 
 import DrawingTools from '../Components/DrawingTools' // components takes in charge displaying drawing tools.
 import Data from "../Components/DataForm" // a table to put data about the marker/line/polygone.
+import Saved from "../Components/SavedMapInfo"
 
 let PolygoneId = 0; // for polygones counting
 let lineId = 0;  // for Polylines counting
 let markerId = 0;  // for markers counting
+
+let mapsKeys = ["Chlef", "Ch lef", "Chulef", "Chilef", "Chlooef", "Clkhlef", "Chlmmmef", "Chlmmddmef", "Chlmmssmef", "Chlmccmmef",];
+let value;
 
 class App extends React.Component {
 
@@ -71,21 +75,39 @@ class App extends React.Component {
     this.state.mapType == MAP_TYPES.STANDARD? this.setState({ mapType : MAP_TYPES.SATELLITE }):this.setState({ mapType : MAP_TYPES.STANDARD })
   }
 
+    // get all saved maps:
+  _getSavedMaps() {}
+
+  
     // get saved maps from the Storage :
-  _getData =  async () => { 
+  _getData =  async () => {
+    // get all saved maps keys:
     try {
-      const value = await AsyncStorage.getItem('savedMap');
-      if (value !== null) {
-        console.log("data retrived: " + value)
-        this.setState({markers : JSON.parse(value)})
+        mapsKeys = await AsyncStorage.getAllKeys(); // get all keys of saved maps
+        console.log(mapsKeys)
+    }
+    catch (error) {
+      console.log("Erro geting keys")
+    }
+
+    // get data:
+    try {
+      for(let key of mapsKeys) {
+        value = await AsyncStorage.getItem(`${key}`);
+        console.log(`u got${value}`);
+
+        if (value !== null) {
+          this.setState({markers : JSON.parse(value)})
+        }
       }
-    } catch (error) {
-      console.log("Error retrieving data")
+    }
+    catch (error) {
+      console.log("Erro")
     }
   }
 
+
     // Helpers :
-  //Storage = ["45454"]   // data storage Storag (saved maps)
   latLng = {latitude: 36.365, longitude: 6.61472}
 
     // pop up marker data on cliking the marker:
@@ -638,6 +660,19 @@ class App extends React.Component {
         </View>
         <Data/>
         <DrawingTools/>
+
+        {//this.state.mapChoosed && (
+          <View style={[styles.savedWorkContainer, styles.container]}>
+            <FlatList
+              style={styles.savedWorkList}
+              data={mapsKeys}
+              renderItem={({ item }) => <Saved title={item}></Saved>}
+              keyExtractor={item => item}
+            />
+          </View>
+        /*)*/}
+
+
       </View>
     );
   }
@@ -649,6 +684,26 @@ App.propTypes = {
 
 
 const styles = StyleSheet.create({
+  container: {
+    position: "absolute",
+    left: "0%",
+
+    width: (Dimensions.get('window').width),
+    height: (Dimensions.get('window').height),
+    paddingTop: 300,
+
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  // saved works list
+  savedWorkContainer: {
+    bottom: "0%"
+  },
+  savedWorkList: {
+  },
   /* map Style */
   LayoutButtons : {  // for the left side buttons (sattelite/map ....etc.)
     position : "absolute",
