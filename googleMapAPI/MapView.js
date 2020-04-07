@@ -11,6 +11,7 @@ import Data from "../Components/DataForm" // a table to put data about the marke
 
 let PolygoneId = 0; // for polygones counting
 let lineId = 0;  // for Polylines counting
+let shapes  // a temporal database of drawed shapes
 
 class App extends React.Component {
 
@@ -25,9 +26,17 @@ class App extends React.Component {
       },
       mapType : MAP_TYPES.STANDARD,
 
+
+
       workName: "empty",        // the actual workspace name:
 
       alertMessage : "HELLO WORLD",      // alert message
+
+      saved : false,      // to detect if the previous project is saved
+
+      deleteAlert: false,
+
+
 
       markerNumber: 0,  // number of markers (counter) "use it to assign keys and helps with counting"
 
@@ -82,56 +91,121 @@ class App extends React.Component {
     // the list of markers
   markers = []
 
+  _deleteAllShapes() {
+    this.markers = []
+    this.setState({polylines : [], polygones: [], saved: false})
+  }
 
   // create a new map of work space : 
   _newWorkSpace() {
-    if(this.state.workName == "empty") { // detect if there is no current work space:
+    if(this.state.workName == "empty") { // detect if there is no current work space (there is not):
         // pop up name work text Input
       let action = { type: "NewWork"}
       this.props.dispatch(action)
 
+      console.log(`there is no workspace`);
+
     } else if(this.state.workName !== "empty") {
-      this.setState({alertMessage : "save ur work or delet it"})
-          // pop up an alert message
-      let action = { type: "ShowAlert"}
-      this.props.dispatch(action)
-      setTimeout(() => {
-        let action = { type: "HideAlert"}
+      
+      if(this.state.saved) {  // detect if the work is saved : (it is)
+
+          // delete all the previous work:
+        this._deleteAllShapes()
+
+          // pop up name work text Input
+        let action = { type: "NewWork"}
         this.props.dispatch(action)
-      }, 1500);
+
+      } else {
+
+
+        this.setState({alertMessage : "save ur work or delet it"})
+          // pop up an alert message
+        let action = { type: "ShowAlert"}
+        this.props.dispatch(action)
+        setTimeout(() => {
+          let action = { type: "HideAlert"}
+          this.props.dispatch(action)
+        }, 1500);
+
+        console.log(`there is a current workspace : ${this.state.workName}`);
+
+
+      }
+      
     }
   }
 
     // add a name to the current work space:
   _fillWorkSpaceName() {
     // create a temporal database of shapes with name
-    let shapes = {
+    shapes = {
       name: this.state.workName,
       markers: [],
       polylines: [],
       polygones: []
     }
+      // hide text input:
     let action = { type: "NewWorkDone"}
     this.props.dispatch(action)
+
+      // the new work is not saved:
+    this.setState({saved: false})
+
+    console.log(`u have created new workspace: ${shapes.name}`);
+    
   }
     
 
 
+  _fillDrawedShapes() {
+    // detect if there is a name:
+    if(this.state.workName !== "empty") {
+        // fill a temporal database to send it to the storage
+        shapes.markers = this.markers
+        shapes.polylines = this.state.polylines
+        shapes.polygones = this.state.polygons
+
+        console.log(`u saved : ${shapes}`)
+      
+    } else {
+      console.log("there is no curent project, set a name");
+        // pop up an alert message
+      this.setState({alertMessage : "there is no curent project, set a name"})
+      let action = { type: "ShowAlert"}
+      this.props.dispatch(action)
+      setTimeout(() => {
+        let action = { type: "HideAlert"}
+        this.props.dispatch(action)
+      }, 1500);
+        // pop up name work text Input
+      let action2 = { type: "NewWork"}
+      this.props.dispatch(action2)
+    }
+  }
+
+
   // store data function:
   _storeData = async () => {
-    try {
-        // update tomporal database :
-      this.shapes.markers = this.markers
-      this.shapes.polylines = this.state.polylines
-      this.shapes.polygones = this.state.polygons
+  if(this.state.workName !== "empty") {
 
-        // send data
-      await AsyncStorage.setItem('savedMap', JSON.stringify(this.markers));
-      console.log("data saved")
+
+    try {
+      // send data
+    await AsyncStorage.setItem('savedMap', JSON.stringify(this.markers));
+    console.log("data saved")
+
+    this.setState({saved: true,})  // tell that the project is saved
 
     } catch (error) {
       console.log("error");
     }
+
+
+  } else {
+    return;
+  }
+
   };
   
     // pop up marker data on cliking the marker:
@@ -694,7 +768,10 @@ class App extends React.Component {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => this._storeData()}
+              onPress={() => {
+                this._fillDrawedShapes()
+                this._storeData()
+              }}
             >
               <Image 
                 source={require("../Images/Manage/save.png")} 
@@ -707,20 +784,53 @@ class App extends React.Component {
         {this.props.newWork && (
           <View style={[styles.NameInputContainer, styles.container]}>
             <View style={styles.NameInput}>
+            <TouchableOpacity
+                onPress={() => {     
+                  let action = { type: "NewWorkDone"}
+                  this.props.dispatch(action)
+                }}
+              style={{width: 25, height: 25, margin: 10}}
+              >
+                <Image 
+                  source={require("../Images/x.png")} 
+                  style={{width: 25, height: 25}}
+                />
+              </TouchableOpacity>
+
               <TextInput
                 style={styles.inputDetails}
                 placeholder={"Title Name"}
                 onChangeText={e => this.setState({workName : e})}
               ></TextInput>
+
               <TouchableOpacity
                 onPress={() => this._fillWorkSpaceName()}
               style={{width: 25, height: 25, margin: 10}}
               >
                 <Image 
-                  source={this.state.LineEditing? require("../Images/done.png"): require("../Images/done_blured.png")} 
+                  source={require("../Images/done.png")} 
                   style={{width: 25, height: 25}}
                 />
               </TouchableOpacity>
+              
+            </View>
+          </View>
+        )}
+
+
+
+        {!this.state.deleteAlert && (
+          <View style={[styles.NameInputContainer, styles.container]}>
+            <View style={styles.column}>
+              <Text style={styles.deletealert}>Delete current work</Text>
+              <View style={styles.row}>
+                <TouchableOpacity onPress={()=> this._deleteAllShapes()} style={styles.Button}>
+                  <Text style={{textAlign: "center"}}>yes</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=> this.setState({deleteAlert: true})} style={styles.Button}>
+                  <Text style={{textAlign: "center"}}>no</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         )}
@@ -751,6 +861,25 @@ App.propTypes = {
 
 
 const styles = StyleSheet.create({
+  column: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  row: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  Button: {
+    width: 35,
+    height: 35,
+    margin: 5,
+
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    borderBottomLeftRadius: 25,
+    borderBottomRightRadius: 25,
+  },
   /* change map type button */
   MapType : { // ordinary button
     position : "absolute",
@@ -906,6 +1035,13 @@ const styles = StyleSheet.create({
     
     backgroundColor: 'rgba(255,50,0,0.6)',
     borderRadius: 10
+  },
+  // delete alert:
+  deletealert: {
+    padding: 5,
+    backgroundColor: 'rgba(255,255,255,0.6)',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
 });
 
