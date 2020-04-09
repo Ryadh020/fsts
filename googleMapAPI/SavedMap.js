@@ -13,6 +13,11 @@ import Saved from "../Components/SavedMapInfo"
 let PolygoneId = 0; // for polygones counting
 let lineId = 0;  // for Polylines counting
 let markerId = 0;  // for markers counting
+let shapes = {       // a temporal database of drawed shapes
+      markers: [],
+      polylines: [],
+      polygones: [],
+    } 
 
 class App extends React.Component {
 
@@ -28,6 +33,12 @@ class App extends React.Component {
       mapType: MAP_TYPES.STANDARD, // map type
 
       mapsKeys : [],  // contain all saved maps keys
+
+      workName: "empty",        // the actual workspace name:
+      alertMessage : "HELLO WORLD",      // alert message
+      saved : false,      // to detect if the previous project is saved
+
+      sandwish: true,
 
         // markers data
       markers: [],   
@@ -62,8 +73,6 @@ class App extends React.Component {
           // for drawing
       polylineFillURL: require("../Images/Polygone/black_hole.png"),
       polylineWidhtURL: require("../Images/Polygone/1.png"),
-
-      text: "test",     // just for debuging
     }
     this._Darw = this._Darw.bind(this)
     this._changeMapType = this._changeMapType.bind(this)
@@ -91,7 +100,9 @@ class App extends React.Component {
     this._getSavedMaps()
   }
   
-
+  _sandwishBar() {
+    this.setState({sandwish: true})
+  }
 
 
     // get saved maps from the Storage :
@@ -101,9 +112,11 @@ class App extends React.Component {
     try {
         let value = await AsyncStorage.getItem(`${key}`);
         let AllShapes = JSON.parse(value)
-        
+
         if (value !== null) {
           this.setState({
+            sandwish: false,
+            workName: AllShapes.name,
             markers : AllShapes.markers,
             polylines : AllShapes.polylines,
             polygons : AllShapes.polygones,
@@ -115,6 +128,28 @@ class App extends React.Component {
     }
   }
 
+
+  _fillDrawedShapes() {
+      // fill a temporal database to send it to the storage
+    shapes.markers = this.state.markers
+    shapes.polylines = this.state.polylines
+    shapes.polygones = this.state.polygons   
+  }
+
+
+  // store data function:
+  _storeData = async () => {
+    try {
+      // send data
+    await AsyncStorage.setItem(`${this.state.workName}`, JSON.stringify(shapes));
+    console.log("data saved")
+
+    this.setState({saved: true,})  // tell that the project is saved
+
+    } catch (error) {
+      console.log("error");
+    }
+  };
 
     // Helpers :
   latLng = {latitude: 36.365, longitude: 6.61472}
@@ -394,9 +429,8 @@ class App extends React.Component {
         )}
         </MapView>
 
-        <Text style={{position: "absolute", top: 0, left: 0}}> `${this.state.storage}` </Text>  
-
         {this.props.drawingPan == "MarkerPan" && (
+        <View style={styles.FloatingContainer}>
           <View style={styles.panelContainer}>
             <Image 
                 source={this.state.markerIconURL} 
@@ -483,10 +517,11 @@ class App extends React.Component {
             </View>
 
           </View>
+          </View>
         )}
 
         {this.props.drawingPan == "PolygonPan" && (
-        <View  style={{position: "absolute", left:0, bottom: 0}}>
+        <View  style={styles.FloatingContainer}>
           <View style={styles.polyPanelContainer}>
             <Image 
                 source={this.state.polygoneFillURL} 
@@ -535,7 +570,6 @@ class App extends React.Component {
               />
             </View>
           </View>
-
           <View style={styles.polyButtonContainer}>
             <TouchableOpacity
               style={[styles.bubble, styles.button]}
@@ -568,9 +602,7 @@ class App extends React.Component {
         )}
      
         {this.props.drawingPan == "LinePan"  && (
-
-          <View  style={{position: "absolute", left:0, bottom: 0}}>
-
+          <View  style={styles.FloatingContainer}>
           <View style={styles.polyPanelContainer}>
             <Image 
                 source={this.state.polylineFillURL} 
@@ -596,8 +628,6 @@ class App extends React.Component {
                 ]}
               />
             </View>
-
-
             <Image 
               source={this.state.polylineWidhtURL} 
               style={{width: 25, height: 25}}
@@ -620,7 +650,6 @@ class App extends React.Component {
                 ]}
               />
             </View>
-
           </View>
 
           <View style={styles.polyButtonContainer}>
@@ -652,26 +681,71 @@ class App extends React.Component {
             </TouchableOpacity>
           </View>
           </View>
-        )}
-        <View  style={styles.LayoutButtons}>
+        )}     
 
-          <TouchableOpacity onPress={this._changeMapType} style={styles.MapType}>
+        <View style={[styles.manageButtonsContainer, styles.container]}>
+          <View style={styles.manageButtons}>
+            <TouchableOpacity
+              onPress={() => this._sandwishBar()}
+            >
+              <Image 
+                source={require("../Images/Manage/new.png")} 
+                style={{width: 25, height: 25}}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => console.log("else")}
+            >
+              <Image 
+                source={require("../Images/Manage/delete.png")} 
+                style={{width: 25, height: 25}}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                this._fillDrawedShapes()
+                this._storeData()
+              }}
+            >
+              <Image 
+                source={require("../Images/Manage/save.png")} 
+                style={{width: 22, height: 22}}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+
+        <View style={[styles.curentWorkContainer]}>
+          <View style={styles.curentWork}>
+            <Text>{this.state.workName}</Text>
+          </View>
+        </View>
+
+
+        {this.props.alert && (
+          <View style={[styles.AlertMessageContainer, styles.container]}>
+            <View style={styles.AlertMessage}>
+              <Text>{this.state.alertMessage}</Text>
+            </View>
+          </View>
+        )}
+
+
+        <View style={[styles.drawingContainer, styles.float, styles.column]}>
+          <TouchableOpacity onPress={this._changeMapType} style={styles.MapTypeButton}>
             <Image 
               style={{width: 45, height: 45}} 
               source={this.state.mapType == MAP_TYPES.STANDARD? require("../Images/earth.png"): require("../Images/map.png") } 
             />
           </TouchableOpacity>
-
-
-          <TouchableOpacity onPress={() => this._getData()} style={styles.MapType}>
-            <Image style={{width: 45, height: 45}} source={require("../Images/done.png")} />
-          </TouchableOpacity>
+          <DrawingTools/>
         </View>
+      
         <Data/>
-        <DrawingTools/>
 
-        {//this.state.mapChoosed && (
-          <View style={[styles.savedWorkContainer, styles.container]}>
+        {this.state.sandwish && (
+          <View style={styles.savedWorkContainer}>
             <FlatList
               style={styles.savedWorkList}
               data={this.state.mapsKeys}
@@ -679,7 +753,7 @@ class App extends React.Component {
               keyExtractor={item => item}
             />
           </View>
-        /*)*/}
+        )}
 
 
       </View>
@@ -691,123 +765,231 @@ App.propTypes = {
   provider: ProviderPropType,
 };
 
-
-const styles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    left: "0%",
-
-    width: (Dimensions.get('window').width),
-    height: (Dimensions.get('window').height),
-    paddingTop: 300,
-
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  // saved works list
-  savedWorkContainer: {
-    bottom: "0%"
-  },
-  savedWorkList: {
-  },
-  /* map Style */
-  LayoutButtons : {  // for the left side buttons (sattelite/map ....etc.)
-    position : "absolute",
-    top : "25%",
-    left : 15,
-    display : "flex",
-    flexDirection : "column",
-    justifyContent : "center",
-    alignItems : "center",
-  },
-  MapType : { // ordinary button
-    display : "flex",
-    justifyContent : "center",
-    alignItems : "center",
-    width : 45,
-    height : 45,
-    padding : 5,
-    backgroundColor : "hsla(44, 0%, 85%, 0.5)",
-    borderRadius : 50
-  },
-  mapStyle: {
-    width: (Dimensions.get('window').width),
-    height: (Dimensions.get('window').height) * 0.93,
-  },
-  buttonContainer: {
-    position: "absolute",
-    bottom: "5%",
-    left: "15%",
-    flexDirection: 'row',
-    alignItems: "center",
-    marginVertical: 20,
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    borderRadius: 20
-  },
-  bubble: {
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-  },
-  button: {
-    width: 80,
-    paddingHorizontal: 12,
-    alignItems: 'center',
-    marginHorizontal: 10,
-  },
-  // panel:
-  panelContainer: {
-    position: "absolute",
-    bottom: "12%",
-    left: "26%",
-    paddingLeft: 25,
-
-    flexDirection: 'row',
-    alignItems: "center",
-
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    borderRadius: 20
-  },
-  btn: {
-    width: 60,
-    paddingHorizontal: 16,
-    alignItems: 'center',
-    marginHorizontal: 0,
-  },
-  // Polypanel:
-  polyPanelContainer: {
-    width: 190,
-    position: "relative",
-    bottom: "27%",
-    left: "100%",
-    paddingLeft: 25,
+  const styles = StyleSheet.create({
+    savedWorkContainer: {
+      position: "absolute",
+      left: "0%",
+      bottom: "0%",
   
-    flexDirection: 'row',
-    alignItems: "center",
+      width: (Dimensions.get('window').width),
+      height: (Dimensions.get('window').height),
+      paddingTop: 300,
   
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    borderRadius: 20
-  },
-  polyButtonContainer: {
-    position: "relative",
-    bottom: "25%",
-    left: "45%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
   
-    flexDirection: 'row',
-    alignItems: "center",
+      backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+    float : {
+      position : "absolute",
+    },
+    column: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+    },
+    row: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    container: {
+      position: "absolute",
+      left: "0%",
   
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    borderRadius: 20
-  },
-  polyBtn: {
-    width: 60,
-    paddingHorizontal: 16,
-    alignItems: 'center',
-    marginHorizontal: 0,
-  },
-});
+      width: (Dimensions.get('window').width),
+      height: 50,
+  
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
+    },
+    Button: {
+      width: 35,
+      height: 35,
+      margin: 5,
+  
+      backgroundColor: 'rgba(255,255,255,0.7)',
+      borderBottomLeftRadius: 25,
+      borderBottomRightRadius: 25,
+    },
+    /* the mapView style */
+    mapStyle: {
+      width: (Dimensions.get('window').width),
+      height: (Dimensions.get('window').height) * 0.93,
+    },
+    /* the drawing buttons style */
+    drawingContainer: {
+      top: "30%",
+      left: "4%",
+  
+    },
+    MapTypeButton : {
+      backgroundColor : "hsla(44, 0%, 85%, 0.5)",
+      borderRadius : 50,
+    },
+    buttonContainer: {
+      position: "absolute",
+      bottom: "5%",
+      left: "15%",
+      flexDirection: 'row',
+      alignItems: "center",
+      marginVertical: 20,
+      backgroundColor: 'rgba(255,255,255,0.7)',
+      borderRadius: 20
+    },
+    bubble: {
+      paddingHorizontal: 18,
+      paddingVertical: 12,
+    },
+    button: {
+      width: 80,
+      paddingHorizontal: 12,
+      alignItems: 'center',
+      marginHorizontal: 10,
+    },
+    // panel:
+    FloatingContainer: {
+      position: "absolute",
+      left: 0,
+      bottom: 50,
+      width: "100%",
+      height: "25%",
+  
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    panelContainer: {
+      paddingLeft: 25,
+  
+      flexDirection: 'row',
+      alignItems: "center",
+  
+      backgroundColor: 'rgba(255,255,255,0.7)',
+      borderRadius: 20
+    },
+    btn: {
+      width: 60,
+      paddingHorizontal: 16,
+      alignItems: 'center',
+      marginHorizontal: 0,
+    },
+    // Polypanel:
+    polyPanelContainer: {
+      width: 190,
+      paddingLeft: 25,
+      marginBottom: 15,
+    
+      flexDirection: 'row',
+      alignItems: "center",
+    
+      backgroundColor: 'rgba(255,255,255,0.7)',
+      borderRadius: 20
+    },
+    polyButtonContainer: {
+      flexDirection: 'row',
+      alignItems: "center",
+    
+      backgroundColor: 'rgba(255,255,255,0.7)',
+      borderRadius: 20
+    },
+    polyBtn: {
+      width: 60,
+      paddingHorizontal: 16,
+      alignItems: 'center',
+      marginHorizontal: 0,
+    },
+    // manage buttons:
+    manageButtonsContainer: {
+      bottom: "1%",
+    },
+    manageButtons: {
+      flexDirection: 'row',
+      alignItems: "center",
+      justifyContent: "space-between",
+  
+      width: 150,
+      padding: 10,
+    
+      backgroundColor: 'rgba(255,255,255,0.7)',
+      borderRadius: 15
+    },
+      // Name input:
+    NameInputContainer: {
+      bottom: "80%",
+    },
+    NameInput: {
+      flexDirection: 'row',
+      alignItems: "center",
+      justifyContent: "space-between",
+  
+      padding: 3,
+    
+      backgroundColor: 'rgba(255,255,255,0.6)',
+      borderRadius: 25
+    },
+    inputDetails: {
+      width: 200,
+      height:45,
+      paddingLeft: 15,
+  
+      borderColor: 'gray', 
+      borderWidth: 0.3 ,
+      borderRadius: 15,
+    },
+      // Alert  message:
+      AlertMessageContainer: {
+      bottom: "90%",
+    },
+    AlertMessage: {
+      flexDirection: 'row',
+      alignItems: "center",
+      justifyContent: "center",
+    
+      width: 150,
+      padding: 10,
+      
+      backgroundColor: 'rgba(255,50,0,0.6)',
+      borderRadius: 10
+    },
+    // delete alert:
+    deletealert: {
+      padding: 5,
+      backgroundColor: 'rgba(255,255,255,0.6)',
+      borderTopLeftRadius: 10,
+      borderTopRightRadius: 10,
+    },
+    // current work: 
+    curentWorkContainer: {
+      position: "absolute",
+      bottom: "94%",
+      left: "0%",
+      paddingLeft: 5,
+  
+      width: (Dimensions.get('window').width),
+      height: 50,
+  
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "flex-start"
+    },
+    curentWork: {
+      flexDirection: 'row',
+      alignItems: "center",
+      justifyContent: "center",
+    
+      width: 150,
+      padding: 8,
+      
+      backgroundColor: 'rgba(250,250,250,0.6)',
+      borderBottomLeftRadius: 15,
+      borderBottomRightRadius: 15,
+      borderTopRightRadius: 15,
+    },
+  });
 
 const mapStateToProps = (state) => {
   return {

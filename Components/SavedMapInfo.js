@@ -13,12 +13,6 @@ class Saved extends React.Component {
 
         return (
           <TouchableOpacity style={styles.container} onPress={()=> showSavedMap(title)}>
-            <TouchableOpacity>
-              <Image 
-                source={require("../Images/map.png")} 
-                style={{width: 30, height: 30}}
-              />
-            </TouchableOpacity>
             <Text>{title}</Text>
             <TouchableOpacity>
               <Image 
