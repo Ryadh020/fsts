@@ -9,12 +9,14 @@ class Saved extends React.Component {
     }
 
     render() {
-        let {title, showSavedMap} = this.props
+        let {title, showSavedMap, deleteSavedMap} = this.props
 
         return (
           <TouchableOpacity style={styles.container} onPress={()=> showSavedMap(title)}>
             <Text>{title}</Text>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={()=> deleteSavedMap(title)}
+            >
               <Image 
                 source={require("../Images/Manage/delete.png")} 
                 style={{width: 22, height: 22}}

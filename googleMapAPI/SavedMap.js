@@ -101,13 +101,13 @@ class App extends React.Component {
   }
   
   _sandwishBar() {
+    this._getSavedMaps()
     this.setState({sandwish: true})
   }
 
 
     // get saved maps from the Storage :
   _getData =  async (key) => {
-    
     // get data:
     try {
         let value = await AsyncStorage.getItem(`${key}`);
@@ -122,6 +122,18 @@ class App extends React.Component {
             polygons : AllShapes.polygones,
           })
         }
+    }
+    catch (error) {
+      console.log("Erro")
+    }
+  }
+
+    // delete clicked data from the sandwish bar:
+  _deleteSavedMap =  async (key) => {
+    // get data:
+    try {
+      await AsyncStorage.removeItem(`${key}`);
+      this._getSavedMaps()
     }
     catch (error) {
       console.log("Erro")
@@ -689,7 +701,7 @@ class App extends React.Component {
               onPress={() => this._sandwishBar()}
             >
               <Image 
-                source={require("../Images/Manage/new.png")} 
+                source={require("../Images/Manage/bar.png")} 
                 style={{width: 25, height: 25}}
               />
             </TouchableOpacity>
@@ -749,7 +761,7 @@ class App extends React.Component {
             <FlatList
               style={styles.savedWorkList}
               data={this.state.mapsKeys}
-              renderItem={({ item }) => <Saved title={item} showSavedMap={this._getData}></Saved>}
+              renderItem={({ item }) => <Saved title={item} deleteSavedMap={this._deleteSavedMap} showSavedMap={this._getData}></Saved>}
               keyExtractor={item => item}
             />
           </View>
