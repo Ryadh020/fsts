@@ -14,8 +14,7 @@ let PolygoneId = 0; // for polygones counting
 let lineId = 0;  // for Polylines counting
 let markerId = 0;  // for markers counting
 
-let mapsKeys = ["Chlef", "Ch lef", "Chulef", "Chilef", "Chlooef", "Clkhlef", "Chlmmmef", "Chlmmddmef", "Chlmmssmef", "Chlmccmmef",];
-let value;
+let value;  // contain all saved maps keys
 
 class App extends React.Component {
 
@@ -29,6 +28,8 @@ class App extends React.Component {
         longitudeDelta: 0.0421,
       },
       mapType: MAP_TYPES.STANDARD, // map type
+
+      mapsKeys : [],  // contain all saved maps keys
 
         // markers data
       markers: [],   
@@ -75,31 +76,39 @@ class App extends React.Component {
     this.state.mapType == MAP_TYPES.STANDARD? this.setState({ mapType : MAP_TYPES.SATELLITE }):this.setState({ mapType : MAP_TYPES.STANDARD })
   }
 
-    // get all saved maps:
-  _getSavedMaps() {}
 
-  
-    // get saved maps from the Storage :
-  _getData =  async () => {
+
     // get all saved maps keys:
+  _getSavedMaps =  async () => {
     try {
-        mapsKeys = await AsyncStorage.getAllKeys(); // get all keys of saved maps
-        console.log(mapsKeys)
+      let Keys = await AsyncStorage.getAllKeys(); // get all keys of saved maps
+      this.setState({mapsKeys: Keys})
     }
     catch (error) {
       console.log("Erro geting keys")
     }
+  }
+    // show the list of saved maps:
+  componentDidMount() {  // chage it with a global state that detect new saved maps (refreshable):
+    this._getSavedMaps()
+  }
+  
 
+
+
+    // get saved maps from the Storage :
+  _getData =  async (key) => {
+
+    console.log(key);
+    
     // get data:
     try {
-      for(let key of mapsKeys) {
         value = await AsyncStorage.getItem(`${key}`);
         console.log(`u got${value}`);
 
         if (value !== null) {
           this.setState({markers : JSON.parse(value)})
         }
-      }
     }
     catch (error) {
       console.log("Erro")
@@ -665,8 +674,8 @@ class App extends React.Component {
           <View style={[styles.savedWorkContainer, styles.container]}>
             <FlatList
               style={styles.savedWorkList}
-              data={mapsKeys}
-              renderItem={({ item }) => <Saved title={item}></Saved>}
+              data={this.state.mapsKeys}
+              renderItem={({ item }) => <Saved title={item} showSavedMap={this._getData}></Saved>}
               keyExtractor={item => item}
             />
           </View>

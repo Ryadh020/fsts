@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
       width : 45,
       height : 45,
       padding : 10,
-      backgroundColor : "black",
+      backgroundColor : "white",
       borderRadius : 50
     },
     XO : { // ordinary button
@@ -137,8 +137,9 @@ const styles = StyleSheet.create({
         borderRadius : 50,
     },
     logo : { // ordinary button
-        width : 30,
-        height : 30,
+        width : 40,
+        height : 40,
+
         borderRadius : 50,
     }
   });
