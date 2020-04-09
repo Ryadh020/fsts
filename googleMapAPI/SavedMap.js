@@ -14,8 +14,6 @@ let PolygoneId = 0; // for polygones counting
 let lineId = 0;  // for Polylines counting
 let markerId = 0;  // for markers counting
 
-let value;  // contain all saved maps keys
-
 class App extends React.Component {
 
   constructor(props) {
@@ -98,16 +96,18 @@ class App extends React.Component {
 
     // get saved maps from the Storage :
   _getData =  async (key) => {
-
-    console.log(key);
     
     // get data:
     try {
-        value = await AsyncStorage.getItem(`${key}`);
-        console.log(`u got${value}`);
-
+        let value = await AsyncStorage.getItem(`${key}`);
+        let AllShapes = JSON.parse(value)
+        
         if (value !== null) {
-          this.setState({markers : JSON.parse(value)})
+          this.setState({
+            markers : AllShapes.markers,
+            polylines : AllShapes.polylines,
+            polygons : AllShapes.polygones,
+          })
         }
     }
     catch (error) {

@@ -173,7 +173,7 @@ class App extends React.Component {
 
     try {
       // send data
-    await AsyncStorage.setItem(`${this.state.workName}`, JSON.stringify(this.markers));
+    await AsyncStorage.setItem(`${this.state.workName}`, JSON.stringify(shapes));
     console.log("data saved")
 
     this.setState({saved: true,})  // tell that the project is saved
