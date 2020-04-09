@@ -482,9 +482,9 @@ class App extends React.Component {
         )}
         </MapView>
 
-        <Text style={{position: "absolute", top: 0, left: 0}}>{this.state.text}</Text>  
 
         {this.props.drawingPan == "MarkerPan" && (
+        <View style={styles.FloatingContainer}>
           <View style={styles.panelContainer}>
             <Image 
                 source={this.state.markerIconURL} 
@@ -571,10 +571,11 @@ class App extends React.Component {
             </View>
 
           </View>
+          </View>
         )}
 
         {this.props.drawingPan == "PolygonPan" && (
-        <View  style={{position: "absolute", left:0, bottom: 0}}>
+        <View  style={styles.FloatingContainer}>
           <View style={styles.polyPanelContainer}>
             <Image 
                 source={this.state.polygoneFillURL} 
@@ -656,7 +657,7 @@ class App extends React.Component {
         )}
      
         {this.props.drawingPan == "LinePan"  && (
-          <View  style={{position: "absolute", left:0, bottom: 0}}>
+          <View  style={styles.FloatingContainer}>
           <View style={styles.polyPanelContainer}>
             <Image 
                 source={this.state.polylineFillURL} 
@@ -743,10 +744,8 @@ class App extends React.Component {
         )}
 
 
-
         <Data/>
-        <DrawingTools/>
-
+        
 
         <View style={[styles.manageButtonsContainer, styles.container]}>
           <View style={styles.manageButtons}>
@@ -833,8 +832,6 @@ class App extends React.Component {
           </View>
         )}
 
-
-
         <View style={[styles.curentWorkContainer]}>
           <View style={styles.curentWork}>
             <Text>{this.state.workName}</Text>
@@ -849,12 +846,15 @@ class App extends React.Component {
           </View>
         )}
 
-        <TouchableOpacity onPress={this._changeMapType} style={styles.MapType}>
+        <View style={[styles.drawingContainer, styles.float, styles.column]}>
+          <TouchableOpacity onPress={this._changeMapType} style={styles.MapTypeButton}>
             <Image 
               style={{width: 45, height: 45}} 
               source={this.state.mapType == MAP_TYPES.STANDARD? require("../Images/earth.png"): require("../Images/map.png") } 
             />
-        </TouchableOpacity>
+          </TouchableOpacity>
+          <DrawingTools/>
+        </View>
       </View>
     );
   }
@@ -866,6 +866,9 @@ App.propTypes = {
 
 
 const styles = StyleSheet.create({
+  float : { // ordinary button
+    position : "absolute",
+  },
   column: {
     display: "flex",
     flexDirection: "column",
@@ -876,6 +879,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  container: {
+    position: "absolute",
+    left: "0%",
+
+    width: (Dimensions.get('window').width),
+    height: 50,
+
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+  },
   Button: {
     width: 35,
     height: 35,
@@ -885,24 +899,20 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 25,
     borderBottomRightRadius: 25,
   },
-  /* change map type button */
-  MapType : { // ordinary button
-    position : "absolute",
-    top : "27%",
-    left : 15,
-
-    display : "flex",
-    justifyContent : "center",
-    alignItems : "center",
-    width : 45,
-    height : 45,
-    padding : 5,
-    backgroundColor : "hsla(44, 0%, 85%, 0.5)",
-    borderRadius : 50
-  },
+  /* the mapView style */
   mapStyle: {
     width: (Dimensions.get('window').width),
     height: (Dimensions.get('window').height) * 0.93,
+  },
+  /* the drawing buttons style */
+  drawingContainer: {
+    top: "30%",
+    left: "4%",
+
+  },
+  MapTypeButton : {
+    backgroundColor : "hsla(44, 0%, 85%, 0.5)",
+    borderRadius : 50,
   },
   buttonContainer: {
     position: "absolute",
@@ -925,10 +935,19 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   // panel:
-  panelContainer: {
+  FloatingContainer: {
     position: "absolute",
-    bottom: "12%",
-    left: "26%",
+    left: 0,
+    bottom: 50,
+    width: "100%",
+    height: "25%",
+
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  panelContainer: {
     paddingLeft: 25,
 
     flexDirection: 'row',
@@ -946,10 +965,8 @@ const styles = StyleSheet.create({
   // Polypanel:
   polyPanelContainer: {
     width: 190,
-    position: "relative",
-    bottom: "27%",
-    left: "100%",
     paddingLeft: 25,
+    marginBottom: 15,
   
     flexDirection: 'row',
     alignItems: "center",
@@ -958,10 +975,6 @@ const styles = StyleSheet.create({
     borderRadius: 20
   },
   polyButtonContainer: {
-    position: "relative",
-    bottom: "25%",
-    left: "45%",
-  
     flexDirection: 'row',
     alignItems: "center",
   
@@ -974,20 +987,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 0,
   },
-
-  // All buttons Container :
-  container: {
-    position: "absolute",
-    left: "0%",
-
-    width: (Dimensions.get('window').width),
-    height: 50,
-
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-
   // manage buttons:
   manageButtonsContainer: {
     bottom: "1%",

@@ -19,10 +19,8 @@ class DrawingTools extends React.Component {
     _DrawingToolsToggle() {
         if(!this.state.toolsOpen) {  // if the drawing toolBar is closed 
           styles.DrawingButtons = {  // Spand the toolBar
-            position : "absolute",
             height: 210,
-            top : 140,
-            right : 15,
+            marginTop: 0,
             display : "flex",
             flexDirection : "column",
             justifyContent : "space-around",
@@ -31,10 +29,8 @@ class DrawingTools extends React.Component {
           this.setState({ toolsOpen : true });  // use it to change to change the button image and detect toolBar state
         } else if(this.state.toolsOpen) {
           styles.DrawingButtons = {  // Shrink the toolBar
-            position : "absolute",
             height: 0,
-            top : 160,
-            right : 15,
+            marginTop: 30,
             display : "flex",
             flexDirection : "column",
             justifyContent : "space-around",
@@ -102,14 +98,12 @@ class DrawingTools extends React.Component {
 
 const styles = StyleSheet.create({
     DrawingButtons : {  // for the right side buttons (marker/line/Polygone ....etc.)
-      position : "absolute",
       height: 0,
-      top : "30%",
-      right : 15,
       display : "flex",
       flexDirection : "column",
       justifyContent : "space-around",
       alignItems : "center",
+      marginTop: 30,
     },
     logoContainer : {
       display : "flex",

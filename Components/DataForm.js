@@ -62,6 +62,7 @@ class Data extends React.Component {
       if (this.props.Choosed) {
         if(this.props.tool == "Marker") {
           return(
+          <View style={styles.FloatingOutputContainer}>
             <View style={styles.output}>
               <Text style={styles.outputText}> remarques: {this.state.markersdata[this.props.id].more}</Text>
               <TouchableOpacity
@@ -74,9 +75,11 @@ class Data extends React.Component {
                     />
               </TouchableOpacity>
             </View>
+          </View>
           )
         } else if(this.props.tool == "Polygone") {
           return(
+          <View style={styles.FloatingOutputContainer}>
             <View style={styles.output}>
               <Text style={styles.outputText} > etat : {this.state.polygonsData[this.props.id].etat}</Text>
               <Text style={styles.outputText} > Hauteur: R+{this.state.polygonsData[this.props.id].hauteur}</Text>
@@ -92,9 +95,11 @@ class Data extends React.Component {
                     />
               </TouchableOpacity>
             </View>
+          </View>
           )
         } else if(this.props.tool == "Line") {
           return(
+          <View style={styles.FloatingOutputContainer}>
             <View style={styles.output}>
               <Text style={styles.outputText} > etat : {this.state.polyLinesData[this.props.id].etat}</Text>
               <Text style={styles.outputText} > Largeur: {this.state.polyLinesData[this.props.id].largeur}</Text>
@@ -110,6 +115,7 @@ class Data extends React.Component {
                     />
               </TouchableOpacity>
             </View>
+          </View>
           )
         }
 
@@ -124,6 +130,7 @@ class Data extends React.Component {
         const { editing } = this.state;
           if(this.props.tool == "Marker") { 
             return(
+            <View style={styles.FloatingContainer}>
               <View style={styles.table}>
                 <TextInput
                   style={styles.inputDetails}
@@ -149,9 +156,11 @@ class Data extends React.Component {
                   </TouchableOpacity>
                 </View>
               </View>
+            </View>
             )
           } else if(this.props.tool == "Line") {
             return(
+            <View style={styles.FloatingContainer}>
               <View style={styles.table}>
                 <RNPickerSelect
                   placeholder={{label: 'deffinez letat de la voirie', value: 'deffinez letat de la voirie' }}
@@ -199,9 +208,11 @@ class Data extends React.Component {
                 </TouchableOpacity>
               </View>
             </View>
+            </View>
             )
           } else if (this.props.tool == "Polygone") {
             return(
+            <View style={styles.FloatingContainer}>
               <View style={styles.table}>
                 <RNPickerSelect
                   placeholder={{label: 'deffinez letat de la construction', value: 'deffinez letat de la construction' }}
@@ -249,6 +260,7 @@ class Data extends React.Component {
                 </TouchableOpacity>
               </View>
               </View>
+              </View>
             )
           }
         }
@@ -267,6 +279,19 @@ class Data extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  FloatingContainer: {
+    position: "absolute",
+    left: 28,
+    bottom: "35%",
+    width: "100%",
+    height: "40%",
+
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
   dataContainer: {
     position: "absolute",
     width: (width) ,
@@ -276,9 +301,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   table: {
-    position: "absolute",
-    top: (height) * 0.5,
-    left: (height) * 0.06,
     width: (width) * 0.75,
     display: "flex",
     flexDirection: "column",
@@ -307,10 +329,20 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
   },
-  output: {
+  FloatingOutputContainer: {
     position: "absolute",
-    top: (height) * 0.1,
-    left: (height) * 0.11,
+    left: 28,
+    bottom: "55%",
+    width: "100%",
+    height: "40%",
+
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  output: {
     width: (width) * 0.6,
     display: "flex",
     flexDirection: "column",
