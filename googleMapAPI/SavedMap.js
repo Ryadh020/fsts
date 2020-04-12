@@ -1,14 +1,16 @@
 import React from 'react';
 import MapView, { Marker, Polygon, Polyline, ProviderPropType } from 'react-native-maps';
-import { StyleSheet, View, Dimensions, Text, TouchableOpacity, Image, FlatList} from 'react-native';
+import { StyleSheet, View, Dimensions, Text, TouchableOpacity, Image, FlatList, TextInput} from 'react-native';
 import { connect } from 'react-redux'
 import RNPickerSelect from 'react-native-picker-select';
 import { MAP_TYPES } from 'react-native-maps';
 import { AsyncStorage } from 'react-native';
 
 import DrawingTools from '../Components/DrawingTools' // components takes in charge displaying drawing tools.
-import Data from "../Components/DataForm" // a table to put data about the marker/line/polygone.
 import Saved from "../Components/SavedMapInfo"
+
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
 
 let PolygoneId = 0; // for polygones counting
 let lineId = 0;  // for Polylines counting
@@ -33,12 +35,10 @@ class App extends React.Component {
       mapType: MAP_TYPES.STANDARD, // map type
 
       mapsKeys : [],  // contain all saved maps keys
-
       workName: "empty",        // the actual workspace name:
       alertMessage : "HELLO WORLD",      // alert message
       saved : false,      // to detect if the previous project is saved
-
-      sandwish: true,
+      sandwish: false,
 
         // markers data
       markers: [],   
@@ -46,7 +46,6 @@ class App extends React.Component {
       markerIconURL : require("../Images/Markers/home.png"),  // (default marker icon) & to detect the changing of select form
       markerIcon : "home",  
       markerColor : require("../Images/Markers/black.png"),   // for panel
-
 
         // polygons data :
       polygons: [],   // to contain polygones and show them on mapping the array
@@ -59,7 +58,6 @@ class App extends React.Component {
           // for drawing
       polygoneStrokeColor : "gray",
       polygoneFillColor: "gray",
-      
 
         // PolyLines data :
       polylines: [],
@@ -73,17 +71,26 @@ class App extends React.Component {
           // for drawing
       polylineFillURL: require("../Images/Polygone/black_hole.png"),
       polylineWidhtURL: require("../Images/Polygone/1.png"),
+
+      Choosed: false,
+      created: false,
+      number: 0,
+
+        // to store live data when filling inputs
+      editing : {},
+      markersdata : [],
+      polyLinesData : [],
+      polygonsData: [],
     }
     this._Darw = this._Darw.bind(this)
     this._changeMapType = this._changeMapType.bind(this)
+    this._updateData = this._updateData.bind(this)
   }
 
     // change the map type :
   _changeMapType() {
     this.state.mapType == MAP_TYPES.STANDARD? this.setState({ mapType : MAP_TYPES.SATELLITE }):this.setState({ mapType : MAP_TYPES.STANDARD })
   }
-
-
 
     // get all saved maps keys:
   _getSavedMaps =  async () => {
@@ -95,11 +102,7 @@ class App extends React.Component {
       console.log("Erro geting keys")
     }
   }
-    // show the list of saved maps:
-  componentDidMount() {  // chage it with a global state that detect new saved maps (refreshable):
-    this._getSavedMaps()
-  }
-  
+    // show all saved maps:
   _sandwishBar() {
     this._getSavedMaps()
     this.setState({sandwish: true})
@@ -120,6 +123,10 @@ class App extends React.Component {
             markers : AllShapes.markers,
             polylines : AllShapes.polylines,
             polygons : AllShapes.polygones,
+
+            markersdata: AllShapes.markersdata,
+            polyLinesData: AllShapes.polyLinesData,
+            polygonsData: AllShapes.polygonsData,
           })
         }
     }
@@ -166,11 +173,253 @@ class App extends React.Component {
     // Helpers :
   latLng = {latitude: 36.365, longitude: 6.61472}
 
+    // push data to the table:
+    _updateData() {
+      // push data to markers array :
+    if(this.props.tool == "Marker") {
+      const { markersdata } = this.state;
+        // fill the markers array with live data
+      this.setState({markersdata : [...markersdata, this.state.editing]})
+        // refresh the data after subbmitting
+      this.setState({editing : {}})
+        // hide the dataTable:
+      this.setState({created: false})
+    } 
+    
+    else if(this.props.tool == "Line") {
+      const { polyLinesData } = this.state;
+      // fill the lines array with live data
+    this.setState({polyLinesData : [...polyLinesData, this.state.editing]})
+      // refresh the data after subbmitting
+    this.setState({editing : {}})
+      // hide the dataTable:
+    this.setState({created: false})
+    } 
+    
+    else if(this.props.tool == "Polygone") {
+      const { polygonsData } = this.state;
+        // fill the polygons array with live data
+      this.setState({polygonsData : [...polygonsData, this.state.editing]})
+        // refresh the data after subbmitting
+      this.setState({editing : {}})
+        // hide the dataTable:
+      this.setState({created: false})
+    }
+
+
+  }
+           // pop up the data of the choosed shape
+  componentDidMount() {
+    if (this.state.Choosed) {
+      if(this.props.tool == "Marker") {
+        return(
+        <View style={styles.FloatingOutputContainer}>
+          <View style={styles.output}>
+            <Text style={styles.outputText}> remarques: {this.state.markersdata[this.state.number].more}</Text>
+            <TouchableOpacity
+                style={{ margin: 5}}
+                onPress={()=> console.log("get galerie")}
+            >
+                  <Image 
+                    source={require("../Images/Galery.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+            </TouchableOpacity>
+          </View>
+        </View>
+        )
+      } else if(this.props.tool == "Polygone") {
+        return(
+        <View style={styles.FloatingOutputContainer}>
+          <View style={styles.output}>
+            <Text style={styles.outputText} > etat : {this.state.polygonsData[this.state.number].etat}</Text>
+            <Text style={styles.outputText} > Hauteur: R+{this.state.polygonsData[this.state.number].hauteur}</Text>
+
+            <Text  style={styles.outputText}> remarques: {this.state.polygonsData[this.state.number].more}</Text>
+            <TouchableOpacity
+                style={{ margin: 5}}
+                onPress={()=> console.log("get galerie")}
+            >
+                  <Image 
+                    source={require("../Images/Galery.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+            </TouchableOpacity>
+          </View>
+        </View>
+        )
+      } else if(this.props.tool == "Line") {
+        return(
+        <View style={styles.FloatingOutputContainer}>
+          <View style={styles.output}>
+            <Text style={styles.outputText} > etat : {this.state.polyLinesData[this.state.number].etat}</Text>
+            <Text style={styles.outputText} > Largeur: {this.state.polyLinesData[this.state.number].largeur}</Text>
+
+            <Text style={styles.outputText}> remarques: {this.state.polyLinesData[this.state.number].more}</Text>
+            <TouchableOpacity
+                style={{ margin: 5}}
+                onPress={()=> console.log("get galerie")}
+            >
+                  <Image 
+                    source={require("../Images/Galery.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+            </TouchableOpacity>
+          </View>
+        </View>
+        )
+      }
+
+
+    } else if(!this.state.Choosed){
+      return;
+    }
+  }
+
+  _inputTable() {
+    if(this.state.created) {
+      const { editing } = this.state;
+        if(this.props.tool == "Marker") { 
+          return(
+          <View style={styles.dataFloatingContainer}>
+            <View style={styles.table}>
+              <TextInput
+                style={styles.inputDetail}
+                placeholder={"Remarks..."}
+                onChangeText={e => this.setState({editing : {...editing, more : e} })}
+              ></TextInput>
+              <View style={{display: "flex", flexDirection: "row", justifyContent: "space-between", width: 100, margin: 15}}>
+                <TouchableOpacity
+                  onPress={()=> console.log("take pictures")}
+                >
+                  <Image 
+                    source={require("../Images/camera.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={this._updateData}
+                >
+                  <Image 
+                    source={require("../Images/done.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+          )
+        } else if(this.props.tool == "Line") {
+          return(
+          <View style={styles.dataFloatingContainer}>
+            <View style={styles.table}>
+              <RNPickerSelect
+                placeholder={{label: 'deffinez letat de la voirie', value: 'deffinez letat de la voirie' }}
+                onValueChange={(value) => {
+                  if(value == "bon") {
+                    this.setState({editing : {...editing, etat : "bon"} })
+                  } else if(value == "moyen") {
+                    this.setState({editing : {...editing, etat : "moyen"} })
+                  } else if(value == "mauvais") {
+                    this.setState({editing : {...editing, etat : "mauvais"} })
+                  }
+                }}
+                items={[
+                  { label: 'bon', value: 'bon' },
+                  { label: 'moyen', value: 'moyen'},
+                  { label: 'mauvais', value: 'mauvais'},
+                ]}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder={"Largeur de la voirie"}
+                onChangeText={e => {this.setState({editing : {...editing, largeur : e} })} }
+              ></TextInput>
+              <TextInput
+                style={styles.inputDetail}
+                placeholder={"Remarks..."}
+                onChangeText={e => this.setState({editing : {...editing, more : e} })}
+              ></TextInput>
+              <View style={{display: "flex", flexDirection: "row", justifyContent: "space-between", width: 100, margin: 15}}>
+                <TouchableOpacity
+                  onPress={()=> console.log("take pictures")}
+                >
+                  <Image 
+                    source={require("../Images/camera.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={this._updateData}
+                >
+                  <Image 
+                    source={require("../Images/done.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+              </TouchableOpacity>
+            </View>
+          </View>
+          </View>
+          )
+        } else if (this.props.tool == "Polygone") {
+          return(
+          <View style={styles.dataFloatingContainer}>
+            <View style={styles.table}>
+              <RNPickerSelect
+                placeholder={{label: 'deffinez letat de la construction', value: 'deffinez letat de la construction' }}
+                onValueChange={(value) => {
+                  if(value == "bon") {
+                    this.setState({editing : {...editing, etat : "bon"} })
+                  } else if(value == "moyen") {
+                    this.setState({editing : {...editing, etat : "moyen"} })
+                  } else if(value == "mauvais") {
+                    this.setState({editing : {...editing, etat : "mauvais"} })
+                  }
+                }}
+                items={[
+                  { label: 'bon', value: 'bon' },
+                  { label: 'moyen', value: 'moyen'},
+                  { label: 'mauvais', value: 'mauvais'},
+                ]}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder={"hauteur de la construction"}
+                onChangeText={e => {this.setState({editing : {...editing, hauteur : e} })} }
+              ></TextInput>
+              <TextInput
+                style={styles.inputDetail}
+                placeholder={"Remarks..."}
+                onChangeText={e => this.setState({editing : {...editing, more : e} })}
+              ></TextInput>
+              <View style={{display: "flex", flexDirection: "row", justifyContent: "space-between", width: 100, margin: 15}}>
+                <TouchableOpacity
+                  onPress={()=> console.log("take pictures")}
+                >
+                  <Image 
+                    source={require("../Images/camera.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={this._updateData}
+                >
+                  <Image 
+                    source={require("../Images/done.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+              </TouchableOpacity>
+            </View>
+            </View>
+            </View>
+          )
+        }
+      }
+  }
     // pop up marker data on cliking the marker:
   _shapeFocused(id) {
     // send the component key to the global state:
-    let action = { type: "ShapeFocused", value: id}
-    this.props.dispatch(action)
+    this.setState({Choosed: true, number: id})
   }
 
     // select the clicked drawing tool
@@ -189,8 +438,7 @@ class App extends React.Component {
 
 
   _HideDataTable() {
-    let action = { type: "shapeBlured"}
-    this.props.dispatch(action)
+    this.setState({Choosed: false, number: 0})
   }
 
   _Darw(e) {
@@ -204,9 +452,8 @@ class App extends React.Component {
       });
       // update the counter of markers :
       markerId++
-        // set global state to true (marker is created):
-      let action = { type: "MarkerCreated"}
-      this.props.dispatch(action)
+        // set  state to true (marker is created):
+      this.setState({created: true})
     }
     else if (this.props.tool == "Polygone") {
       const { polygoneEditing, creatingHole } = this.state;
@@ -253,9 +500,8 @@ class App extends React.Component {
         polygoneEditing: null,
         creatingHole: false
       });
-        // set global state to true (polygon is created):
-      let action = { type: "PolygoneCreated"}
-      this.props.dispatch(action)
+        // set  state to true (polygon is created):
+      this.setState({created: true})
   
         // set global state to true (polygon is created):
       let action2 = { type: "disabled", value : "Polygone"}
@@ -312,9 +558,8 @@ class App extends React.Component {
   
         scrollable : true // enavle map scrolling
       });
-        // set global state to true (polyline is created):
-      let action = { type: "PolygoneCreated"}
-      this.props.dispatch(action)
+        // set  state to true (polyline is created):
+      this.setState({created: true})
   
         // set global state to true (polyline is created):
       let action2 = { type: "disabled", value : "Line"}
@@ -753,8 +998,6 @@ class App extends React.Component {
           </TouchableOpacity>
           <DrawingTools/>
         </View>
-      
-        <Data/>
 
         {this.state.sandwish && (
           <View style={styles.savedWorkContainer}>
@@ -764,10 +1007,18 @@ class App extends React.Component {
               renderItem={({ item }) => <Saved title={item} deleteSavedMap={this._deleteSavedMap} showSavedMap={this._getData}></Saved>}
               keyExtractor={item => item}
             />
+
+            <TouchableOpacity onPress={()=> this.setState({sandwish: false})} style={styles.hideSandwishButton}>
+              <Image 
+                style={{width: 45, height: 45}} 
+                source={require("../Images/x.png")} 
+              />
+            </TouchableOpacity>
+
           </View>
         )}
-
-
+        {this.componentDidMount()  /* this shows the data table*/}
+        {this._inputTable() /* this shows the input data of shapes*/}
       </View>
     );
   }
@@ -1001,6 +1252,92 @@ App.propTypes = {
       borderBottomRightRadius: 15,
       borderTopRightRadius: 15,
     },
+    // shandwish button
+    hideSandwishButton : {
+      position: "absolute",
+      bottom: (Dimensions.get('window').height) * 0.87,
+      right: 5,
+    },
+    
+
+
+  dataFloatingContainer: {
+    position: "absolute",
+    left: 28,
+    bottom: "35%",
+    width: "100%",
+    height: "40%",
+
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  dataContainer: {
+    position: "absolute",
+    width: (width) ,
+    height: (height),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  table: {
+    width: (width) * 0.75,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    borderRadius: 20,
+  },
+  input: {
+    width: (width) * 0.7,
+    height:45,
+    paddingLeft: 15,
+
+    borderColor: 'gray', 
+    borderWidth: 0.3 ,
+    borderRadius: 10,
+  },
+  inputDetail: {
+    width: (width) * 0.7,
+    height:105,
+    paddingLeft: 15,
+    marginTop: 10,
+
+    borderColor: 'gray', 
+    borderWidth: 0.3 ,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+  },
+  FloatingOutputContainer: {
+    position: "absolute",
+    left: 28,
+    bottom: "55%",
+    width: "100%",
+    height: "40%",
+
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  output: {
+    width: (width) * 0.6,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    borderRadius: 20,
+  },
+  outputText: {
+    borderBottomColor: "black",
+    borderBottomWidth: 1, 
+    margin: 10
+  }
   });
 
 const mapStateToProps = (state) => {
@@ -1008,6 +1345,9 @@ const mapStateToProps = (state) => {
     tool: state.toggleTool.tool,
     drawingPan: state.toggleTool.drawingPan,
     clicked: state.showTable.clicked,
+
+    created: state.showTable.clicked,
+    id: state.showData.id,
   }
 }
 

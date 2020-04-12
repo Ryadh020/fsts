@@ -12,9 +12,9 @@ class MyMaps extends React.Component {
 
     render() {
         return (
-            <SafeAreaView style={styles.main}>
+            <View style={styles.main}>
                 <SavedMap style={styles.map}></SavedMap>
-            </SafeAreaView>
+            </View>
         )
     }
 }
