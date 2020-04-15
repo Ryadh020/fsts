@@ -75,6 +75,7 @@ class App extends React.Component {
       Choosed: false,
       created: false,
       updating: false,    // data is not updating
+      trash: "blue",      // to save shapes color when outline them
       number: 0,
 
         // to store live data when filling inputs
@@ -522,8 +523,43 @@ class App extends React.Component {
   _shapeFocused(id) {
     // send the component key to the global state:
     this.setState({Choosed: true, number: id})
-
     console.log("u clicked marker number "+ id);
+
+    
+      // outline shapes when focusing on them:
+      if(this.props.tool == "Marker") {
+        let { markers } = this.state;
+        this.setState({trash: markers[id].icon})                // save the old icon
+        markers[id].icon =  require("../Images/Markers/outline.png")           // change the icon 
+        this.setState({markers : markers})                      // fill the markers array with live data
+          // set the icon to origin:
+        setTimeout(() => {
+          markers[id].icon =  this.state.trash                 // change the icon 
+          this.setState({markers : markers})                   // fill the markers array with live data   
+        }, 1000);
+      }
+      else if(this.props.tool == "Line") {
+        let { polylines } = this.state;
+        this.setState({trash: polylines[id].polylineStrok})      // save the old color
+        polylines[id].polylineStrokeColor =  "blue"              // change the stroke color
+        this.setState({polylines : polylines})                   // fill the markers array with live data
+          // set stroke color to origin:
+        setTimeout(() => {
+          polylines[id].polylineStrokeColor =  this.state.trash              
+          this.setState({polylines : polylines})  
+        }, 500);
+      }
+      else if(this.props.tool == "Polygone") {
+        let { polygons } = this.state;
+        this.setState({trash: polygons[id].polygoneFillColor})      // save the old color
+        polygons[id].polygoneFillColor =  "blue"              // change the stroke color
+        this.setState({polygons : polygons})                   // fill the markers array with live data
+          // set stroke color to origin:
+        setTimeout(() => {
+          polygons[id].polygoneFillColor =  this.state.trash              
+          this.setState({polygons : polygons})  
+        }, 500);
+      }
   }
 
     // select the clicked drawing tool

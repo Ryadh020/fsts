@@ -68,6 +68,7 @@ class App extends React.Component {
 
       scrollable : true,  // for map scrolling
       updating: false,    // data is not updating
+      trash: "blue",
 
         // to store live data when filling inputs
       editing : {},  
@@ -292,19 +293,6 @@ class App extends React.Component {
             this.props.dispatch(action)
           }
         }
-  }
-  
-    // delete selected item shape
-    deletItem() {
-      if(this.props.tool == "Marker") {
-        const {markersdata} = this.state
-        this.markers.splice(this.props.id, 1)   // delete the shapes
-        markersdata.splice(this.props.id, 1)    // delete the data
-        this.setState({markersdata: markersdata})   // update the data array
-          // hide data:
-        let action = { type: "shapeBlured"}
-        this.props.dispatch(action)
-      }
   }
 
 
@@ -588,6 +576,38 @@ class App extends React.Component {
     let action = { type: "ShapeFocused", value: id}
     this.props.dispatch(action)
     console.log("u clicked marker number "+ id); 
+
+      // outline shapes when focusing on them:
+    if(this.props.tool == "Marker") {
+      this.setState({trash: this.markers[id].icon})      // save the old icon
+      this.markers[id].icon =  require("../Images/Markers/outline.png")           // change the icon 
+        // set the icon to origin:
+      setTimeout(() => {
+        this.markers[id].icon =  this.state.trash      
+      }, 1000);
+    }
+    else if(this.props.tool == "Line") {
+      let { polylines } = this.state;
+      this.setState({trash: polylines[id].polylineStrok})      // save the old color
+      polylines[id].polylineStrokeColor =  "blue"              // change the stroke color
+      this.setState({polylines : polylines})                   // fill the markers array with live data
+        // set stroke color to origin:
+      setTimeout(() => {
+        polylines[id].polylineStrokeColor =  this.state.trash              
+        this.setState({polylines : polylines})  
+      }, 500);
+    }
+    else if(this.props.tool == "Polygone") {
+      let { polygons } = this.state;
+      this.setState({trash: polygons[id].polygoneFillColor})      // save the old color
+      polygons[id].polygoneFillColor =  "blue"              // change the stroke color
+      this.setState({polygons : polygons})                   // fill the markers array with live data
+        // set stroke color to origin:
+      setTimeout(() => {
+        polygons[id].polygoneFillColor =  this.state.trash              
+        this.setState({polygons : polygons})  
+      }, 500);
+    }
   }
 
     // select the clicked drawing tool
