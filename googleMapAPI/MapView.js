@@ -13,7 +13,7 @@ const height = Dimensions.get('window').height;
 
 let PolygoneId = 0; // for polygones counting
 let lineId = 0;  // for Polylines counting
-let shapes  // a temporal database of drawed shapes
+let shapes  // a database of drawed shapes to send to the local phone
 
 class App extends React.Component {
 
@@ -67,6 +67,7 @@ class App extends React.Component {
       drawLine : false,
 
       scrollable : true,  // for map scrolling
+      updating: false,    // data is not updating
 
         // to store live data when filling inputs
       editing : {},  
@@ -191,47 +192,113 @@ class App extends React.Component {
     return;
   }
   };
+
+  _editData() {
+    this.setState({updating: true}) // data is editing
+
+    if(this.props.tool == "Marker") {
+        // show the data form:
+      let action = { type: "MarkerCreated"}
+      this.props.dispatch(action)
+        // hide the data:
+      let action2 = { type: "shapeBlured"}
+      this.props.dispatch(action2)
+
+    } else if(this.props.tool == "Line") {
+        // show the data form:
+      let action = { type: "LineCreated"}
+      this.props.dispatch(action)
+        // hide the data:
+      let action2 = { type: "shapeBlured"}
+      this.props.dispatch(action2)
+
+    } else if(this.props.tool == "Polygone") {
+        // show the data form:
+      let action = { type: "PolygoneCreated"}
+      this.props.dispatch(action)
+        // hide the data:
+      let action2 = { type: "shapeBlured"}
+      this.props.dispatch(action2)
+    } 
+  }
   
       // push data to the table:
-      _updateData() {
-        // push data to markers array :
-      if(this.props.tool == "Marker") {
-        const { markersdata } = this.state;
-          // fill the markers array with live data
-        this.setState({markersdata : [...markersdata, this.state.editing]})
-          // refresh the data after subbmitting
-        this.setState({editing : {}})
-          // hide the dataTable:
-        let action = { type: "MarkerSubmited"}
-        this.props.dispatch(action)
-      } 
-      
-      else if(this.props.tool == "Line") {
-        const { polyLinesData } = this.state;
-        // fill the lines array with live data
-      this.setState({polyLinesData : [...polyLinesData, this.state.editing]})
-        // refresh the data after subbmitting
-      this.setState({editing : {}})
-        // hide the dataTable:
-      let action = { type: "MarkerSubmited"}
-      this.props.dispatch(action)
-      } 
-      
-      else if(this.props.tool == "Polygone") {
-        const { polygonsData } = this.state;
-          // fill the polygons array with live data
-        this.setState({polygonsData : [...polygonsData, this.state.editing]})
-          // refresh the data after subbmitting
-        this.setState({editing : {}})
-          // hide the dataTable:
-        let action = { type: "PolygoneSubmited"}
-        this.props.dispatch(action)
-      }
+  _updateData() {
+        if (this.state.updating) {
+
+          if(this.props.tool == "Marker") {
+            const { markersdata } = this.state;
+            markersdata[this.props.id] =  this.state.editing              // update the target element
+            this.setState({markersdata : markersdata})              // fill the markers array with live data
+            this.setState({editing : {}})              // refresh the data after subbmitting
+            this.setState({updating: false})  // the data is edited
+              // hide the dataTable:
+            let action = { type: "MarkerSubmited"}
+            this.props.dispatch(action)
+
+          }else if(this.props.tool == "Line") {
+            const { polyLinesData } = this.state;
+            polyLinesData[this.props.id] =  this.state.editing              // update the target element
+            this.setState({polyLinesData : polyLinesData})              // fill the markers array with live data
+            this.setState({editing : {}})              // refresh the data after subbmitting
+            this.setState({updating: false})  // the data is edited
+              // hide the dataTable:
+            let action = { type: "MarkerSubmited"}
+            this.props.dispatch(action)
+
+          }else if(this.props.tool == "Polygone") {
+            const { polygonsData } = this.state;
+            polygonsData[this.props.id] =  this.state.editing              // update the target element
+            this.setState({polygonsData : polygonsData})              // fill the markers array with live data
+            this.setState({editing : {}})              // refresh the data after subbmitting
+            this.setState({updating: false})  // the data is edited
+              // hide the dataTable:
+            let action = { type: "MarkerSubmited"}
+            this.props.dispatch(action)
+          }
+
+        } else {
+                        // push data to markers array :
+          if(this.props.tool == "Marker") {
+            const { markersdata } = this.state;
+                // fill the markers array with live data
+            this.setState({markersdata : [...markersdata, this.state.editing]})
+                // refresh the data after subbmitting
+            this.setState({editing : {}})
+                // hide the dataTable:
+            let action = { type: "MarkerSubmited"}
+            this.props.dispatch(action)
+          } 
+            
+          else if(this.props.tool == "Line") {
+            const { polyLinesData } = this.state;
+              // fill the lines array with live data
+            this.setState({polyLinesData : [...polyLinesData, this.state.editing]})
+              // refresh the data after subbmitting
+            this.setState({editing : {}})
+              // hide the dataTable:
+            let action = { type: "MarkerSubmited"}
+            this.props.dispatch(action)
+          } 
+            
+          else if(this.props.tool == "Polygone") {
+            const { polygonsData } = this.state;
+                // fill the polygons array with live data
+            this.setState({polygonsData : [...polygonsData, this.state.editing]})
+                // refresh the data after subbmitting
+            this.setState({editing : {}})
+                // hide the dataTable:
+            let action = { type: "PolygoneSubmited"}
+            this.props.dispatch(action)
+          }
+        }
+  }
   
-  
-    }
+
+
+
       // pop up the data of the choosed shape
-    componentDidMount() {           
+    componentDidUpdate() {           
       if (this.props.Choosed) {
         if(this.props.tool == "Marker") {
           return(
@@ -247,6 +314,28 @@ class App extends React.Component {
                       style={{width: 25, height: 25}}
                     />
               </TouchableOpacity>
+              <View style={{width:100, display: "flex", flexDirection: "row", justifyContent: "space-between"}} >
+                <TouchableOpacity
+                    style={{ margin: 5}}
+                    onPress={()=> this.deletItem()}
+                >
+                  <Image 
+                    source={require("../Images/Manage/delete.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+                </TouchableOpacity>
+
+
+                <TouchableOpacity
+                    style={{ margin: 5}}
+                    onPress={()=>this._editData()}
+                >
+                  <Image 
+                    source={require("../Images/Manage/edit.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+                </TouchableOpacity>
+              </View>   
             </View>
           </View>
           )
@@ -267,6 +356,28 @@ class App extends React.Component {
                       style={{width: 25, height: 25}}
                     />
               </TouchableOpacity>
+              <View style={{width:100, display: "flex", flexDirection: "row", justifyContent: "space-between"}} >
+                <TouchableOpacity
+                      style={{ margin: 5}}
+                      onPress={()=> this.deletItem()}
+                >
+                  <Image 
+                      source={require("../Images/Manage/delete.png")} 
+                      style={{width: 25, height: 25}}
+                  />
+                </TouchableOpacity>
+
+
+                <TouchableOpacity
+                      style={{ margin: 5}}
+                      onPress={()=>this._editData()}
+                >
+                  <Image 
+                      source={require("../Images/Manage/edit.png")} 
+                      style={{width: 25, height: 25}}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
           )
@@ -287,6 +398,28 @@ class App extends React.Component {
                       style={{width: 25, height: 25}}
                     />
               </TouchableOpacity>
+              <View style={{width:100, display: "flex", flexDirection: "row", justifyContent: "space-between"}} >
+                <TouchableOpacity
+                    style={{ margin: 5}}
+                    onPress={()=> this.deletItem()}
+                >
+                  <Image 
+                    source={require("../Images/Manage/delete.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+                </TouchableOpacity>
+
+
+                <TouchableOpacity
+                    style={{ margin: 5}}
+                    onPress={()=>this._editData()}
+                >
+                  <Image 
+                    source={require("../Images/Manage/edit.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
           )
@@ -443,6 +576,7 @@ class App extends React.Component {
     // send the component key to the global state:
     let action = { type: "ShapeFocused", value: id}
     this.props.dispatch(action)
+    console.log("u clicked marker number "+ id); 
   }
 
     // select the clicked drawing tool
@@ -465,7 +599,7 @@ class App extends React.Component {
   }
 
   _Darw(e) {
-    if(this.state.workName !== "empty") {
+    //if(this.state.workName !== "empty") {
       const latLng = e.nativeEvent.coordinate  // change the marker location to the touched one
       if (this.props.tool == "Marker") {
           // push a new marker data to the list :
@@ -517,15 +651,15 @@ class App extends React.Component {
           });
         }
       }
-    }else {
-      this.setState({alertMessage : "create a new project"})
-      let action = { type: "ShowAlert"}
-      this.props.dispatch(action)
-      setTimeout(() => {
-        let action2 = { type: "HideAlert"}
-        this.props.dispatch(action2)
-      }, 1500);
-    }
+    //}else {
+    //  this.setState({alertMessage : "create a new project"})
+    //  let action = { type: "ShowAlert"}
+    //  this.props.dispatch(action)
+    //  setTimeout(() => {
+    //    let action2 = { type: "HideAlert"}
+    //    this.props.dispatch(action2)
+    //  }, 1500);
+    //}*/
   }
     // finish drawing:
   finishPolygone() {
@@ -669,12 +803,12 @@ class App extends React.Component {
           onPanDrag={e => this.onPanDrag(e)}
         >
 
-        {this.markers.map(index =>(
+        {this.markers.map((marker, index ) =>(
           <Marker
-            onPress={()=> {this._MarkerTool(), this._shapeFocused(index.key)} }  
-            coordinate={index.latiLngi}
-            key={"MN-" + index.key}
-            icon={index.icon}
+            onPress={()=> {this._MarkerTool(), this._shapeFocused(index)} }  
+            coordinate={marker.latiLngi}
+            key={"MN-" + marker.key}
+            icon={marker.icon}
             draggable
           >
           </Marker>
@@ -1106,7 +1240,7 @@ class App extends React.Component {
           </TouchableOpacity>
           <DrawingTools/>
         </View>
-        {this.componentDidMount()  /* this shows the data table*/}
+        {this.componentDidUpdate()  /* this shows the data table*/}
         {this._inputTable() /* this shows the input data of shapes*/}
       </View>
     );

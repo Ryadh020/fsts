@@ -74,6 +74,7 @@ class App extends React.Component {
 
       Choosed: false,
       created: false,
+      updating: false,    // data is not updating
       number: 0,
 
         // to store live data when filling inputs
@@ -173,40 +174,75 @@ class App extends React.Component {
     // Helpers :
   latLng = {latitude: 36.365, longitude: 6.61472}
 
+
+  _editData() {
+    this.setState({updating: true})        // data is editing
+    this.setState({created: true})         // show the data form:    
+    this.setState({Choosed: false})        // hide the data:       
+  }
+
     // push data to the table:
     _updateData() {
-      // push data to markers array :
-    if(this.props.tool == "Marker") {
-      const { markersdata } = this.state;
-        // fill the markers array with live data
-      this.setState({markersdata : [...markersdata, this.state.editing]})
+    if (this.state.updating) {
+      if(this.props.tool == "Marker") {
+        const { markersdata } = this.state;
+        markersdata[this.state.number] =  this.state.editing              // update the target element
+        this.setState({markersdata : markersdata})              // fill the markers array with live data
+        this.setState({editing : {}})              // refresh the data after subbmitting
+        this.setState({updating: false})  // the data is edited
+          // hide the dataTable:
+        this.setState({created: false})
+
+      }else if(this.props.tool == "Line") {
+        const { polyLinesData } = this.state;
+        polyLinesData[this.state.number] =  this.state.editing              // update the target element
+        this.setState({polyLinesData : polyLinesData})              // fill the markers array with live data
+        this.setState({editing : {}})              // refresh the data after subbmitting
+        this.setState({updating: false})  // the data is edited
+          // hide the dataTable:
+        this.setState({created: false})
+
+      }else if(this.props.tool == "Polygone") {
+        const { polygonsData } = this.state;
+        polygonsData[this.state.number] =  this.state.editing              // update the target element
+        this.setState({polygonsData : polygonsData})              // fill the markers array with live data
+        this.setState({editing : {}})              // refresh the data after subbmitting
+        this.setState({updating: false})  // the data is edited
+            // hide the dataTable:
+        this.setState({created: false})
+      }
+
+    } else {
+      if(this.props.tool == "Marker") {
+        const { markersdata } = this.state;
+          // fill the markers array with live data
+        this.setState({markersdata : [...markersdata, this.state.editing]})
+          // refresh the data after subbmitting
+        this.setState({editing : {}})
+          // hide the dataTable:
+        this.setState({created: false})
+      } 
+      
+      else if(this.props.tool == "Line") {
+        const { polyLinesData } = this.state;
+        // fill the lines array with live data
+      this.setState({polyLinesData : [...polyLinesData, this.state.editing]})
         // refresh the data after subbmitting
       this.setState({editing : {}})
         // hide the dataTable:
       this.setState({created: false})
-    } 
-    
-    else if(this.props.tool == "Line") {
-      const { polyLinesData } = this.state;
-      // fill the lines array with live data
-    this.setState({polyLinesData : [...polyLinesData, this.state.editing]})
-      // refresh the data after subbmitting
-    this.setState({editing : {}})
-      // hide the dataTable:
-    this.setState({created: false})
-    } 
-    
-    else if(this.props.tool == "Polygone") {
-      const { polygonsData } = this.state;
-        // fill the polygons array with live data
-      this.setState({polygonsData : [...polygonsData, this.state.editing]})
-        // refresh the data after subbmitting
-      this.setState({editing : {}})
-        // hide the dataTable:
-      this.setState({created: false})
+      } 
+      
+      else if(this.props.tool == "Polygone") {
+        const { polygonsData } = this.state;
+          // fill the polygons array with live data
+        this.setState({polygonsData : [...polygonsData, this.state.editing]})
+          // refresh the data after subbmitting
+        this.setState({editing : {}})
+          // hide the dataTable:
+        this.setState({created: false})
+      }
     }
-
-
   }
            // pop up the data of the choosed shape
   componentDidMount() {
@@ -225,6 +261,28 @@ class App extends React.Component {
                     style={{width: 25, height: 25}}
                   />
             </TouchableOpacity>
+            <View style={{width:100, display: "flex", flexDirection: "row", justifyContent: "space-between"}} >
+                <TouchableOpacity
+                    style={{ margin: 5}}
+                    onPress={()=> this.deletItem()}
+                >
+                  <Image 
+                    source={require("../Images/Manage/delete.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+                </TouchableOpacity>
+
+
+                <TouchableOpacity
+                    style={{ margin: 5}}
+                    onPress={()=>this._editData()}
+                >
+                  <Image 
+                    source={require("../Images/Manage/edit.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+                </TouchableOpacity>
+              </View>  
           </View>
         </View>
         )
@@ -245,6 +303,28 @@ class App extends React.Component {
                     style={{width: 25, height: 25}}
                   />
             </TouchableOpacity>
+            <View style={{width:100, display: "flex", flexDirection: "row", justifyContent: "space-between"}} >
+              <TouchableOpacity
+                    style={{ margin: 5}}
+                    onPress={()=> this.deletItem()}
+                >
+                  <Image 
+                    source={require("../Images/Manage/delete.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+                </TouchableOpacity>
+
+
+                <TouchableOpacity
+                    style={{ margin: 5}}
+                    onPress={()=>this._editData()}
+                >
+                  <Image 
+                    source={require("../Images/Manage/edit.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+              </TouchableOpacity>
+            </View>  
           </View>
         </View>
         )
@@ -265,6 +345,28 @@ class App extends React.Component {
                     style={{width: 25, height: 25}}
                   />
             </TouchableOpacity>
+            <View style={{width:100, display: "flex", flexDirection: "row", justifyContent: "space-between"}} >
+              <TouchableOpacity
+                    style={{ margin: 5}}
+                    onPress={()=> this.deletItem()}
+                >
+                  <Image 
+                    source={require("../Images/Manage/delete.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+              </TouchableOpacity>
+
+
+              <TouchableOpacity
+                    style={{ margin: 5}}
+                    onPress={()=>this._editData()}
+                >
+                  <Image 
+                    source={require("../Images/Manage/edit.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+              </TouchableOpacity>
+            </View>  
           </View>
         </View>
         )
@@ -420,6 +522,8 @@ class App extends React.Component {
   _shapeFocused(id) {
     // send the component key to the global state:
     this.setState({Choosed: true, number: id})
+
+    console.log("u clicked marker number "+ id);
   }
 
     // select the clicked drawing tool
@@ -622,12 +726,12 @@ class App extends React.Component {
         >
 
 
-        {this.state.markers.map(index =>(
+        {this.state.markers.map((marker, index) =>(
           <Marker
-            onPress={()=> {this._MarkerTool(), this._shapeFocused(index.key)} }  
-            coordinate={index.latiLngi}
-            key={"MN-" + index.key}
-            icon={index.icon}
+            onPress={()=> {this._MarkerTool(), this._shapeFocused(index)} }  
+            coordinate={marker.latiLngi}
+            key={"MN-" + marker.key}
+            icon={marker.icon}
             draggable
           >
           </Marker>
