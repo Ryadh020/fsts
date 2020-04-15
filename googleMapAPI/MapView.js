@@ -294,7 +294,18 @@ class App extends React.Component {
         }
   }
   
-
+    // delete selected item shape
+    deletItem() {
+      if(this.props.tool == "Marker") {
+        const {markersdata} = this.state
+        this.markers.splice(this.props.id, 1)   // delete the shapes
+        markersdata.splice(this.props.id, 1)    // delete the data
+        this.setState({markersdata: markersdata})   // update the data array
+          // hide data:
+        let action = { type: "shapeBlured"}
+        this.props.dispatch(action)
+      }
+  }
 
 
       // pop up the data of the choosed shape
