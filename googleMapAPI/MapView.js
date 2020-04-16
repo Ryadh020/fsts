@@ -607,7 +607,7 @@ class App extends React.Component {
     console.log("u clicked marker number "+ id); 
 
       // outline shapes when focusing on them:
-      
+      /*
     if(this.props.tool == "Marker") {
       this.setState({trash: this.markers[id].icon})      // save the old icon
       this.markers[id].icon =  require("../Images/Markers/outline.png")           // change the icon 
@@ -638,7 +638,7 @@ class App extends React.Component {
         this.setState({polygons : polygons})  
       }, 500);
     }
-    
+    */
   }
 
     // select the clicked drawing tool

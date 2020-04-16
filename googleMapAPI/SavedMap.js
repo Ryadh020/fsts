@@ -550,7 +550,7 @@ class App extends React.Component {
     this.setState({Choosed: true, number: id})
     console.log("u clicked marker number "+ id);
 
-  
+  /*
       // outline shapes when focusing on them:
       if(this.props.tool == "Marker") {
         let { markers } = this.state;
@@ -585,7 +585,7 @@ class App extends React.Component {
           this.setState({polygons : polygons})  
         }, 500);
       }
-  
+  */
   }
 
     // select the clicked drawing tool
