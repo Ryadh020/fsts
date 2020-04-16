@@ -245,6 +245,31 @@ class App extends React.Component {
       }
     }
   }
+
+      // delete selected item shape
+  deletItem() {
+    if(this.props.tool == "Marker") {
+      const {markersdata, markers} = this.state
+      markers.splice(this.state.number, 1)   // delete the shapes
+      markersdata.splice(this.state.number, 1)    // delete the data
+      this.setState({markersdata: markersdata, markers: markers})   // update the data array
+      this.setState({Choosed: false})        // hide the data:   
+    }
+    else if(this.props.tool == "Line") {
+      const {polyLinesData, polylines} = this.state
+      polylines.splice(this.state.number, 1)           // delete the shapes
+      polyLinesData.splice(this.state.number, 1)       // delete the data
+      this.setState({polyLinesData: polyLinesData, polylines: polylines})   // update the data array
+      this.setState({Choosed: false})        // hide the data:  
+    }
+    else if(this.props.tool == "Polygone") {
+      const {polygonsData, polygons} = this.state
+      polygons.splice(this.state.number, 1)           // delete the shapes
+      polygonsData.splice(this.state.number, 1)       // delete the data
+      this.setState({polygonsData: polygonsData, polygons: polygons})   // update the data array
+      this.setState({Choosed: false})        // hide the data:  
+    }
+  }
            // pop up the data of the choosed shape
   componentDidMount() {
     if (this.state.Choosed) {
@@ -525,7 +550,7 @@ class App extends React.Component {
     this.setState({Choosed: true, number: id})
     console.log("u clicked marker number "+ id);
 
-    
+  
       // outline shapes when focusing on them:
       if(this.props.tool == "Marker") {
         let { markers } = this.state;
@@ -560,6 +585,7 @@ class App extends React.Component {
           this.setState({polygons : polygons})  
         }, 500);
       }
+  
   }
 
     // select the clicked drawing tool
@@ -774,10 +800,10 @@ class App extends React.Component {
         ))}
 
 
-        {this.state.polylines.map(polyline => (
+        {this.state.polylines.map((polyline, index) => (
           <Polyline
             tappable={true}
-            onPress={()=> {this._LineTool(), this._shapeFocused(polyline.lineId), this.setState({text : "done"})}}
+            onPress={()=> {this._LineTool(), this._shapeFocused(index), this.setState({text : "done"})}}
 
             key={polyline.lineId}
             coordinates={polyline.coordinates}
@@ -799,10 +825,10 @@ class App extends React.Component {
 
 
 
-        {this.state.polygons.map(polygon => (
+        {this.state.polygons.map((polygon, index) => (
           <Polygon
             tappable={true}
-            onPress={()=> {this._PolygoneTool(),this._shapeFocused(polygon.PolygoneId)}}
+            onPress={()=> {this._PolygoneTool(),this._shapeFocused(index)}}
 
             key={polygon.PolygoneId}
             coordinates={polygon.coordinates}

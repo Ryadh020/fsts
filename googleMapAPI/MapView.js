@@ -294,7 +294,36 @@ class App extends React.Component {
           }
         }
   }
-
+    // delete selected item shape
+  deletItem() {
+      if(this.props.tool == "Marker") {
+        const {markersdata} = this.state
+        this.markers.splice(this.props.id, 1)   // delete the shapes
+        markersdata.splice(this.props.id, 1)    // delete the data
+        this.setState({markersdata: markersdata})   // update the data array
+          // hide data:
+        let action = { type: "shapeBlured"}
+        this.props.dispatch(action)
+      }
+      else if(this.props.tool == "Line") {
+        const {polyLinesData, polylines} = this.state
+        polylines.splice(this.props.id, 1)           // delete the shapes
+        polyLinesData.splice(this.props.id, 1)       // delete the data
+        this.setState({polyLinesData: polyLinesData, polylines: polylines})   // update the data array
+          // hide data:
+        let action = { type: "shapeBlured"}
+        this.props.dispatch(action)
+      }
+      else if(this.props.tool == "Polygone") {
+        const {polygonsData, polygons} = this.state
+        polygons.splice(this.props.id, 1)           // delete the shapes
+        polygonsData.splice(this.props.id, 1)       // delete the data
+        this.setState({polygonsData: polygonsData, polygons: polygons})   // update the data array
+          // hide data:
+        let action = { type: "shapeBlured"}
+        this.props.dispatch(action)
+      }
+  }
 
       // pop up the data of the choosed shape
     componentDidUpdate() {           
@@ -578,6 +607,7 @@ class App extends React.Component {
     console.log("u clicked marker number "+ id); 
 
       // outline shapes when focusing on them:
+      
     if(this.props.tool == "Marker") {
       this.setState({trash: this.markers[id].icon})      // save the old icon
       this.markers[id].icon =  require("../Images/Markers/outline.png")           // change the icon 
@@ -588,7 +618,7 @@ class App extends React.Component {
     }
     else if(this.props.tool == "Line") {
       let { polylines } = this.state;
-      this.setState({trash: polylines[id].polylineStrok})      // save the old color
+      this.setState({trash: polylines[id].polylineStrokeColor})      // save the old color
       polylines[id].polylineStrokeColor =  "blue"              // change the stroke color
       this.setState({polylines : polylines})                   // fill the markers array with live data
         // set stroke color to origin:
@@ -608,6 +638,7 @@ class App extends React.Component {
         this.setState({polygons : polygons})  
       }, 500);
     }
+    
   }
 
     // select the clicked drawing tool
@@ -770,9 +801,6 @@ class App extends React.Component {
     } else {
       return // show an eroor message later
     }
-
-
-
   }
 
   // add data to polyline array when pan dragging (to draw it in the render):
@@ -786,7 +814,7 @@ class App extends React.Component {
               lineId: lineId++,
               coordinates: [e.nativeEvent.coordinate],
               polylineStrokeColor: this.state.polylineStrokeColor,
-              polylineStrokeWidth: this.state.polylineStrokeWidth 
+              polylineStrokeWidth: this.state.polylineStrokeWidth,
             },
           });
         } else {
@@ -846,10 +874,10 @@ class App extends React.Component {
         ))}
 
 
-        {this.state.polylines.map(polyline => (
+        {this.state.polylines.map((polyline, index)=> (
           <Polyline
             tappable={true}
-            onPress={()=> {this._LineTool(), this._shapeFocused(polyline.lineId), this.setState({text : "done"})}}
+            onPress={()=> {this._LineTool(), this._shapeFocused(index), this.setState({text : "done"})}}
 
             key={polyline.lineId}
             coordinates={polyline.coordinates}
@@ -871,10 +899,10 @@ class App extends React.Component {
 
 
 
-        {this.state.polygons.map(polygon => (
+        {this.state.polygons.map((polygon, index) => (
           <Polygon
             tappable={true}
-            onPress={()=> {this._PolygoneTool(),this._shapeFocused(polygon.PolygoneId)}}
+            onPress={()=> {this._PolygoneTool(),this._shapeFocused(index)}}
 
             key={polygon.PolygoneId}
             coordinates={polygon.coordinates}
