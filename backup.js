@@ -5,8 +5,6 @@ import { connect } from 'react-redux'
 import RNPickerSelect from 'react-native-picker-select';
 import { MAP_TYPES } from 'react-native-maps';
 import { AsyncStorage } from 'react-native';
-import { Camera } from 'expo-camera';
-import * as FileSystem from 'expo-file-system';
 
 import DrawingTools from '../Components/DrawingTools' // components takes in charge displaying drawing tools.
 import Saved from "../Components/SavedMapInfo"
@@ -22,7 +20,6 @@ let shapes = {       // a temporal database of drawed shapes
       polylines: [],
       polygones: [],
     } 
-let photo;  // stors the snap
 
 class App extends React.Component {
 
@@ -80,10 +77,9 @@ class App extends React.Component {
       updating: false,    // data is not updating
       trash: "blue",      // to save shapes color when outline them
       number: 0,
-      galery: false,      // display galery
 
         // to store live data when filling inputs
-      editing : {pic:[],}, 
+      editing : {},
       markersdata : [],
       polyLinesData : [],
       polygonsData: [],
@@ -193,7 +189,7 @@ class App extends React.Component {
         const { markersdata } = this.state;
         markersdata[this.state.number] =  this.state.editing              // update the target element
         this.setState({markersdata : markersdata})              // fill the markers array with live data
-        this.setState({editing : {pic:[],}})              // refresh the data after subbmitting
+        this.setState({editing : {}})              // refresh the data after subbmitting
         this.setState({updating: false})  // the data is edited
           // hide the dataTable:
         this.setState({created: false})
@@ -202,7 +198,7 @@ class App extends React.Component {
         const { polyLinesData } = this.state;
         polyLinesData[this.state.number] =  this.state.editing              // update the target element
         this.setState({polyLinesData : polyLinesData})              // fill the markers array with live data
-        this.setState({editing : {pic:[],}})              // refresh the data after subbmitting
+        this.setState({editing : {}})              // refresh the data after subbmitting
         this.setState({updating: false})  // the data is edited
           // hide the dataTable:
         this.setState({created: false})
@@ -211,7 +207,7 @@ class App extends React.Component {
         const { polygonsData } = this.state;
         polygonsData[this.state.number] =  this.state.editing              // update the target element
         this.setState({polygonsData : polygonsData})              // fill the markers array with live data
-        this.setState({editing : {pic:[],}})              // refresh the data after subbmitting
+        this.setState({editing : {}})              // refresh the data after subbmitting
         this.setState({updating: false})  // the data is edited
             // hide the dataTable:
         this.setState({created: false})
@@ -223,7 +219,7 @@ class App extends React.Component {
           // fill the markers array with live data
         this.setState({markersdata : [...markersdata, this.state.editing]})
           // refresh the data after subbmitting
-          this.setState({editing : {pic:[],}})
+        this.setState({editing : {}})
           // hide the dataTable:
         this.setState({created: false})
       } 
@@ -233,7 +229,7 @@ class App extends React.Component {
         // fill the lines array with live data
       this.setState({polyLinesData : [...polyLinesData, this.state.editing]})
         // refresh the data after subbmitting
-        this.setState({editing : {pic:[],}})
+      this.setState({editing : {}})
         // hide the dataTable:
       this.setState({created: false})
       } 
@@ -243,7 +239,7 @@ class App extends React.Component {
           // fill the polygons array with live data
         this.setState({polygonsData : [...polygonsData, this.state.editing]})
           // refresh the data after subbmitting
-          this.setState({editing : {pic:[],}})
+        this.setState({editing : {}})
           // hide the dataTable:
         this.setState({created: false})
       }
@@ -284,7 +280,7 @@ class App extends React.Component {
             <Text style={styles.outputText}> remarques: {this.state.markersdata[this.state.number].more}</Text>
             <TouchableOpacity
                 style={{ margin: 5}}
-                onPress={()=> this.setState({galery: true})}
+                onPress={()=> console.log("get galerie")}
             >
                   <Image 
                     source={require("../Images/Galery.png")} 
@@ -326,7 +322,7 @@ class App extends React.Component {
             <Text  style={styles.outputText}> remarques: {this.state.polygonsData[this.state.number].more}</Text>
             <TouchableOpacity
                 style={{ margin: 5}}
-                onPress={()=> this.setState({galery: true})}
+                onPress={()=> console.log("get galerie")}
             >
                   <Image 
                     source={require("../Images/Galery.png")} 
@@ -368,7 +364,7 @@ class App extends React.Component {
             <Text style={styles.outputText}> remarques: {this.state.polyLinesData[this.state.number].more}</Text>
             <TouchableOpacity
                 style={{ margin: 5}}
-                onPress={()=> this.setState({galery: true})}
+                onPress={()=> console.log("get galerie")}
             >
                   <Image 
                     source={require("../Images/Galery.png")} 
@@ -422,6 +418,14 @@ class App extends React.Component {
               ></TextInput>
               <View style={{display: "flex", flexDirection: "row", justifyContent: "space-between", width: 100, margin: 15}}>
                 <TouchableOpacity
+                  onPress={()=> console.log("take pictures")}
+                >
+                  <Image 
+                    source={require("../Images/camera.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
                   onPress={this._updateData}
                 >
                   <Image 
@@ -466,6 +470,14 @@ class App extends React.Component {
               ></TextInput>
               <View style={{display: "flex", flexDirection: "row", justifyContent: "space-between", width: 100, margin: 15}}>
                 <TouchableOpacity
+                  onPress={()=> console.log("take pictures")}
+                >
+                  <Image 
+                    source={require("../Images/camera.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
                   onPress={this._updateData}
                 >
                   <Image 
@@ -509,6 +521,14 @@ class App extends React.Component {
                 onChangeText={e => this.setState({editing : {...editing, more : e} })}
               ></TextInput>
               <View style={{display: "flex", flexDirection: "row", justifyContent: "space-between", width: 100, margin: 15}}>
+                <TouchableOpacity
+                  onPress={()=> console.log("take pictures")}
+                >
+                  <Image 
+                    source={require("../Images/camera.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+                </TouchableOpacity>
                 <TouchableOpacity
                   onPress={this._updateData}
                 >
@@ -1165,49 +1185,6 @@ class App extends React.Component {
         )}
         {this.componentDidMount()  /* this shows the data table*/}
         {this._inputTable() /* this shows the input data of shapes*/}
-
-        {this.state.galery &&  (
-          <View style={[styles.container, styles.GaleryContainer]}>
-            <TouchableOpacity onPress={()=> this.setState({galery: false})} style={styles.hideCamera}>
-              <Image 
-                style={{width: 45, height: 45}} 
-                source={require("../Images/x.png")} 
-              />
-            </TouchableOpacity>
-            <View style={[styles.wrap, styles.row]}>
-              {this.props.tool === "Marker" && (
-                this.state.markersdata[this.state.number].pic.map((marker, index) =>(
-                  <Image 
-                    style={{width: 140, height: 140, margin:5}} 
-                    source={{uri: this.state.markersdata[this.state.number].pic[index]}} 
-                    key={photo}  // temporal
-                  />
-
-                ))
-              )}
-              {this.props.tool === "Line" && (
-                this.state.polyLinesData[this.state.number].pic.map((line, index) =>(
-                  <Image 
-                    style={{width: 140, height: 140, margin:5}} 
-                    source={{uri: this.state.polyLinesData[this.state.number].pic[index]}} 
-                    key={photo}  // temporal
-                  />
-
-                ))
-              )}
-              {this.props.tool === "Polygone" && (
-                this.state.polygonsData[this.state.number].pic.map((polygon, index) =>(
-                  <Image 
-                    style={{width: 140, height: 140, margin:5}} 
-                    source={{uri: this.state.polygonsData[this.state.number].pic[index]}} 
-                    key={photo}  // temporal
-                  />
-
-                ))
-              )}
-            </View>
-          </View>
-        )}
       </View>
     );
   }
@@ -1265,10 +1242,6 @@ App.propTypes = {
       backgroundColor: 'rgba(255,255,255,0.7)',
       borderBottomLeftRadius: 25,
       borderBottomRightRadius: 25,
-    },
-    wrap: {
-      justifyContent: "space-around",
-      flexWrap: 'wrap',
     },
     /* the mapView style */
     mapStyle: {
@@ -1530,29 +1503,7 @@ App.propTypes = {
     borderBottomColor: "black",
     borderBottomWidth: 1, 
     margin: 10
-  },
-  // camera :
-  CameraContainer: {
-    height: height,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-  },
-  camera: {
-    width: width * .9, 
-    height: height * 0.5, 
-    backgroundColor: 'black',
-    justifyContent: 'flex-end',
-    borderRadius: 15,
-  },
-  hideCamera : {
-    position: "absolute",
-    bottom: height * .83,
-    right: 5,
-  },
-  // galery :
-  GaleryContainer: {
-    height: height,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-  },
+  }
   });
 
 const mapStateToProps = (state) => {
