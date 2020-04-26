@@ -1171,17 +1171,12 @@ class App extends React.Component {
 
         {this.state.galery &&  (
           <View style={[styles.container, styles.GaleryContainer]}>
-            <TouchableOpacity onPress={()=> this.setState({galery: false})} style={styles.hideCamera}>
-              <Image 
-                style={{width: 45, height: 45}} 
-                source={require("../Images/x.png")} 
-              />
-            </TouchableOpacity>
+            <ScrollView>
             <View style={[styles.wrap, styles.row]}>
               {this.props.tool === "Marker" && (
                 this.state.markersdata[this.state.number].pic.map((marker, index) =>(
                   <Image 
-                    style={{width: 140, height: 140, margin:5}} 
+                    style={{width: 180, height: 180, margin:5}} 
                     source={{uri: this.state.markersdata[this.state.number].pic[index]}} 
                     key={photo}  // temporal
                   />
@@ -1191,7 +1186,7 @@ class App extends React.Component {
               {this.props.tool === "Line" && (
                 this.state.polyLinesData[this.state.number].pic.map((line, index) =>(
                   <Image 
-                    style={{width: 140, height: 140, margin:5}} 
+                    style={{width: 180, height: 180, margin:5}} 
                     source={{uri: this.state.polyLinesData[this.state.number].pic[index]}} 
                     key={photo}  // temporal
                   />
@@ -1201,7 +1196,7 @@ class App extends React.Component {
               {this.props.tool === "Polygone" && (
                 this.state.polygonsData[this.state.number].pic.map((polygon, index) =>(
                   <Image 
-                    style={{width: 140, height: 140, margin:5}} 
+                    style={{width: 180, height: 180, margin:5}} 
                     source={{uri: this.state.polygonsData[this.state.number].pic[index]}} 
                     key={photo}  // temporal
                   />
@@ -1209,6 +1204,13 @@ class App extends React.Component {
                 ))
               )}
             </View>
+            </ScrollView>
+            <TouchableOpacity onPress={()=> this.setState({galery: false})} style={styles.hideCamera}>
+              <Image 
+                style={{width: 45, height: 45}} 
+                source={require("../Images/x.png")} 
+              />
+            </TouchableOpacity>
           </View>
         )}
       </KeyboardAvoidingView>
@@ -1554,7 +1556,7 @@ App.propTypes = {
   // galery :
   GaleryContainer: {
     height: height,
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    backgroundColor: 'rgba(250,250,250,1)',
   },
   });
 

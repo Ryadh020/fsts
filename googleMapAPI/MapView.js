@@ -1374,20 +1374,15 @@ class App extends React.Component {
 
         {this.state.galery &&  (
           <View style={[styles.container, styles.GaleryContainer]}>
-            <TouchableOpacity onPress={()=> this.setState({galery: false})} style={styles.hideCamera}>
-              <Image 
-                style={{width: 45, height: 45}} 
-                source={require("../Images/x.png")} 
-              />
-            </TouchableOpacity>
+            <ScrollView>
             <View style={[styles.wrap, styles.row]}>
+              
               {this.props.tool === "Marker" && (
                 this.state.markersdata[this.props.id].pic.map((marker, index) =>(
                   <Image 
-                    style={{width: 140, height: 140, margin:5}} 
+                    style={{width: 180, height: 180, margin:5}} 
                     source={{uri: this.state.markersdata[this.props.id].pic[index]}} 
                     key={photo}  // temporal
-                    //onProgress={()=> }
                   />
 
                 ))
@@ -1412,7 +1407,15 @@ class App extends React.Component {
 
                 ))
               )}
+              
             </View>
+            </ScrollView>
+            <TouchableOpacity onPress={()=> this.setState({galery: false})} style={styles.hideCamera}>
+              <Image 
+                style={{width: 45, height: 45, zIndex: +5}} 
+                source={require("../Images/x.png")} 
+              />
+            </TouchableOpacity>
           </View>
         )}
       </KeyboardAvoidingView>
