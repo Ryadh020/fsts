@@ -1,6 +1,6 @@
 import React from 'react';
 import MapView, { Marker, Polygon, Polyline, ProviderPropType } from 'react-native-maps';
-import { StyleSheet, View, Dimensions, Text, TouchableOpacity, Image, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, ScrollView} from 'react-native';
+import { FlatList, StyleSheet, View, Dimensions, Text, TouchableOpacity, Image, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, ScrollView} from 'react-native';
 import { connect } from 'react-redux'
 import RNPickerSelect from 'react-native-picker-select';
 import { MAP_TYPES } from 'react-native-maps';

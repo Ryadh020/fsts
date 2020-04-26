@@ -882,7 +882,7 @@ class App extends React.Component {
 
     return (
       <KeyboardAvoidingView
-        behavior={"position"}
+        behavior={"padding"}
         keyboardVerticalOffset={- (Dimensions.get('window').height) * 0.06}
       >
         <MapView
@@ -1387,6 +1387,7 @@ class App extends React.Component {
                     style={{width: 140, height: 140, margin:5}} 
                     source={{uri: this.state.markersdata[this.props.id].pic[index]}} 
                     key={photo}  // temporal
+                    //onProgress={()=> }
                   />
 
                 ))
@@ -1737,7 +1738,7 @@ const styles = StyleSheet.create({
   // galery :
   GaleryContainer: {
     height: height,
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    backgroundColor: 'rgba(250,250,250,1)',
   },
 });
 
