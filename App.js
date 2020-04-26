@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {View, Text, StyleSheet} from 'react-native'
+import {View, Text, StyleSheet, Image} from 'react-native'
 import { Provider } from 'react-redux'
 import Store from './Store/configureStore'
 import Route from './Navigation/Route'
@@ -16,7 +16,7 @@ export default class App extends React.Component {
   componentDidMount() {
     setTimeout(() => {
       this.setState({no: 2})
-    }, 2000);
+    }, 4000);
   }
 
 render() {
@@ -24,6 +24,20 @@ render() {
     this.state.no === 1 ? 
     <View style={styles.introPage}>
       <Text style={styles.logo}>FSTS</Text>
+
+
+      <View style={styles.touche}>
+        <Text>Made with</Text>
+        <Image
+          style={{width: 30, height:30}}
+          source={require("./Images/love.png")}
+        ></Image>
+        <Text>and </Text>
+        <Image
+          source={require("./Images/milk.png")}
+        ></Image>
+      </View>
+
     </View>
     :
     <Provider store={Store}>
@@ -38,12 +52,16 @@ const styles = StyleSheet.create({
   introPage: {
     display:"flex",
     flex: 1,
-    justifyContent:"center", 
+    justifyContent:"space-around", 
     alignItems: "center"
   },
   logo: {
     fontSize: 80,
-    backgroundColor: "red"
+  },
+  touche: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   }
 })
 
