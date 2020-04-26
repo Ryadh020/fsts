@@ -349,34 +349,32 @@ class App extends React.Component {
           return(
           <View style={styles.FloatingOutputContainer}>
             <View style={styles.output}>
-              <Text style={styles.outputText}> remarques: {this.state.markersdata[this.props.id].more}</Text>
-              <TouchableOpacity
-                  style={{ margin: 5}}
-                  onPress={()=> this.setState({galery: true})}
-              >
-                    <Image 
-                      source={require("../Images/Galery.png")} 
-                      style={{width: 25, height: 25}}
-                    />
-              </TouchableOpacity>
+              <Text style={styles.outputText}>{this.state.markersdata[this.props.id].more}</Text>
               <View style={{width:100, display: "flex", flexDirection: "row", justifyContent: "space-between"}} >
                 <TouchableOpacity
                     style={{ margin: 5}}
-                    onPress={()=> this.deletItem()}
+                    onPress={()=> this.setState({galery: true})}
                 >
                   <Image 
-                    source={require("../Images/Manage/delete.png")} 
+                    source={require("../Images/Galery.png")} 
                     style={{width: 25, height: 25}}
                   />
                 </TouchableOpacity>
-
-
                 <TouchableOpacity
                     style={{ margin: 5}}
                     onPress={()=>this._editData()}
                 >
                   <Image 
                     source={require("../Images/Manage/edit.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={{ margin: 5}}
+                    onPress={()=> this.deletItem()}
+                >
+                  <Image 
+                    source={require("../Images/Manage/delete.png")} 
                     style={{width: 25, height: 25}}
                   />
                 </TouchableOpacity>
@@ -388,37 +386,35 @@ class App extends React.Component {
           return(
           <View style={styles.FloatingOutputContainer}>
             <View style={styles.output}>
-              <Text style={styles.outputText} > etat : {this.state.polygonsData[this.props.id].etat}</Text>
-              <Text style={styles.outputText} > Hauteur: R+{this.state.polygonsData[this.props.id].hauteur}</Text>
+              <Text style={styles.outputText} >En {this.state.polygonsData[this.props.id].etat} etat</Text>
+              <Text style={styles.outputText} >R+{this.state.polygonsData[this.props.id].hauteur}</Text>
   
-              <Text  style={styles.outputText}> remarques: {this.state.polygonsData[this.props.id].more}</Text>
-              <TouchableOpacity
-                  style={{ margin: 5}}
-                  onPress={()=> this.setState({galery: true})}
-              >
-                    <Image 
-                      source={require("../Images/Galery.png")} 
-                      style={{width: 25, height: 25}}
-                    />
-              </TouchableOpacity>
+              <Text  style={styles.outputText}>{this.state.polygonsData[this.props.id].more}</Text>
               <View style={{width:100, display: "flex", flexDirection: "row", justifyContent: "space-between"}} >
                 <TouchableOpacity
-                      style={{ margin: 5}}
-                      onPress={()=> this.deletItem()}
+                    style={{ margin: 5}}
+                    onPress={()=> this.setState({galery: true})}
                 >
                   <Image 
-                      source={require("../Images/Manage/delete.png")} 
-                      style={{width: 25, height: 25}}
+                    source={require("../Images/Galery.png")} 
+                    style={{width: 25, height: 25}}
                   />
                 </TouchableOpacity>
-
-
                 <TouchableOpacity
                       style={{ margin: 5}}
                       onPress={()=>this._editData()}
                 >
                   <Image 
                       source={require("../Images/Manage/edit.png")} 
+                      style={{width: 25, height: 25}}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                      style={{ margin: 5}}
+                      onPress={()=> this.deletItem()}
+                >
+                  <Image 
+                      source={require("../Images/Manage/delete.png")} 
                       style={{width: 25, height: 25}}
                   />
                 </TouchableOpacity>
@@ -430,37 +426,35 @@ class App extends React.Component {
           return(
           <View style={styles.FloatingOutputContainer}>
             <View style={styles.output}>
-              <Text style={styles.outputText} > etat : {this.state.polyLinesData[this.props.id].etat}</Text>
-              <Text style={styles.outputText} > Largeur: {this.state.polyLinesData[this.props.id].largeur}</Text>
+              <Text style={styles.outputText} >En {this.state.polyLinesData[this.props.id].etat} etat</Text>
+              <Text style={styles.outputText} >{this.state.polyLinesData[this.props.id].largeur} m</Text>
   
-              <Text style={styles.outputText}> remarques: {this.state.polyLinesData[this.props.id].more}</Text>
-              <TouchableOpacity
-                  style={{ margin: 5}}
-                  onPress={()=> this.setState({galery: true})}
-              >
-                    <Image 
-                      source={require("../Images/Galery.png")} 
-                      style={{width: 25, height: 25}}
-                    />
-              </TouchableOpacity>
+              <Text style={styles.outputText}>{this.state.polyLinesData[this.props.id].more}</Text>
               <View style={{width:100, display: "flex", flexDirection: "row", justifyContent: "space-between"}} >
                 <TouchableOpacity
                     style={{ margin: 5}}
-                    onPress={()=> this.deletItem()}
+                    onPress={()=> this.setState({galery: true})}
                 >
-                  <Image 
-                    source={require("../Images/Manage/delete.png")} 
-                    style={{width: 25, height: 25}}
-                  />
+                      <Image 
+                        source={require("../Images/Galery.png")} 
+                        style={{width: 25, height: 25}}
+                      />
                 </TouchableOpacity>
-
-
                 <TouchableOpacity
                     style={{ margin: 5}}
                     onPress={()=>this._editData()}
                 >
                   <Image 
                     source={require("../Images/Manage/edit.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={{ margin: 5}}
+                    onPress={()=> this.deletItem()}
+                >
+                  <Image 
+                    source={require("../Images/Manage/delete.png")} 
                     style={{width: 25, height: 25}}
                   />
                 </TouchableOpacity>
@@ -1712,14 +1706,15 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    padding: 5,
 
     backgroundColor: 'rgba(255,255,255,0.7)',
     borderRadius: 20,
   },
   outputText: {
     borderBottomColor: "black",
-    borderBottomWidth: 1, 
-    margin: 10
+    marginBottom: 5,
+    textAlign: "center"
   },
   // camera :
   CameraContainer: {

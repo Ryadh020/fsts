@@ -281,38 +281,36 @@ class App extends React.Component {
         return(
         <View style={styles.FloatingOutputContainer}>
           <View style={styles.output}>
-            <Text style={styles.outputText}> remarques: {this.state.markersdata[this.state.number].more}</Text>
-            <TouchableOpacity
-                style={{ margin: 5}}
-                onPress={()=> this.setState({galery: true})}
-            >
-                  <Image 
-                    source={require("../Images/Galery.png")} 
-                    style={{width: 25, height: 25}}
-                  />
-            </TouchableOpacity>
+            <Text style={styles.outputText}>{this.state.markersdata[this.state.number].more}</Text>
             <View style={{width:100, display: "flex", flexDirection: "row", justifyContent: "space-between"}} >
-                <TouchableOpacity
-                    style={{ margin: 5}}
-                    onPress={()=> this.deletItem()}
-                >
-                  <Image 
-                    source={require("../Images/Manage/delete.png")} 
-                    style={{width: 25, height: 25}}
-                  />
-                </TouchableOpacity>
-
-
-                <TouchableOpacity
+              <TouchableOpacity
+                  style={{ margin: 5}}
+                  onPress={()=> this.setState({galery: true})}
+              >
+                <Image 
+                  source={require("../Images/Galery.png")} 
+                  style={{width: 25, height: 25}}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
                     style={{ margin: 5}}
                     onPress={()=>this._editData()}
-                >
-                  <Image 
+              >
+                <Image 
                     source={require("../Images/Manage/edit.png")} 
                     style={{width: 25, height: 25}}
-                  />
-                </TouchableOpacity>
-              </View>  
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                    style={{ margin: 5}}
+                    onPress={()=> this.deletItem()}
+              >
+                <Image 
+                    source={require("../Images/Manage/delete.png")} 
+                    style={{width: 25, height: 25}}
+                />
+              </TouchableOpacity>
+            </View>  
           </View>
         </View>
         )
@@ -320,20 +318,29 @@ class App extends React.Component {
         return(
         <View style={styles.FloatingOutputContainer}>
           <View style={styles.output}>
-            <Text style={styles.outputText} > etat : {this.state.polygonsData[this.state.number].etat}</Text>
-            <Text style={styles.outputText} > Hauteur: R+{this.state.polygonsData[this.state.number].hauteur}</Text>
+            <Text style={styles.outputText} >En {this.state.polygonsData[this.state.number].etat} etat</Text>
+            <Text style={styles.outputText} >R+{this.state.polygonsData[this.state.number].hauteur}</Text>
 
-            <Text  style={styles.outputText}> remarques: {this.state.polygonsData[this.state.number].more}</Text>
-            <TouchableOpacity
-                style={{ margin: 5}}
-                onPress={()=> this.setState({galery: true})}
-            >
+            <Text  style={styles.outputText}>{this.state.polygonsData[this.state.number].more}</Text>
+            <View style={{width:100, display: "flex", flexDirection: "row", justifyContent: "space-between"}} >
+              <TouchableOpacity
+                  style={{ margin: 5}}
+                  onPress={()=> this.setState({galery: true})}
+              >
+                    <Image 
+                      source={require("../Images/Galery.png")} 
+                      style={{width: 25, height: 25}}
+                    />
+              </TouchableOpacity>
+              <TouchableOpacity
+                    style={{ margin: 5}}
+                    onPress={()=>this._editData()}
+                >
                   <Image 
-                    source={require("../Images/Galery.png")} 
+                    source={require("../Images/Manage/edit.png")} 
                     style={{width: 25, height: 25}}
                   />
-            </TouchableOpacity>
-            <View style={{width:100, display: "flex", flexDirection: "row", justifyContent: "space-between"}} >
+              </TouchableOpacity>
               <TouchableOpacity
                     style={{ margin: 5}}
                     onPress={()=> this.deletItem()}
@@ -343,17 +350,6 @@ class App extends React.Component {
                     style={{width: 25, height: 25}}
                   />
                 </TouchableOpacity>
-
-
-                <TouchableOpacity
-                    style={{ margin: 5}}
-                    onPress={()=>this._editData()}
-                >
-                  <Image 
-                    source={require("../Images/Manage/edit.png")} 
-                    style={{width: 25, height: 25}}
-                  />
-              </TouchableOpacity>
             </View>  
           </View>
         </View>
@@ -362,37 +358,35 @@ class App extends React.Component {
         return(
         <View style={styles.FloatingOutputContainer}>
           <View style={styles.output}>
-            <Text style={styles.outputText} > etat : {this.state.polyLinesData[this.state.number].etat}</Text>
-            <Text style={styles.outputText} > Largeur: {this.state.polyLinesData[this.state.number].largeur}</Text>
+            <Text style={styles.outputText} >En {this.state.polyLinesData[this.state.number].etat} etat</Text>
+            <Text style={styles.outputText} >{this.state.polyLinesData[this.state.number].largeur} m</Text>
 
-            <Text style={styles.outputText}> remarques: {this.state.polyLinesData[this.state.number].more}</Text>
-            <TouchableOpacity
-                style={{ margin: 5}}
-                onPress={()=> this.setState({galery: true})}
-            >
-                  <Image 
-                    source={require("../Images/Galery.png")} 
-                    style={{width: 25, height: 25}}
-                  />
-            </TouchableOpacity>
+            <Text style={styles.outputText}>{this.state.polyLinesData[this.state.number].more}</Text>
             <View style={{width:100, display: "flex", flexDirection: "row", justifyContent: "space-between"}} >
               <TouchableOpacity
-                    style={{ margin: 5}}
-                    onPress={()=> this.deletItem()}
-                >
-                  <Image 
-                    source={require("../Images/Manage/delete.png")} 
-                    style={{width: 25, height: 25}}
-                  />
+                  style={{ margin: 5}}
+                  onPress={()=> this.setState({galery: true})}
+              >
+                    <Image 
+                      source={require("../Images/Galery.png")} 
+                      style={{width: 25, height: 25}}
+                    />
               </TouchableOpacity>
-
-
               <TouchableOpacity
                     style={{ margin: 5}}
                     onPress={()=>this._editData()}
                 >
                   <Image 
                     source={require("../Images/Manage/edit.png")} 
+                    style={{width: 25, height: 25}}
+                  />
+              </TouchableOpacity>
+              <TouchableOpacity
+                    style={{ margin: 5}}
+                    onPress={()=> this.deletItem()}
+                >
+                  <Image 
+                    source={require("../Images/Manage/delete.png")} 
                     style={{width: 25, height: 25}}
                   />
               </TouchableOpacity>
@@ -1527,14 +1521,15 @@ App.propTypes = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    padding: 5,
 
     backgroundColor: 'rgba(255,255,255,0.7)',
     borderRadius: 20,
   },
   outputText: {
     borderBottomColor: "black",
-    borderBottomWidth: 1, 
-    margin: 10
+    marginBottom: 5,
+    textAlign: "center"
   },
   // camera :
   CameraContainer: {
