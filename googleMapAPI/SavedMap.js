@@ -1380,7 +1380,7 @@ App.propTypes = {
     },
       // Name input:
     NameInputContainer: {
-      bottom: "80%",
+      bottom: "20%",
     },
     NameInput: {
       flexDirection: 'row',
@@ -1462,7 +1462,7 @@ App.propTypes = {
   dataFloatingContainer: {
     position: "absolute",
     left: 28,
-    bottom: "35%",
+    bottom: "15%",
     width: "100%",
     height: "40%",
 

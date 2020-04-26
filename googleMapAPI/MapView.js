@@ -882,7 +882,7 @@ class App extends React.Component {
 
     return (
       <KeyboardAvoidingView
-        behavior={"padding"}
+        behavior={"position"}
         keyboardVerticalOffset={- (Dimensions.get('window').height) * 0.06}
       >
         <MapView
@@ -1571,7 +1571,7 @@ const styles = StyleSheet.create({
   },
     // Name input:
   NameInputContainer: {
-    bottom: "80%",
+    bottom: "20%",
   },
   NameInput: {
     flexDirection: 'row',
@@ -1647,7 +1647,7 @@ const styles = StyleSheet.create({
   dataFloatingContainer: {
     position: "absolute",
     left: 28,
-    bottom: "35%",
+    bottom: "15%",
     width: "100%",
     height: "40%",
 
