@@ -1,7 +1,7 @@
 import React from 'react';
 import MapView, { Marker, Polygon, Polyline, ProviderPropType } from 'react-native-maps';
 import { MAP_TYPES } from 'react-native-maps';
-import { StyleSheet, View, Dimensions, Text, TouchableOpacity, Image, TextInput} from 'react-native';
+import { StyleSheet, View, Dimensions, Text, TouchableOpacity, Image, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, ScrollView} from 'react-native';
 import { connect } from 'react-redux'
 import RNPickerSelect from 'react-native-picker-select';
 import { AsyncStorage } from 'react-native';
@@ -881,7 +881,10 @@ class App extends React.Component {
     }
 
     return (
-      <View>
+      <KeyboardAvoidingView
+        behavior={"position"}
+        keyboardVerticalOffset={- (Dimensions.get('window').height) * 0.06}
+      >
         <MapView
           mapType = {this.state.mapType}
           initialRegion = {this.state.region}
@@ -1411,7 +1414,7 @@ class App extends React.Component {
             </View>
           </View>
         )}
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -1462,7 +1465,7 @@ const styles = StyleSheet.create({
   /* the mapView style */
   mapStyle: {
     width: (Dimensions.get('window').width),
-    height: (Dimensions.get('window').height) * 0.93,
+    height: (Dimensions.get('window').height) * 0.932,
   },
   /* the drawing buttons style */
   drawingContainer: {
