@@ -14,9 +14,9 @@ import MyMaps from './Pages/MyMaps'
   },
   {
     initialRouteName: 'Browser',
-    activeColor: '#f0edf6',
+    activeColor: 'rgba(250,250,250,0.5)',
     inactiveColor: '#3e2465',
-    barStyle: { backgroundColor: '#694fad' },
+    barStyle: { backgroundColor: 'rgba(0,0,0,1)' },
   }
   );
 
