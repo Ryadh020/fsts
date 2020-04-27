@@ -1349,8 +1349,8 @@ class App extends React.Component {
                   }}
                 >
                   <Image 
-                    source={require("../Images/back_blured.png")} 
-                    style={{width: 25, height: 25, margin: 20}}
+                    source={require("../Images/turn.png")} 
+                    style={{width: 30, height: 30, margin: 20}}
                   />
                 </TouchableOpacity>
               </View>
