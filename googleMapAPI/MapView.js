@@ -24,8 +24,8 @@ class App extends React.Component {
     super(props)
     this.state = {
       region : {    //  initial cordinates for the map
-        latitude: 36.365,
-        longitude: 6.61472,
+        latitude: 36.1580,
+        longitude: 1.3373,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       },
