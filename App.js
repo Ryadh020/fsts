@@ -16,27 +16,33 @@ export default class App extends React.Component {
   componentDidMount() {
     setTimeout(() => {
       this.setState({no: 2})
-    }, 1000);
+    }, 4000);
   }
 
 render() {
   return (
     this.state.no === 1 ? 
     <View style={styles.introPage}>
-      <Text style={styles.logo}>FSTS</Text>
+
+      <Image 
+        source={require("./Images/logo.png")} 
+        style={{width: 200, height: 200}}
+      />
 
 
       <View style={styles.touche}>
-        <Text>Made with</Text>
+        <Text style={{color: "white"}}>Made with </Text>
         <Image
-          style={{width: 30, height:30}}
+          style={{width: 20, height:20}}
           source={require("./Images/love.png")}
         ></Image>
-        <Text>and </Text>
+        <Text style={{color: "white"}}> and </Text>
         <Image
+          style={{width: 25, height:25}}
           source={require("./Images/milk.png")}
         ></Image>
       </View>
+
 
     </View>
     :
@@ -52,16 +58,16 @@ const styles = StyleSheet.create({
   introPage: {
     display:"flex",
     flex: 1,
-    justifyContent:"space-around", 
-    alignItems: "center"
-  },
-  logo: {
-    fontSize: 80,
+    justifyContent:"flex-end", 
+    alignItems: "center",
+    backgroundColor: "black"
   },
   touche: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-end",
+    height: "45%",
+    marginBottom: 20,
   }
 })
 
