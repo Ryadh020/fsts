@@ -1232,7 +1232,7 @@ class App extends React.Component {
               onPress={() => this.setState({deleteAlert: true})}
             >
               <Image 
-                source={require("../Images/Manage/delete.png")} 
+                source={require("../Images/Manage/deleteBlack.png")} 
                 style={{width: 25, height: 25}}
               />
             </TouchableOpacity>
@@ -1708,13 +1708,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 5,
 
-    backgroundColor: 'rgba(255,255,255,0.7)',
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    color: "white",
     borderRadius: 20,
   },
   outputText: {
-    borderBottomColor: "black",
     marginBottom: 5,
-    textAlign: "center"
+    textAlign: "center",
+    color: "white",
   },
   // camera :
   CameraContainer: {

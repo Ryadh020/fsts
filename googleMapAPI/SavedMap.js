@@ -30,8 +30,8 @@ class App extends React.Component {
     super(props)
     this.state = {
       region : {    //  initial cordinates for the map
-        latitude: 36.365,
-        longitude: 6.61472,
+        latitude: 36.1580,
+        longitude: 1.3373,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       },
@@ -1094,14 +1094,6 @@ class App extends React.Component {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => console.log("else")}
-            >
-              <Image 
-                source={require("../Images/Manage/delete.png")} 
-                style={{width: 25, height: 25}}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
               onPress={() => {
                 this._fillDrawedShapes()
                 this._storeData()
@@ -1366,8 +1358,8 @@ App.propTypes = {
       alignItems: "center",
       justifyContent: "space-between",
   
-      width: 150,
-      padding: 10,
+      width: 100,
+      padding: 15,
     
       backgroundColor: 'rgba(255,255,255,0.7)',
       borderRadius: 15
@@ -1523,13 +1515,13 @@ App.propTypes = {
     alignItems: "center",
     padding: 5,
 
-    backgroundColor: 'rgba(255,255,255,0.7)',
+    backgroundColor: 'rgba(0,0,0,0.6)',
     borderRadius: 20,
   },
   outputText: {
-    borderBottomColor: "black",
     marginBottom: 5,
-    textAlign: "center"
+    textAlign: "center",
+    color: "white",
   },
   // camera :
   CameraContainer: {
