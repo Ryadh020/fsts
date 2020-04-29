@@ -10,28 +10,26 @@ import MyMaps from './Pages/MyMaps'
   const TabNavigator = createMaterialBottomTabNavigator({
     Browser: {
       screen :Browser,
-
       navigationOptions:{
-        tabBarIcon: ({focused}) =><Icon name="place" size={30} color={focused ? '#FFF' : 'rgba(250,250,250,0.5)'}/>,
+        tabBarIcon: () => <Image source={require("../Images/BottomNavBar/browse.png")} style={{width: 30, height: 30}}/>,
+        tabBarLabel: "Browse",
+
       }
     },
 
     myMaps: {
       screen :MyMaps,
-
       navigationOptions:{
-        tabBarIcon: ({focused}) =><Icon name="assistant" size={30} color={focused ? '#FFF' : 'rgba(250,250,250,0.5)'}/>,
+        tabBarIcon: () =><Image source={require("../Images/BottomNavBar/saved.png")} style={{width: 30, height: 30}}/>,
+        tabBarLabel: "Saved",
       }
     },
   },
   {
     initialRouteName: 'Browser',
-    activeColor: 'rgba(250,250,250,0.5)',
+    activeColor: 'rgba(250,250,250,1)',
     inactiveColor: 'rgba(250,250,250,0.5)',
-    barStyle: { backgroundColor: 'rgba(0,0,0,1)' },
-
-    shifting: false,
-    labeled: false,
+    barStyle: { backgroundColor: '#616262' },
   }
   );
 
