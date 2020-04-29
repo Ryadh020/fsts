@@ -29,12 +29,10 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      region : {    //  initial cordinates for the map
-        latitude: 36.1580,
-        longitude: 1.3373,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      },
+        //  initial cordinates for the map  
+      latitude: 36.1580,
+      longitude: 1.3373,
+      
       mapType: MAP_TYPES.STANDARD, // map type
 
       mapsKeys : [],  // contain all saved maps keys
@@ -133,6 +131,10 @@ class App extends React.Component {
             markersdata: AllShapes.markersdata,
             polyLinesData: AllShapes.polyLinesData,
             polygonsData: AllShapes.polygonsData,
+
+              // go to the map location:
+            latitude: AllShapes.markers[0].latiLngi.latitude,
+            longitude: AllShapes.markers[0].latiLngi.longitude,
           })
         }
     }
@@ -756,7 +758,15 @@ class App extends React.Component {
       >
         <MapView
           mapType = {this.state.mapType}
-          initialRegion = {this.state.region}
+          //initialRegion
+          region = {
+            {    
+              latitude: this.state.latitude,
+              longitude: this.state.longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }
+          }
           style={styles.mapStyle} 
           scrollEnabled={this.state.scrollable}
           onLongPress={this._Darw}

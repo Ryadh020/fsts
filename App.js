@@ -16,7 +16,7 @@ export default class App extends React.Component {
   componentDidMount() {
     setTimeout(() => {
       this.setState({no: 2})
-    }, 0);
+    }, 3000);
   }
 
 render() {
