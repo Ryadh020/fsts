@@ -1,7 +1,8 @@
 import React from 'react';
 import MapView, { Marker, Polygon, Polyline, ProviderPropType } from 'react-native-maps';
 import { MAP_TYPES } from 'react-native-maps';
-import { StyleSheet, View, Dimensions, Text, TouchableOpacity, Image, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, ScrollView} from 'react-native';
+import { Animated, StyleSheet, View, Dimensions, Text, TouchableOpacity, Image, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, ScrollView} from 'react-native';
+import { Easing } from 'react-native-reanimated';
 import { connect } from 'react-redux'
 import RNPickerSelect from 'react-native-picker-select';
 import { AsyncStorage } from 'react-native';
@@ -84,6 +85,10 @@ class App extends React.Component {
       markersdata : [],
       polyLinesData : [],
       polygonsData: [],
+
+      // animations propreties:
+    AlertMessageContainer:new Animated.Value(height * 0.5),
+    alertOppacity :new Animated.Value(0) 
     }
     this._Darw = this._Darw.bind(this)
     this._changeMapType = this._changeMapType.bind(this)
@@ -841,12 +846,37 @@ class App extends React.Component {
       }
     }else {
       this.setState({alertMessage : "create a new project"})
-      let action = { type: "ShowAlert"}
-      this.props.dispatch(action)
+
+        // show the alert ( to the top ):
+
+
+        Animated.parallel([
+          Animated.timing( this.state.AlertMessageContainer, {
+            toValue : height * 0.7,
+            duration : 500,
+          }),
+          Animated.timing( this.state.alertOppacity, {
+            toValue : 0.9,
+            duration : 800,
+          })
+        ]).start()
+
+
+        // hide Alert:
       setTimeout(() => {
-        let action2 = { type: "HideAlert"}
-        this.props.dispatch(action2)
-      }, 1500);
+
+        Animated.parallel([
+          Animated.timing( this.state.AlertMessageContainer, {
+            toValue : height * 0.5,
+            duration : 2000,
+          }),
+          Animated.timing( this.state.alertOppacity, {
+            toValue : 0,
+            duration : 1000,
+          })
+        ]).start()
+
+      }, 3000);
     }
   }
 
@@ -1309,12 +1339,12 @@ class App extends React.Component {
           </View>
         </View>
 
-        {this.props.alert && (
-          <View style={[styles.AlertMessageContainer, styles.container]}>
-            <View style={styles.AlertMessage}>
-              <Text>{this.state.alertMessage}</Text>
-            </View>
-          </View>
+        {/*this.props.alert &&*/ (
+          <Animated.View style={[styles.container, {bottom: this.state.AlertMessageContainer}]}>
+            <Animated.View style={[styles.AlertMessage, {opacity: this.state.alertOppacity}]}>
+              <Text style={{fontWeight: "600"}}>{this.state.alertMessage}</Text>
+            </Animated.View>
+          </Animated.View>
         )}
 
         <View style={[styles.drawingContainer, styles.float, styles.column]}>
@@ -1587,19 +1617,16 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
     // Alert  message:
-    AlertMessageContainer: {
-    bottom: "90%",
-  },
   AlertMessage: {
     flexDirection: 'row',
     alignItems: "center",
     justifyContent: "center",
   
-    width: 150,
-    padding: 10,
+    width: 250,
+    padding: 20,
     
     backgroundColor: 'rgba(255,50,0,0.6)',
-    borderRadius: 10
+    borderRadius: 10,
   },
   // delete alert:
   deletealert: {
