@@ -9,6 +9,11 @@ import { AsyncStorage } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as FileSystem from 'expo-file-system';
 
+
+
+import Constants from 'expo-constants';
+import * as Location from 'expo-location';
+
 import DrawingTools from '../Components/DrawingTools' // components takes in charge displaying drawing tools.
 
 const width = Dimensions.get('window').width;
@@ -24,12 +29,12 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      region : {    //  initial cordinates for the map
-        latitude: 36.1580,
-        longitude: 1.3373,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      },
+        //  initial cordinates for the map
+      latitude: 36.1580,
+      longitude: 1.3373,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+
       mapType : MAP_TYPES.STANDARD,
 
       workName: "empty",        // the actual workspace name:
@@ -98,6 +103,26 @@ class App extends React.Component {
     // the map type change function
   _changeMapType() {
     this.state.mapType == MAP_TYPES.STANDARD? this.setState({ mapType : MAP_TYPES.SATELLITE }):this.setState({ mapType : MAP_TYPES.STANDARD })
+  }
+
+      // get the current location:
+  _getLocation() {
+    (async () => {
+      let { status } = await Location.requestPermissionsAsync();
+      if (status !== 'granted') {
+        console.log('Permission to access location was denied')
+      }
+      let location = await Location.getCurrentPositionAsync({});
+      this.setState({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.0022,
+        longitudeDelta: 0.0000,
+      })
+          // show a location marker
+      let action = { type: "LOcationFocused"}
+      this.props.dispatch(action)
+    })();
   }
 
   componentDidMount() {
@@ -674,6 +699,9 @@ class App extends React.Component {
   _HideDataTable() {
     let action = { type: "shapeBlured"}
     this.props.dispatch(action)
+     // hide location marker:
+    let action2 = { type: "LOcationBlured"}
+    this.props.dispatch(action2)
   }
 
   _Darw(e) {
@@ -911,7 +939,14 @@ class App extends React.Component {
       >
         <MapView
           mapType = {this.state.mapType}
-          initialRegion = {this.state.region}
+          region = {
+            {    
+              latitude: this.state.latitude,
+              longitude: this.state.longitude,
+              latitudeDelta: this.state.latitudeDelta,
+              longitudeDelta: this.state.longitudeDelta,
+            }
+          }
           style={styles.mapStyle} 
           scrollEnabled={this.state.scrollable}
           onLongPress={this._Darw}
@@ -930,6 +965,13 @@ class App extends React.Component {
           </Marker>
         ))}
 
+        {this.props.located && (
+          <Marker
+            coordinate={{latitude: this.state.latitude,longitude: this.state.longitude,}}
+            icon={require("../Images/Markers/location.png")}
+          >
+          </Marker>
+        )}
 
         {this.state.polylines.map((polyline, index)=> (
           <Polyline
@@ -1339,15 +1381,21 @@ class App extends React.Component {
           </View>
         </View>
 
-        {/*this.props.alert &&*/ (
-          <Animated.View style={[styles.container, {bottom: this.state.AlertMessageContainer}]}>
-            <Animated.View style={[styles.AlertMessage, {opacity: this.state.alertOppacity}]}>
-              <Text style={{fontWeight: "600"}}>{this.state.alertMessage}</Text>
-            </Animated.View>
+        
+        <Animated.View style={[styles.container, {bottom: this.state.AlertMessageContainer}]}>
+          <Animated.View style={[styles.AlertMessage, {opacity: this.state.alertOppacity}]}>
+            <Text style={{fontWeight: "600"}}>{this.state.alertMessage}</Text>
           </Animated.View>
-        )}
+        </Animated.View>
+      
 
         <View style={[styles.drawingContainer, styles.float, styles.column]}>
+          <TouchableOpacity onPress={()=> this._getLocation()} style={styles.MapTypeButton}>
+            <Image 
+              style={{width: 45, height: 45}} 
+              source={this.state.mapType == MAP_TYPES.STANDARD? require("../Images/earth.png"): require("../Images/map.png") } 
+            />
+          </TouchableOpacity>
           <TouchableOpacity onPress={this._changeMapType} style={styles.MapTypeButton}>
             <Image 
               style={{width: 45, height: 45}} 
@@ -1779,6 +1827,7 @@ const mapStateToProps = (state) => {
 
     created: state.showTable.clicked,
     Choosed: state.showData.shoosed,
+    located: state.showData.located,
     id: state.showData.id,
   }
 }

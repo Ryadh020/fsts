@@ -1,4 +1,4 @@
-const initialState = { shoosed : false, id : 0 }  // the number of the selected shape
+const initialState = { shoosed : false, id : 0, located: false }  // the number of the selected shape
 
   // change the state to the spicified one of the the tools
 function showData(state = initialState, action) {
@@ -18,6 +18,20 @@ function showData(state = initialState, action) {
           //id : action.value,
         }
         return nextState || state
+
+      case 'LOcationFocused':
+        nextState = { 
+          ...state, 
+          located : true,
+        }
+        return nextState || state
+      case 'LOcationBlured':
+        nextState = {
+          ...state,
+          located : false,
+        }
+        return nextState || state
+
       default:
       return state
     }
