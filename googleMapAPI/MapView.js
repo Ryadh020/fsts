@@ -36,6 +36,7 @@ class App extends React.Component {
       longitudeDelta: 0.0421,
 
       mapType : MAP_TYPES.STANDARD,
+      loading : "got",
 
       workName: "empty",        // the actual workspace name:
       alertMessage : "HELLO WORLD",      // alert message
@@ -110,7 +111,7 @@ class App extends React.Component {
     (async () => {
       let { status } = await Location.requestPermissionsAsync();
       if (status !== 'granted') {
-        console.log('Permission to access location was denied')
+        this.state({loading : "loading"})
       }
       let location = await Location.getCurrentPositionAsync({});
       this.setState({
@@ -1390,10 +1391,10 @@ class App extends React.Component {
       
 
         <View style={[styles.drawingContainer, styles.float, styles.column]}>
-          <TouchableOpacity onPress={()=> this._getLocation()} style={styles.MapTypeButton}>
+        <TouchableOpacity onPress={()=> this._getLocation()} style={styles.MapTypeButton}>
             <Image 
               style={{width: 45, height: 45}} 
-              source={this.state.mapType == MAP_TYPES.STANDARD? require("../Images/earth.png"): require("../Images/map.png") } 
+              source={this.state.loading === "got"? require("../Images/located.png"): require("../Images/location-loading.png")} 
             />
           </TouchableOpacity>
           <TouchableOpacity onPress={this._changeMapType} style={styles.MapTypeButton}>
